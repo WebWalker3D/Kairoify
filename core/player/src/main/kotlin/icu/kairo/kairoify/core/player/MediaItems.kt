@@ -25,6 +25,7 @@ import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.ItemJson
 import icu.kairo.kairoify.core.model.MediaRef
@@ -63,6 +64,13 @@ object MediaItems {
                         setAlbumTitle(item.album)
                         item.durationMillis?.let { setDurationMs(it) }
                     }
+                    // Albums are folders for browsers (e.g. Android Auto), never queue entries.
+                    is Album -> {
+                        setMediaType(MediaMetadata.MEDIA_TYPE_ALBUM)
+                        setAlbumTitle(item.title)
+                        setIsPlayable(false)
+                        setIsBrowsable(true)
+                    }
                 }
             }
             .setExtras(extras)
@@ -97,7 +105,7 @@ object MediaItems {
         val hls = when (val item = itemOf(mediaItem)) {
             is Station -> item.isHls
             is Track -> item.isHls
-            null -> false
+            is Album, null -> false
         }
         return mediaItem.buildUpon()
             .setUri(placeholderUri(refOf(mediaItem)))

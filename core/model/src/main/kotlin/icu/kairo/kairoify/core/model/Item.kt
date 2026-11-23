@@ -62,13 +62,35 @@ data class Track(
     val pageUrl: String? = null,
     /** True when the service streams it as HLS, so the player can pick the right format before resolving. */
     val isHls: Boolean = false,
+    /** Creative Commons or public-domain license, shown with the artist (spec §7.7). */
+    val license: License? = null,
+) : Item
+
+/** A concert, album or record that opens into its tracks. Not playable itself. */
+@Serializable
+@SerialName("album")
+data class Album(
+    override val ref: MediaRef,
+    override val title: String,
+    override val subtitle: String? = null,
+    override val artworkUrl: String? = null,
+    val artists: List<String> = emptyList(),
+    val year: String? = null,
+    val trackCount: Int? = null,
+    val pageUrl: String? = null,
+    val license: License? = null,
 ) : Item
 
 /** What kind of thing an item is, for filters and search sections. */
-enum class ItemKind { STATION, SONG }
+enum class ItemKind { STATION, SONG, ALBUM }
 
 val Item.kind: ItemKind
     get() = when (this) {
         is Station -> ItemKind.STATION
         is Track -> ItemKind.SONG
+        is Album -> ItemKind.ALBUM
     }
+
+/** Stations and songs can be queued; albums open into their tracks instead. */
+val Item.isPlayable: Boolean
+    get() = this !is Album

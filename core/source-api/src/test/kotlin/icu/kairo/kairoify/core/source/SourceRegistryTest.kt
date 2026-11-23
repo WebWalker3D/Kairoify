@@ -19,6 +19,7 @@
  */
 package icu.kairo.kairoify.core.source
 
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
@@ -50,6 +51,9 @@ private class FakeSource(
     val queries = mutableListOf<String>()
 
     override suspend fun related(ref: MediaRef): List<Item> = relatedItems
+
+    override suspend fun details(ref: MediaRef): AlbumDetails =
+        AlbumDetails(Album(ref, "Album ${ref.itemId}"), listOf(Track(MediaRef(ref.sourceId, "${ref.itemId}/1"), "One")))
 
     override suspend fun search(query: String, page: PageToken?): Page<Item> {
         queries += query
@@ -159,5 +163,12 @@ class SourceRegistryTest {
         val song = Track(MediaRef("b", "2"), "Two")
         val registry = SourceRegistry(listOf(FakeSource("a"), FakeSource("b", relatedItems = listOf(song))))
         assertEquals(listOf<Item>(song), registry.related(MediaRef("b", "1")))
+    }
+
+    @Test
+    fun `details delegates to the album's source`() = runTest {
+        val details = SourceRegistry(listOf(FakeSource("a"), FakeSource("b"))).details(MediaRef("b", "x"))
+        assertEquals("Album x", details.album.title)
+        assertEquals("x/1", details.tracks.single().ref.itemId)
     }
 }
