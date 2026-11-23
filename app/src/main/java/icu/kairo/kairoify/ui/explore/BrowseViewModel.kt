@@ -54,7 +54,12 @@ class BrowseViewModel(
             _state.value = try {
                 val page = registry.get(sourceId).browse(node, next)
                 next = page.next
-                _state.value.copy(items = _state.value.items + page.items, loading = false, endReached = page.next == null)
+                // Offset paging over a live ranking can repeat a station at a page boundary; a repeated key would crash the list.
+                _state.value.copy(
+                    items = (_state.value.items + page.items).distinctBy { it.ref },
+                    loading = false,
+                    endReached = page.next == null,
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

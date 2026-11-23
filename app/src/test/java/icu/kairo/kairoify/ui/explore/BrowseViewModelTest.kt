@@ -85,4 +85,19 @@ class BrowseViewModelTest {
             assertEquals("nope", vm.state.value.error)
         }
     }
+
+    @Test
+    fun `duplicate station across pages is shown once`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val overlapping = mapOf(
+                null to Page(listOf(station("1"), station("2")), PageToken("2")),
+                "2" to Page(listOf(station("2"), station("3")), null),
+            )
+            val vm = BrowseViewModel(SourceRegistry(listOf(FakeSource("fake", browsePages = overlapping))), "fake", BrowseNode.Country("JP"))
+            advanceUntilIdle()
+            vm.loadMore()
+            advanceUntilIdle()
+            assertEquals(listOf("1", "2", "3"), vm.state.value.items.map { it.ref.itemId })
+        }
+    }
 }

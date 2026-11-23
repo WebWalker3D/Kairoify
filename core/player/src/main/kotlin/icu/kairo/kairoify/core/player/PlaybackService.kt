@@ -19,6 +19,9 @@
  */
 package icu.kairo.kairoify.core.player
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -63,6 +66,7 @@ class PlaybackService : MediaLibraryService() {
     private var retryAttempt = 0
     private var retryJob: Job? = null
     private var lastReportedId: String? = null
+    private val networkWatcher = NetworkWatcher()
 
     override fun onCreate() {
         super.onCreate()
@@ -82,11 +86,13 @@ class PlaybackService : MediaLibraryService() {
             .build()
         player.addListener(PlayerEvents())
         session = MediaLibrarySession.Builder(this, player, SessionCallback()).build()
+        getSystemService(ConnectivityManager::class.java).registerDefaultNetworkCallback(networkWatcher)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? = session
 
     override fun onDestroy() {
+        runCatching { getSystemService(ConnectivityManager::class.java).unregisterNetworkCallback(networkWatcher) }
         scope.cancel()
         session?.run {
             player.release()
@@ -102,18 +108,21 @@ class PlaybackService : MediaLibraryService() {
             controller: MediaSession.ControllerInfo,
             mediaItems: MutableList<MediaItem>,
         ): ListenableFuture<MutableList<MediaItem>> = scope.future {
-            mediaItems.map { requested ->
-                val ref = MediaItems.refOf(requested)
-                val item = if (requested.mediaMetadata.title == null) tree.item(requested.mediaId) ?: requested else requested
-                try {
-                    MediaItems.withStream(item, deps.sourceRegistry.resolve(ref))
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    mediaSession.sendError(controller, SessionError(SessionError.ERROR_IO, "Couldn't reach ${sourceName(ref)}. Try again."))
-                    throw e
-                }
-            }.toMutableList()
+            resolveAll(mediaSession, controller, mediaItems, replacing = false)
+        }
+
+        override fun onSetMediaItems(
+            mediaSession: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaItems: MutableList<MediaItem>,
+            startIndex: Int,
+            startPositionMs: Long,
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = scope.future {
+            MediaSession.MediaItemsWithStartPosition(
+                resolveAll(mediaSession, controller, mediaItems, replacing = true),
+                startIndex,
+                startPositionMs,
+            )
         }
 
         override fun onGetLibraryRoot(
@@ -171,8 +180,49 @@ class PlaybackService : MediaLibraryService() {
             retryJob?.cancel()
             retryJob = scope.launch {
                 delay(wait)
-                player.prepare()
+                player.restartCurrent()
                 player.play()
+            }
+        }
+    }
+
+    /**
+     * Resolves every item to a playable stream. If one fails while replacing the queue, the old item stops too,
+     * so the screen and the speaker never disagree about what is playing.
+     */
+    private suspend fun resolveAll(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        mediaItems: List<MediaItem>,
+        replacing: Boolean,
+    ): MutableList<MediaItem> = mediaItems.map { requested ->
+        val ref = MediaItems.refOf(requested)
+        val item = if (requested.mediaMetadata.title == null) tree.item(requested.mediaId) ?: requested else requested
+        try {
+            MediaItems.withStream(item, deps.sourceRegistry.resolve(ref))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            if (replacing) {
+                player.stop()
+                player.clearMediaItems()
+            }
+            mediaSession.sendError(controller, SessionError(SessionError.ERROR_IO, resolveFailureMessage(e, sourceName(ref))))
+            throw e
+        }
+    }.toMutableList()
+
+    /** Brings a live stream back by itself when the phone finds a working network again (tunnels, lifts, dead zones). */
+    private inner class NetworkWatcher : ConnectivityManager.NetworkCallback() {
+        override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
+            if (!capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) return
+            scope.launch {
+                val live = player.currentMediaItem?.mediaMetadata?.mediaType == MediaMetadata.MEDIA_TYPE_RADIO_STATION
+                if (shouldResumeOnNetworkBack(live, player.playWhenReady, player.playbackState, player.playerError?.errorCode)) {
+                    retryJob?.cancel()
+                    retryAttempt = 0
+                    player.restartCurrent()
+                }
             }
         }
     }

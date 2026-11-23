@@ -24,10 +24,12 @@ import androidx.media3.common.PlaybackException
 /** How long to wait before re-preparing a live stream after an error, or null to give up. */
 class LiveRetryPolicy(private val delaysMillis: List<Long> = listOf(2_000, 5_000, 10_000)) {
     fun delayFor(attempt: Int, errorCode: Int): Long? =
-        if (errorCode in RETRYABLE) delaysMillis.getOrNull(attempt) else null
+        if (isNetworkError(errorCode)) delaysMillis.getOrNull(attempt) else null
 
-    private companion object {
-        val RETRYABLE = setOf(
+    companion object {
+        fun isNetworkError(errorCode: Int): Boolean = errorCode in RETRYABLE
+
+        private val RETRYABLE = setOf(
             PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
             PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
             PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW,

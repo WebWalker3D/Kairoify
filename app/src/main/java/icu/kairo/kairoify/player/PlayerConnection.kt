@@ -33,6 +33,7 @@ import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.Station
 import icu.kairo.kairoify.core.player.MediaItems
 import icu.kairo.kairoify.core.player.PlaybackService
+import icu.kairo.kairoify.core.player.restartCurrent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -63,7 +64,7 @@ class PlayerConnection(private val context: Context) {
         if (it.isPlaying) {
             it.pause()
         } else {
-            if (it.playbackState == Player.STATE_IDLE) it.prepare()
+            if (it.playbackState == Player.STATE_IDLE) it.restartCurrent()
             it.play()
         }
     }
