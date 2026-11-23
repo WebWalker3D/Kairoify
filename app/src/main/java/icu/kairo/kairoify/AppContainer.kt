@@ -24,6 +24,7 @@ import icu.kairo.kairoify.core.network.createHttpClient
 import icu.kairo.kairoify.core.network.kairoifyUserAgent
 import icu.kairo.kairoify.core.player.PlayerDependencies
 import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.source.radiobrowser.RadioBrowserServers
 import icu.kairo.kairoify.source.radiobrowser.RadioBrowserSource
 import okhttp3.OkHttpClient
@@ -44,4 +45,6 @@ class AppContainer(context: Context) : PlayerDependencies {
             ),
         ),
     )
+
+    val playerConnection: PlayerConnection = PlayerConnection(context.applicationContext)
 }

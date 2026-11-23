@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -35,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +47,10 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import icu.kairo.kairoify.core.model.Item
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import icu.kairo.kairoify.player.PlayerConnection
+import icu.kairo.kairoify.ui.player.MiniPlayer
+import icu.kairo.kairoify.ui.player.NowPlayingSheet
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
@@ -69,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         splashDone = true
                     })
                 } else {
-                    KairoifyScaffold(registry = app.container.sourceRegistry, onPlay = {})
+                    KairoifyScaffold(registry = app.container.sourceRegistry, player = app.container.playerConnection)
                 }
             }
         }
@@ -85,11 +90,16 @@ private val tabs = listOf(
 )
 
 @Composable
-private fun KairoifyScaffold(registry: SourceRegistry, onPlay: (Item) -> Unit) {
+private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
+    val nowPlaying by player.nowPlaying.collectAsStateWithLifecycle()
+    var showSheet by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { player.connect() }
     Scaffold(
         bottomBar = {
+            Column {
+                nowPlaying?.let { np -> MiniPlayer(np, onToggle = player::togglePlayPause, onOpen = { showSheet = true }) }
             NavigationBar {
                 tabs.forEach { tab ->
                     val selected = backStack?.destination?.hasRoute(tab.route::class) == true
@@ -108,8 +118,22 @@ private fun KairoifyScaffold(registry: SourceRegistry, onPlay: (Item) -> Unit) {
                     )
                 }
             }
+            }
         },
     ) { padding ->
-        KairoifyNavHost(navController, registry, onPlay = onPlay, modifier = Modifier.padding(padding))
+        KairoifyNavHost(navController, registry, onPlay = player::play, modifier = Modifier.padding(padding))
+    }
+    val np = nowPlaying
+    if (showSheet && np != null) {
+        NowPlayingSheet(
+            nowPlaying = np,
+            sourceName = registry.sources.firstOrNull { it.info.id == np.ref.sourceId }?.info?.displayName ?: np.ref.sourceId,
+            onToggle = player::togglePlayPause,
+            onStop = {
+                player.stop()
+                showSheet = false
+            },
+            onDismiss = { showSheet = false },
+        )
     }
 }
