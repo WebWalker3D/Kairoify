@@ -102,4 +102,11 @@ class MediaItemsTest {
         assertEquals(ref, MediaItems.refOfPlaceholder(MediaItems.placeholderUri(ref)))
         assertTrue(MediaItems.refOfPlaceholder(android.net.Uri.parse("https://a.bandcamp.com/track/x")) == null)
     }
+
+    @Test
+    fun `items without a Kairoify id are refused`() {
+        assertNull(MediaItems.forPlayerOrNull(androidx.media3.common.MediaItem.Builder().setMediaId("").build()))
+        assertNull(MediaItems.forPlayerOrNull(androidx.media3.common.MediaItem.Builder().setMediaId("nonsense").build()))
+        assertNotNull(MediaItems.forPlayerOrNull(MediaItems.fromItem(track)))
+    }
 }

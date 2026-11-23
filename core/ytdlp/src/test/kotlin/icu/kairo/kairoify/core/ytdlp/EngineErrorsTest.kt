@@ -83,9 +83,29 @@ class EngineErrorsTest {
     }
 
     @Test
-    fun `anything else keeps its message`() {
-        val e = engineError("ValueError", "odd thing")
-        assertIs<SourceException.Unavailable>(e)
-        assertEquals("odd thing", e.message)
+    fun `anything else is unplayable`() {
+        listOf("odd thing", "ERROR: [bandcamp] x: No video formats found!", "No module named 'yt_dlp.extractor.x'").forEach {
+            val e = engineError("DownloadError", it)
+            assertIs<SourceException.Unplayable>(e, it)
+            assertEquals("The music engine couldn't handle this.", e.message)
+        }
+    }
+
+    @Test
+    fun `age-restricted songs are unplayable`() {
+        listOf("Sign in to confirm your age. This video may be inappropriate for some users.", "This video is age-restricted").forEach {
+            val e = engineError("DownloadError", it)
+            assertIs<SourceException.Unplayable>(e, it)
+            assertEquals("That song is age-restricted.", e.message)
+        }
+    }
+
+    @Test
+    fun `subscription-only songs are unplayable`() {
+        listOf("Join this channel to get access to members-only content", "This video requires payment to watch", "Music Premium only").forEach {
+            val e = engineError("DownloadError", it)
+            assertIs<SourceException.Unplayable>(e, it)
+            assertEquals("That song needs a subscription.", e.message)
+        }
     }
 }

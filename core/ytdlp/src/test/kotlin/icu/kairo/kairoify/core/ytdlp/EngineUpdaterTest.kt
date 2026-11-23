@@ -32,6 +32,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.security.MessageDigest
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -46,6 +47,7 @@ class EngineUpdaterTest {
     private var zip = "PK fake yt-dlp zipapp".toByteArray()
     private var sums: () -> String = { "${sha256(zip)}  yt-dlp\n0000  yt-dlp.exe\n" }
     private val paths = mutableListOf<String>()
+    private var latestBody: (() -> String)? = null
 
     private lateinit var updater: EngineUpdater
 
@@ -57,7 +59,9 @@ class EngineUpdaterTest {
                 val path = request.url.encodedPath
                 synchronized(paths) { paths += path }
                 return when (path) {
-                    "/repos/yt-dlp/yt-dlp/releases/latest" -> MockResponse.Builder().body("""{"tag_name":"$tag","assets":[{"browser_download_url":"https://evil.example/x"}]}""").build()
+                    "/repos/yt-dlp/yt-dlp/releases/latest" -> MockResponse.Builder()
+                        .body(latestBody?.invoke() ?: """{"tag_name":"$tag","assets":[{"browser_download_url":"https://evil.example/x"}]}""")
+                        .build()
                     "/yt-dlp/yt-dlp/releases/download/$tag/SHA2-256SUMS" -> MockResponse.Builder().body(sums()).build()
                     "/yt-dlp/yt-dlp/releases/download/$tag/yt-dlp" -> MockResponse.Builder().body(okio.Buffer().write(zip)).build()
                     else -> MockResponse.Builder().code(404).build()
@@ -68,7 +72,8 @@ class EngineUpdaterTest {
         updater = newUpdater()
     }
 
-    private fun newUpdater() = EngineUpdater(OkHttpClient(), temp.root, { clock }, server.url("/"), server.url("/"))
+    private fun newUpdater(bundled: String = BUNDLED_YTDLP_VERSION) =
+        EngineUpdater(OkHttpClient(), temp.root, { clock }, server.url("/"), server.url("/"), bundledVersion = bundled)
 
     @After fun stop() = server.close()
 
@@ -125,12 +130,44 @@ class EngineUpdaterTest {
     }
 
     @Test
-    fun `rollback returns to built-in`() = runTest {
+    fun `rollback keeps the running zip until the next start`() = runTest {
         updater.check()
+        val running = updater.updateToLoad()!!
         updater.rollback()
-        assertNull(updater.activeUpdate())
+        assertTrue(running.isFile)
         assertNull(updater.activeVersion())
+        assertNull(updater.updateToLoad())
+        assertFalse(running.exists())
+    }
+
+    @Test
+    fun `a newer download keeps the zip the engine is running from`() = runTest {
+        updater.check()
+        val running = updater.updateToLoad()!!
+        tag = "2026.11.09"
+        zip = "PK newer zipapp".toByteArray()
+        clock += 25 * hour
+        assertEquals(UpdateResult.Downloaded("2026.11.09"), updater.check())
+        assertTrue(running.isFile)
+        assertEquals("2026.11.09", updater.activeVersion())
+        val next = updater.updateToLoad()!!
+        assertTrue(next.readBytes().contentEquals(zip))
+        assertFalse(running.exists())
+    }
+
+    @Test
+    fun `an app update with a newer built-in engine wins over an older download`() = runTest {
+        updater.check()
+        val upgraded = newUpdater(bundled = "2026.12.01")
+        assertNull(upgraded.activeVersion())
+        assertNull(upgraded.updateToLoad())
         assertTrue(temp.root.listFiles().orEmpty().none { it.name.endsWith(".zip") })
+    }
+
+    @Test
+    fun `odd replies fail quietly`() = runTest {
+        latestBody = { "<html>Sign in to the hotel Wi-Fi</html>" }
+        assertEquals(UpdateResult.Failed("Couldn't check for an update."), updater.check())
     }
 
     @Test

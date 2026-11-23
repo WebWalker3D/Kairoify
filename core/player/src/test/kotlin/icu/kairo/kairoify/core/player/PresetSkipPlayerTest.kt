@@ -20,6 +20,11 @@
 package icu.kairo.kairoify.core.player
 
 import android.os.Looper
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.Futures
+import androidx.media3.common.SimpleBasePlayer
+import androidx.media3.common.Player
+import androidx.media3.common.PlaybackException
 import androidx.media3.exoplayer.ExoPlayer
 import org.robolectric.RuntimeEnvironment
 import icu.kairo.kairoify.core.model.Item
@@ -62,5 +67,55 @@ class PresetSkipPlayerTest {
         player.seekToPrevious()
         assertEquals(1, exo.currentMediaItemIndex)
         assertEquals(0, exo.currentPosition)
+    }
+
+    /** A player stuck after a failure (or happily playing), recording prepare() calls. */
+    private class StuckPlayer(failed: Boolean) : SimpleBasePlayer(Looper.getMainLooper()) {
+        var prepares = 0
+        private var state = State.Builder()
+            .setAvailableCommands(Player.Commands.Builder().addAllCommands().build())
+            .setPlaylist(listOf("a", "b", "c").map { MediaItemData.Builder(it).build() })
+            .setCurrentMediaItemIndex(1)
+            .setPlayWhenReady(true, Player.PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST)
+            .setPlaybackState(if (failed) Player.STATE_IDLE else Player.STATE_READY)
+            .setPlayerError(if (failed) PlaybackException("dead", null, PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS) else null)
+            .build()
+
+        override fun getState(): State = state
+
+        override fun handlePrepare(): ListenableFuture<*> {
+            prepares++
+            state = state.buildUpon().setPlayerError(null).setPlaybackState(Player.STATE_BUFFERING).build()
+            return Futures.immediateVoidFuture()
+        }
+
+        override fun handleSeek(mediaItemIndex: Int, positionMs: Long, seekCommand: Int): ListenableFuture<*> {
+            state = state.buildUpon().setCurrentMediaItemIndex(mediaItemIndex).build()
+            return Futures.immediateVoidFuture()
+        }
+    }
+
+    @Test
+    fun `next after a failure starts playing again`() {
+        val stuck = StuckPlayer(failed = true)
+        PresetSkipPlayer(stuck).seekToNext()
+        assertEquals(2, stuck.currentMediaItemIndex)
+        assertEquals(1, stuck.prepares)
+    }
+
+    @Test
+    fun `previous after a failure starts playing again`() {
+        val stuck = StuckPlayer(failed = true)
+        PresetSkipPlayer(stuck).seekToPreviousMediaItem()
+        assertEquals(0, stuck.currentMediaItemIndex)
+        assertEquals(1, stuck.prepares)
+    }
+
+    @Test
+    fun `skipping while playing does not prepare again`() {
+        val playing = StuckPlayer(failed = false)
+        PresetSkipPlayer(playing).seekToNext()
+        assertEquals(2, playing.currentMediaItemIndex)
+        assertEquals(0, playing.prepares)
     }
 }

@@ -60,9 +60,12 @@ class PlayerConnection(private val context: Context) {
         withController {
             requested = request.items[request.startIndex]
             sessionError = null
-            it.shuffleModeEnabled = request.shuffle
+            // Shuffle goes off, the queue is set, then shuffle goes on: the service orders the shuffle from the
+            // start item when shuffle turns on, so every item plays.
+            it.shuffleModeEnabled = false
             it.repeatMode = request.repeatMode
             it.setMediaItems(request.items.map(MediaItems::fromItem), request.startIndex, 0)
+            it.shuffleModeEnabled = request.shuffle
             it.prepare()
             it.play()
             publish(it)

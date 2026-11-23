@@ -55,4 +55,14 @@ class TrackRecoveryTest {
     @Test
     fun `network loss stops instead of skipping`() =
         assertEquals(Recovery.STOP, trackRecovery(ERROR_CODE_IO_NETWORK_CONNECTION_FAILED, null, refreshedAlready = false, hasNext = true))
+
+    @Test
+    fun `unclassified song failures skip`() =
+        assertEquals(Recovery.SKIP, trackRecovery(ERROR_CODE_IO_UNSPECIFIED, SourceException.Unplayable("odd"), refreshedAlready = false, hasNext = true))
+
+    @Test
+    fun `three failures in a row stop the queue`() {
+        assertEquals(Recovery.SKIP, trackRecovery(ERROR_CODE_IO_UNSPECIFIED, gone, refreshedAlready = false, hasNext = true, skipsInARow = 2))
+        assertEquals(Recovery.STOP, trackRecovery(ERROR_CODE_IO_UNSPECIFIED, gone, refreshedAlready = false, hasNext = true, skipsInARow = 3))
+    }
 }

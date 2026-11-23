@@ -24,6 +24,8 @@ import icu.kairo.kairoify.core.source.SourceException
 private val NOT_FOUND = listOf("video unavailable", "private video", "has been removed", "http error 404", "does not exist")
 private val GEOBLOCKED = listOf("available in your country", "geo restrict", "geo-restrict")
 private val RATE_LIMITED = listOf("http error 429", "too many requests")
+private val AGE_RESTRICTED = listOf("confirm your age", "age-restricted", "age restricted", "inappropriate for some users")
+private val SUBSCRIPTION = listOf("members-only", "members only", "requires payment", "premium")
 private val BOT_CHECK = listOf("sign in to confirm", "not a bot")
 private val NETWORK_TYPES = setOf("URLError", "ConnectionError", "TransportError", "SSLError")
 private val NETWORK = listOf("timed out", "failed to resolve", "connection")
@@ -37,9 +39,12 @@ fun engineError(type: String, message: String): SourceException {
         has(NOT_FOUND) -> SourceException.NotFound("That song isn't available anymore.")
         has(GEOBLOCKED) -> SourceException.Geoblocked("That song isn't available in your country.")
         has(RATE_LIMITED) -> SourceException.RateLimited("The service is busy. Try again in a minute.")
+        has(AGE_RESTRICTED) -> SourceException.Unplayable("That song is age-restricted.")
+        has(SUBSCRIPTION) -> SourceException.Unplayable("That song needs a subscription.")
         has(BOT_CHECK) -> SourceException.Unavailable("YouTube wants to check you're not a bot. Try again later.")
         type in NETWORK_TYPES || has(NETWORK) -> SourceException.Unavailable("Couldn't reach the service. Check your internet.")
         has(BROKEN_EXTRACTOR) || type == "ExtractorError" -> SourceException.NeedsUpdate("The music engine needs an update.")
-        else -> SourceException.Unavailable(message.ifBlank { "The music engine failed." })
+        // Unknown trouble with this one item: skip it rather than blame the network.
+        else -> SourceException.Unplayable("The music engine couldn't handle this.", RuntimeException("$type: $message"))
     }
 }

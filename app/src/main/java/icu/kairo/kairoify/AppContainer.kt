@@ -65,7 +65,7 @@ class AppContainer(context: Context) : PlayerDependencies {
         python = ChaquopyCall(context),
         cacheDir = context.cacheDir.resolve("engine"),
         qjsPath = File(context.applicationInfo.nativeLibraryDir, "libqjs.so").path,
-        updateZip = updater::activeUpdate,
+        updateZip = updater::updateToLoad,
         onNeedsUpdate = { appScope.launch { updater.check(force = true) } },
         onUpdateFailed = { updater.activeVersion()?.let(updater::markBad) },
     )

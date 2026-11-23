@@ -29,11 +29,21 @@ enum class Recovery { REFRESH_URL, SKIP, STOP }
  * - An HTTP error on a stream that played before usually means its URL expired: fetch a fresh one, once.
  * - A song that is gone, geoblocked or can't be extracted is skipped, so Play all keeps going.
  * - When the service or the network is unreachable, skipping would just fail through the whole queue, so stop.
+ * - After [MAX_SKIPS_IN_A_ROW] songs in a row failed, the source itself is broken: stop instead of churning on.
  */
-fun trackRecovery(errorCode: Int, resolveFailure: SourceException?, refreshedAlready: Boolean, hasNext: Boolean): Recovery = when {
+fun trackRecovery(
+    errorCode: Int,
+    resolveFailure: SourceException?,
+    refreshedAlready: Boolean,
+    hasNext: Boolean,
+    skipsInARow: Int = 0,
+): Recovery = when {
     resolveFailure == null && LiveRetryPolicy.isNetworkError(errorCode) -> Recovery.STOP
     resolveFailure == null && errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS && !refreshedAlready -> Recovery.REFRESH_URL
     resolveFailure is SourceException.Unavailable || resolveFailure is SourceException.RateLimited -> Recovery.STOP
+    skipsInARow >= MAX_SKIPS_IN_A_ROW -> Recovery.STOP
     hasNext -> Recovery.SKIP
     else -> Recovery.STOP
 }
+
+const val MAX_SKIPS_IN_A_ROW = 3

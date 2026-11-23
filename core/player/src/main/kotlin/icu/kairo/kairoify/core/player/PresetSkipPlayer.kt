@@ -34,5 +34,26 @@ class PresetSkipPlayer(player: Player) : ForwardingPlayer(player) {
     override fun seekToPrevious() {
         val isStation = currentMediaItem?.mediaMetadata?.mediaType == MediaMetadata.MEDIA_TYPE_RADIO_STATION
         if (isStation && hasPreviousMediaItem()) seekToPreviousMediaItem() else super.seekToPrevious()
+        resumeAfterFailure()
+    }
+
+    override fun seekToNext() {
+        super.seekToNext()
+        resumeAfterFailure()
+    }
+
+    override fun seekToNextMediaItem() {
+        super.seekToNextMediaItem()
+        resumeAfterFailure()
+    }
+
+    override fun seekToPreviousMediaItem() {
+        super.seekToPreviousMediaItem()
+        resumeAfterFailure()
+    }
+
+    /** After a failure the player sits idle; skipping to another station or song should play it, not show it silently. */
+    private fun resumeAfterFailure() {
+        if (playbackState == Player.STATE_IDLE && playerError != null) prepare()
     }
 }

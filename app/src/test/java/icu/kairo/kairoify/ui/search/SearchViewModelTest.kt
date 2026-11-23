@@ -152,4 +152,16 @@ class SearchViewModelTest {
         assertEquals(ALL_VIEW_LIMIT, visibleItems(items, null).size)
         assertEquals(10, visibleItems(items, ItemKind.SONG).size)
     }
+
+    @Test
+    fun `duplicate results show once`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val songs = FakeSource("songs", searchItems = listOf(track("1"), track("1"), track("2")), searchKind = ItemKind.SONG)
+            val vm = SearchViewModel(SourceRegistry(listOf(songs)))
+            vm.onQueryChange("jazz")
+            advanceTimeBy(1_000)
+            val section = assertIs<SearchUiState.Results>(vm.state.value).sections.single()
+            assertEquals(listOf("1", "2"), assertIs<SearchSectionState.Loaded>(section.state).items.map { it.ref.itemId })
+        }
+    }
 }

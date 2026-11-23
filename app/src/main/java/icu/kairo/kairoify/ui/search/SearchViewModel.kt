@@ -125,7 +125,8 @@ class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
 
     private fun record(q: String, result: SourceResult<Page<Item>>) {
         val state = when (result) {
-            is SourceResult.Ok -> SearchSectionState.Loaded(result.value.items)
+            // A source can list the same song twice; each appears once (lists are keyed by it).
+            is SourceResult.Ok -> SearchSectionState.Loaded(result.value.items.distinctBy { it.ref })
             is SourceResult.Failed -> SearchSectionState.Failed(result.error.message ?: "Something went wrong")
         }
         setState(q, result.source.id, state)

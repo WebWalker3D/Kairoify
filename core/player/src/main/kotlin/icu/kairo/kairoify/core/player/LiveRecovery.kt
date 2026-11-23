@@ -57,6 +57,7 @@ fun resolveFailureMessage(error: Throwable, sourceName: String): String = when (
     is SourceException.RateLimited,
     is SourceException.Geoblocked,
     is SourceException.NeedsUpdate,
+    is SourceException.Unplayable,
     -> error.message ?: "Couldn't reach $sourceName. Try again."
     else -> "Couldn't reach $sourceName. Try again."
 }

@@ -66,6 +66,7 @@ class PlaybackService : MediaLibraryService() {
     private var session: MediaLibrarySession? = null
     private var lastReportedId: String? = null
     private var refreshedMediaId: String? = null
+    private var skipsInARow = 0
     private val networkWatcher = NetworkWatcher()
 
     override fun onCreate() {
@@ -113,7 +114,10 @@ class PlaybackService : MediaLibraryService() {
             mediaSession: MediaSession,
             controller: MediaSession.ControllerInfo,
             mediaItems: MutableList<MediaItem>,
-        ): ListenableFuture<MutableList<MediaItem>> = Futures.immediateFuture(mediaItems.map(::playable).toMutableList())
+        ): ListenableFuture<MutableList<MediaItem>> {
+            val playable = mediaItems.mapNotNull(::playable)
+            return if (playable.isEmpty()) nothingPlayable() else Futures.immediateFuture(playable.toMutableList())
+        }
 
         override fun onSetMediaItems(
             mediaSession: MediaSession,
@@ -124,12 +128,17 @@ class PlaybackService : MediaLibraryService() {
         ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
             // A favorite picked in a car browser plays the whole Favorites folder from there, like radio presets.
             val favoritesQueue = mediaItems.singleOrNull()?.let { tree.queueFor(it.mediaId) }
-            val result = if (favoritesQueue != null) {
-                MediaSession.MediaItemsWithStartPosition(favoritesQueue.first.map(::playable), favoritesQueue.second, startPositionMs)
-            } else {
-                MediaSession.MediaItemsWithStartPosition(mediaItems.map(::playable), startIndex, startPositionMs)
+            if (favoritesQueue != null) {
+                val items = favoritesQueue.first.mapNotNull(::playable)
+                if (items.size == favoritesQueue.first.size) {
+                    return Futures.immediateFuture(MediaSession.MediaItemsWithStartPosition(items, favoritesQueue.second, startPositionMs))
+                }
             }
-            return Futures.immediateFuture(result)
+            // Voice "play …" and play-from-URI requests arrive with an empty id; refuse them instead of crashing.
+            val playable = mediaItems.mapNotNull(::playable)
+            if (playable.isEmpty()) return nothingPlayable()
+            val start = if (playable.size == mediaItems.size) startIndex else 0
+            return Futures.immediateFuture(MediaSession.MediaItemsWithStartPosition(playable, start, startPositionMs))
         }
 
         override fun onGetLibraryRoot(
@@ -179,8 +188,15 @@ class PlaybackService : MediaLibraryService() {
             if (!playWhenReady) liveRetry.reset()
         }
 
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            if (shuffleModeEnabled) player.shuffleFromCurrent()
+        }
+
         override fun onPlaybackStateChanged(playbackState: Int) {
-            if (playbackState == Player.STATE_READY) liveRetry.onReady()
+            if (playbackState == Player.STATE_READY) {
+                liveRetry.onReady()
+                skipsInARow = 0
+            }
             if (player.mediaItemCount == 0) lastReportedId = null
         }
 
@@ -200,29 +216,35 @@ class PlaybackService : MediaLibraryService() {
                 return
             }
             val refreshed = refreshedMediaId == item.mediaId
-            when (trackRecovery(error.errorCode, failure, refreshed, player.hasNextMediaItem())) {
+            val why = failure?.let { resolveFailureMessage(it, sourceName(ref)) } ?: playbackErrorMessage(error.errorCode, isLive = false)
+            when (trackRecovery(error.errorCode, failure, refreshed, player.hasNextMediaItem(), skipsInARow)) {
                 Recovery.REFRESH_URL -> {
                     refreshedMediaId = item.mediaId
                     resolver.invalidate(ref)
                     player.prepare()
                 }
                 Recovery.SKIP -> {
-                    val why = failure?.let { resolveFailureMessage(it, sourceName(ref)) } ?: playbackErrorMessage(error.errorCode, isLive = false)
+                    skipsInARow++
                     tellControllers("Skipped “${item.mediaMetadata.title}”: $why")
                     player.seekToNextMediaItem()
                     player.prepare()
                     player.play()
                 }
-                Recovery.STOP -> Unit
+                Recovery.STOP -> if (skipsInARow >= MAX_SKIPS_IN_A_ROW) {
+                    tellControllers("Stopped after $MAX_SKIPS_IN_A_ROW songs in a row couldn't play. $why")
+                }
             }
         }
     }
 
     /** Fills in metadata browsers left out, then swaps the stream for a placeholder resolved at play time. */
-    private fun playable(requested: MediaItem): MediaItem {
+    private fun playable(requested: MediaItem): MediaItem? {
         val item = if (requested.mediaMetadata.title == null) tree.item(requested.mediaId) ?: requested else requested
-        return MediaItems.forPlayer(item)
+        return MediaItems.forPlayerOrNull(item)
     }
+
+    private fun <T> nothingPlayable(): ListenableFuture<T> =
+        Futures.immediateFailedFuture(UnsupportedOperationException("Nothing playable in that request"))
 
     private fun tellControllers(message: String) {
         val current = session ?: return

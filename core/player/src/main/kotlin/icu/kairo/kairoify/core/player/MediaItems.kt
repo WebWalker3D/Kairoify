@@ -85,6 +85,10 @@ object MediaItems {
         return runCatching { MediaRef.decode(encoded) }.getOrNull()
     }
 
+    /** [forPlayer], or null when the item has no Kairoify id (e.g. a voice "play …" request with an empty id). */
+    fun forPlayerOrNull(mediaItem: MediaItem): MediaItem? =
+        if (runCatching { refOf(mediaItem) }.isSuccess) forPlayer(mediaItem) else null
+
     /**
      * Readies an item for the player without contacting any source: the stream is resolved later, when audio is
      * first needed. HLS has to be chosen now, so items that stream as HLS say so up front.

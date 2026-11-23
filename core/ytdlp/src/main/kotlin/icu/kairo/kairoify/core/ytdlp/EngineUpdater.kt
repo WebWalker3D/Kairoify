@@ -19,6 +19,7 @@
  */
 package icu.kairo.kairoify.core.ytdlp
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -59,6 +60,7 @@ class EngineUpdater(
     private val now: () -> Long = System::currentTimeMillis,
     private val apiBase: HttpUrl = "https://api.github.com/".toHttpUrl(),
     private val downloadBase: HttpUrl = "https://github.com/".toHttpUrl(),
+    private val bundledVersion: String = BUNDLED_YTDLP_VERSION,
 ) {
     @Serializable
     private data class State(
@@ -72,10 +74,25 @@ class EngineUpdater(
     private val stateFile = File(dir, "state.json")
     private val lock = Mutex()
 
-    /** The downloaded yt-dlp to load at start, if there is one and it hasn't failed before. */
+    /** The downloaded yt-dlp the next start will load: newer than the built-in one and never failed before. */
     fun activeUpdate(): File? = activeVersion()?.let { zipFor(it) }?.takeIf(File::isFile)
 
-    fun activeVersion(): String? = load().let { s -> s.active?.takeIf { it !in s.bad } }
+    fun activeVersion(): String? =
+        load().let { s -> s.active?.takeIf { it !in s.bad && compareVersions(it, bundledVersion) > 0 } }
+
+    /**
+     * Called once as the engine starts, before Python loads anything: clears out zips nothing will use (older
+     * downloads, rolled-back or failed ones) and returns the one to load. Zips are only ever deleted here, because
+     * Python keeps reading modules from the loaded zip for as long as the app runs.
+     */
+    fun updateToLoad(): File? {
+        val keep = activeUpdate()
+        dir.listFiles { f -> f.name.startsWith("yt-dlp-") && (f.name.endsWith(".zip") || f.name.endsWith(".part")) && f != keep }
+            .orEmpty()
+            .forEach { it.delete() }
+        if (keep == null && load().active != null) save(load().copy(active = null))
+        return keep
+    }
 
     /** Checks GitHub for a newer yt-dlp: at most daily, or hourly when [force]d (a source just broke). */
     suspend fun check(force: Boolean = false): UpdateResult = lock.withLock {
@@ -87,29 +104,30 @@ class EngineUpdater(
             save(state.copy(lastCheckMillis = time, lastForcedMillis = if (force) time else state.lastForcedMillis))
             try {
                 download(state)
-            } catch (e: IOException) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // A captive-portal page, a GitHub hiccup, a full disk: say so, never crash.
                 UpdateResult.Failed("Couldn't check for an update.")
             }
         }
     }
 
-    /** Back to the yt-dlp inside the APK, from the next start. */
+    /** Back to the yt-dlp inside the APK, from the next start (the running zip is removed then, not now). */
     fun rollback() {
-        deleteZips()
         save(load().copy(active = null))
     }
 
-    /** A downloaded version that wouldn't load: never use or download it again. */
+    /** A downloaded version that wouldn't load: never use or download it again. Its file goes at the next start. */
     fun markBad(version: String) {
         val state = load()
-        zipFor(version).delete()
         save(state.copy(active = state.active?.takeIf { it != version }, bad = (state.bad + version).distinct()))
     }
 
     private fun download(state: State): UpdateResult {
         val tag = latestTag()
         if (!TAG.matches(tag)) return UpdateResult.Failed("Unexpected engine version")
-        val current = listOfNotNull(BUNDLED_YTDLP_VERSION, state.active?.takeIf { it !in state.bad }).maxWithOrNull(::compareVersions)!!
+        val current = listOfNotNull(bundledVersion, state.active?.takeIf { it !in state.bad }).maxWithOrNull(::compareVersions)!!
         if (compareVersions(tag, current) <= 0 || tag in state.bad) return UpdateResult.UpToDate(current)
 
         val sums = fetch(release(tag, "SHA2-256SUMS")).decodeToString()
@@ -124,7 +142,6 @@ class EngineUpdater(
 
         dir.mkdirs()
         val part = File(dir, "yt-dlp-$tag.part").apply { writeBytes(bytes) }
-        deleteZips()
         if (!part.renameTo(zipFor(tag))) {
             part.delete()
             return UpdateResult.Failed("Couldn't save the engine update")
@@ -163,10 +180,6 @@ class EngineUpdater(
     }
 
     private fun zipFor(version: String) = File(dir, "yt-dlp-$version.zip")
-
-    private fun deleteZips() {
-        dir.listFiles { f -> f.name.startsWith("yt-dlp-") && f.name.endsWith(".zip") }.orEmpty().forEach { it.delete() }
-    }
 
     private fun load(): State =
         runCatching { json.decodeFromString(State.serializer(), stateFile.readText()) }.getOrDefault(State())
