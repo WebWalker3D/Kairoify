@@ -109,7 +109,7 @@ class NtsSourceTest {
     }
 
     @Test
-    fun `shows hosted only on Mixcloud are left out`() = runTest {
+    fun `shows recorded on SoundCloud or Mixcloud are both listed`() = runTest {
         server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest) = MockResponse.Builder().body(
                 """{"results":[
@@ -117,7 +117,18 @@ class NtsSourceTest {
                   {"title":"On Mixcloud","article":{"path":"/shows/a/episodes/mc"},"audio_sources":[{"url":"https://www.mixcloud.com/x/y/","source":"mixcloud"}]}]}""",
             ).build()
         }
-        assertEquals(listOf("On SoundCloud"), source.search("x").items.map { it.title })
+        assertEquals(listOf("On SoundCloud", "On Mixcloud"), source.search("x").items.map { it.title })
+    }
+
+    @Test
+    fun `mixcloud-recorded shows play through the HLS client`() = runTest {
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest) = MockResponse.Builder()
+                .body("""{"name":"On Mixcloud","audio_sources":[{"url":"https://www.mixcloud.com/x/y/","source":"mixcloud"}]}""").build()
+        }
+        engine.resolveAnswers[ResolveMode.HLS] = { EngineStream("https://aod.mixcloud.com/x.m3u8", "m3u8_native", emptyMap(), 3600.0) }
+        source.resolve(MediaRef("nts", "/shows/a/episodes/mc"))
+        assertEquals(listOf<Any>("https://www.mixcloud.com/x/y/", ResolveMode.HLS), engine.calls.single().second)
     }
 
     @Test

@@ -36,6 +36,8 @@ import icu.kairo.kairoify.source.jamendo.JamendoSource
 import icu.kairo.kairoify.source.hearthis.HearthisSource
 import icu.kairo.kairoify.source.wikimedia.WikimediaSource
 import icu.kairo.kairoify.source.ytdlp.BandcampSearchApi
+import icu.kairo.kairoify.source.ytdlp.MixcloudSearchApi
+import icu.kairo.kairoify.source.ytdlp.MixcloudSource
 import icu.kairo.kairoify.source.ytdlp.NtsApi
 import icu.kairo.kairoify.source.ytdlp.NtsSource
 import icu.kairo.kairoify.source.ytdlp.BandcampSource
@@ -89,7 +91,8 @@ class AppContainer(context: Context) : PlayerDependencies {
             BandcampSource(BandcampSearchApi(httpClient), engine),
             ArchiveSource(httpClient),
             AudiusSource(httpClient),
-            // Mixcloud is built but off: its terms exclude audio streams from its API and restrict extraction.
+            // Not authorized by Mixcloud (extraction), included by the owner's choice like YouTube/SoundCloud/Bandcamp.
+            MixcloudSource(MixcloudSearchApi(httpClient), engine),
             NtsSource(NtsApi(httpClient), engine),
             HearthisSource(httpClient),
             // ccMixter is built but off: its MP3s answer 403 unless the request claims to come from ccMixter's own

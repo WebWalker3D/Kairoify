@@ -103,8 +103,8 @@ built into the app.
 | Bandcamp | Independent artists | ✓ Live |
 | Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | ✓ Live |
 | Audius | Independent artists | ✓ Live |
-| Mixcloud | DJ mixes and radio shows | Built, off (its terms exclude pulling its audio) |
-| NTS Radio | Two live channels, and archived shows recorded on SoundCloud | ✓ Live (next release) |
+| Mixcloud | DJ mixes and radio shows | ✓ Live (next release) |
+| NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live (next release) |
 | hearthis.at | DJ sets, live recordings, tracks | ✓ Live (next release) |
 | ccMixter | Creative Commons remixes and originals | Built, off (its files block plays from outside its site) |
 | Wikimedia Commons | Classical, folk and historical recordings | ✓ Live (next release) |

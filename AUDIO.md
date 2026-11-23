@@ -35,7 +35,8 @@ table.
 | [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | next release |
 | [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search, yt-dlp for streams, on the phone | **Not authorized** (owner's choice to include) | 0.2 |
 | [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams | **Not authorized** (owner's choice to include) | 0.2 |
-| NTS Radio — archive | ~90,000 shows, played from their SoundCloud recordings | NTS's public API, then yt-dlp on SoundCloud | **Not authorized**, same as SoundCloud | next release |
+| NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | next release |
+| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | **Not authorized**: its API excludes audio streams (royalty reporting and licensing) and its terms restrict extraction. Included by the owner's choice. | next release |
 | [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search endpoint (unofficial), yt-dlp for streams | **Not authorized** (owner's choice to include) | 0.2 |
 
 ## Built (off)
@@ -44,7 +45,6 @@ table.
 |---|---|---|---|
 | [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Official, key | Register a client ID at developer.jamendo.com, then build with `-Pkairoify.jamendo.clientId=…` (see the README) |
 | [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Blocked (hotlink protection) | Its MP3s answer 403 unless the request carries ccMixter's own page as the Referer. Owner decision: send that header, or ask ccMixter. |
-| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | **Not authorized**: its API excludes audio streams (royalty reporting and licensing), and its terms restrict extraction | Only with Mixcloud's permission. NTS shows recorded only on Mixcloud are left out for the same reason. |
 
 ## Planned
 
@@ -131,6 +131,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | Mixcloud | **Switched back on** by the owner's choice, marked Not authorized like YouTube Music, SoundCloud and Bandcamp. NTS shows recorded on Mixcloud are back. |
 | 2026-11-23 | Unreleased | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app (next release). **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |
 | 2026-11-23 | Unreleased | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |
 | 2026-11-23 | Unreleased | All sources | **Changed**: this file now shows authorization separately from build status. |
