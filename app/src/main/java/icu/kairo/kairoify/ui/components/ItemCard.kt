@@ -19,41 +19,35 @@
  */
 package icu.kairo.kairoify.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import icu.kairo.kairoify.core.model.Item
 
+/** A station or song in a horizontal shelf. */
 @Composable
-fun StationRow(item: Item, onClick: (Item) -> Unit, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.fillMaxWidth().clickable { onClick(item) }.padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+fun ItemCard(item: Item, onClick: (Item) -> Unit, modifier: Modifier = Modifier, onLongClick: ((Item) -> Unit)? = null) {
+    Column(
+        modifier.width(136.dp).combinedClickable(
+            onLongClickLabel = if (onLongClick != null) "More options" else null,
+            onLongClick = onLongClick?.let { { it(item) } },
+            onClick = { onClick(item) },
+        ),
     ) {
-        Artwork(item.artworkUrl, item.title, 52.dp)
-        Spacer(Modifier.width(12.dp))
-        Column(Modifier.weight(1f)) {
-            Text(item.title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            item.subtitle?.let {
-                Text(
-                    it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
+        Artwork(item.artworkUrl, item.title, 136.dp)
+        Text(
+            item.title,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 6.dp),
+        )
     }
 }

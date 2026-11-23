@@ -41,10 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.ui.components.SectionError
-import icu.kairo.kairoify.ui.components.StationRow
+import icu.kairo.kairoify.ui.components.ItemRow
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit) {
+fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
@@ -85,7 +85,7 @@ fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit) {
                                     )
                                 }
                             } else {
-                                items(st.items, key = { "${section.source.id}-${it.ref.encode()}" }) { StationRow(it, onPlay) }
+                                items(st.items, key = { "${section.source.id}-${it.ref.encode()}" }) { ItemRow(it, onPlay, onLongClick = onLongPress) }
                             }
                     }
                 }

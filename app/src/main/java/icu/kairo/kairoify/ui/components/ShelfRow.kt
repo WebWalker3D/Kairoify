@@ -33,11 +33,17 @@ import androidx.compose.ui.unit.dp
 import icu.kairo.kairoify.core.model.Item
 
 @Composable
-fun ShelfRow(title: String, items: List<Item>, onItemClick: (Item) -> Unit, modifier: Modifier = Modifier) {
+fun ShelfRow(
+    title: String,
+    items: List<Item>,
+    onItemClick: (Item) -> Unit,
+    modifier: Modifier = Modifier,
+    onItemLongClick: ((Item) -> Unit)? = null,
+) {
     Column(modifier.padding(vertical = 8.dp)) {
         Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(items, key = { it.ref.encode() }) { StationCard(it, onItemClick) }
+            items(items, key = { it.ref.encode() }) { ItemCard(it, onItemClick, onLongClick = onItemLongClick) }
         }
     }
 }

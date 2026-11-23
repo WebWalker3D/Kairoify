@@ -29,36 +29,48 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import icu.kairo.kairoify.player.PlayerConnection
-import icu.kairo.kairoify.ui.player.MiniPlayer
-import icu.kairo.kairoify.ui.player.NowPlayingSheet
+import icu.kairo.kairoify.core.data.FavoritesStore
+import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
 import icu.kairo.kairoify.ui.KairoifyNavHost
+import icu.kairo.kairoify.ui.LibraryRoute
 import icu.kairo.kairoify.ui.SearchRoute
+import icu.kairo.kairoify.ui.components.ItemActionsSheet
+import icu.kairo.kairoify.ui.components.rememberLinkOpener
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
+import icu.kairo.kairoify.ui.player.MiniPlayer
+import icu.kairo.kairoify.ui.player.NowPlayingSheet
 import icu.kairo.kairoify.ui.theme.KairoifyTheme
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +86,8 @@ class MainActivity : ComponentActivity() {
                         splashDone = true
                     })
                 } else {
-                    KairoifyScaffold(registry = app.container.sourceRegistry, player = app.container.playerConnection)
+                    val container = app.container
+                    KairoifyScaffold(container.sourceRegistry, container.playerConnection, container.favorites)
                 }
             }
         }
@@ -87,53 +100,95 @@ private val tabs = listOf(
     Tab(HomeRoute, "Home", Icons.Filled.Home),
     Tab(SearchRoute, "Search", Icons.Filled.Search),
     Tab(ExploreRoute, "Explore", KairoifyIcons.Globe),
+    Tab(LibraryRoute, "Library", KairoifyIcons.Library),
 )
 
 @Composable
-private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection) {
+private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection, favorites: FavoritesStore) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val nowPlaying by player.nowPlaying.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    val snackbar = remember { SnackbarHostState() }
     var showSheet by remember { mutableStateOf(false) }
+    var actionsFor by remember { mutableStateOf<Item?>(null) }
+    val openLink = rememberLinkOpener { scope.launch { snackbar.showSnackbar("No app on this phone can open that link.") } }
+    val toggleFavorite: (Item) -> Unit = { item -> scope.launch { favorites.toggle(item) } }
+    val np = nowPlaying
+    val npItem = np?.item
+    val npFavorite by rememberIsFavorite(favorites, npItem?.ref)
     LaunchedEffect(Unit) { player.connect() }
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
             Column {
-                nowPlaying?.let { np -> MiniPlayer(np, onToggle = player::togglePlayPause, onOpen = { showSheet = true }) }
-            NavigationBar {
-                tabs.forEach { tab ->
-                    val selected = backStack?.destination?.hasRoute(tab.route::class) == true
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(tab.route) {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Icon(tab.icon, contentDescription = null) },
-                        label = { Text(tab.label) },
-                        colors = NavigationBarItemDefaults.colors(selectedTextColor = MaterialTheme.colorScheme.primary),
+                np?.let {
+                    MiniPlayer(
+                        it,
+                        onToggle = player::togglePlayPause,
+                        onOpen = { showSheet = true },
+                        isFavorite = npFavorite,
+                        onToggleFavorite = npItem?.let { item -> { toggleFavorite(item) } },
                     )
                 }
-            }
+                NavigationBar {
+                    tabs.forEach { tab ->
+                        val selected = backStack?.destination?.hasRoute(tab.route::class) == true
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = {
+                                navController.navigate(tab.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = { Icon(tab.icon, contentDescription = null) },
+                            label = { Text(tab.label) },
+                            colors = NavigationBarItemDefaults.colors(selectedTextColor = MaterialTheme.colorScheme.primary),
+                        )
+                    }
+                }
             }
         },
     ) { padding ->
-        KairoifyNavHost(navController, registry, onPlay = player::play, modifier = Modifier.padding(padding))
+        KairoifyNavHost(
+            navController,
+            registry,
+            favorites,
+            onPlay = player::play,
+            onPlayQueue = { items, start, shuffle -> player.playAll(items, start, shuffle) },
+            onLongPress = { actionsFor = it },
+            modifier = Modifier.padding(padding),
+        )
     }
-    val np = nowPlaying
     if (showSheet && np != null) {
         NowPlayingSheet(
             nowPlaying = np,
-            sourceName = registry.sources.firstOrNull { it.info.id == np.ref.sourceId }?.info?.displayName ?: np.ref.sourceId,
-            onToggle = player::togglePlayPause,
-            onStop = {
-                player.stop()
-                showSheet = false
-            },
+            sourceName = sourceName(registry, np.ref.sourceId),
+            player = player,
+            isFavorite = npFavorite,
+            onToggleFavorite = npItem?.let { item -> { toggleFavorite(item) } },
+            onOpenLink = openLink,
+            onStopped = { showSheet = false },
             onDismiss = { showSheet = false },
         )
     }
+    actionsFor?.let { item ->
+        val isFavorite by rememberIsFavorite(favorites, item.ref)
+        ItemActionsSheet(
+            item = item,
+            isFavorite = isFavorite,
+            onToggleFavorite = { toggleFavorite(item) },
+            onOpenLink = openLink,
+            onDismiss = { actionsFor = null },
+        )
+    }
 }
+
+@Composable
+private fun rememberIsFavorite(favorites: FavoritesStore, ref: MediaRef?) =
+    remember(ref) { ref?.let(favorites::isFavorite) ?: flowOf(false) as Flow<Boolean> }.collectAsStateWithLifecycle(false)
+
+private fun sourceName(registry: SourceRegistry, sourceId: String): String =
+    registry.sources.firstOrNull { it.info.id == sourceId }?.info?.displayName ?: sourceId

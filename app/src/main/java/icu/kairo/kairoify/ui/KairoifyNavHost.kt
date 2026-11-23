@@ -26,7 +26,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.ui.library.LibraryScreen
+import icu.kairo.kairoify.ui.library.LibraryViewModel
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.ui.explore.BrowseScreen
 import icu.kairo.kairoify.ui.explore.BrowseViewModel
@@ -42,14 +45,17 @@ import icu.kairo.kairoify.ui.search.SearchViewModel
 fun KairoifyNavHost(
     navController: NavHostController,
     registry: SourceRegistry,
+    favorites: FavoritesStore,
     onPlay: (Item) -> Unit,
+    onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
+    onLongPress: (Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute> {
-            HomeScreen(viewModel { HomeViewModel(registry) }, onPlay, onAbout = { navController.navigate(AboutRoute) })
+            HomeScreen(viewModel { HomeViewModel(registry) }, onPlay, onLongPress, onAbout = { navController.navigate(AboutRoute) })
         }
-        composable<SearchRoute> { SearchScreen(viewModel { SearchViewModel(registry) }, onPlay) }
+        composable<SearchRoute> { SearchScreen(viewModel { SearchViewModel(registry) }, onPlay, onLongPress) }
         composable<ExploreRoute> { ExploreScreen(onOpenFacets = { navController.navigate(FacetsRoute(it)) }) }
         composable<FacetsRoute> { entry ->
             val route = entry.toRoute<FacetsRoute>()
@@ -59,7 +65,15 @@ fun KairoifyNavHost(
         }
         composable<BrowseRoute> { entry ->
             val route = entry.toRoute<BrowseRoute>()
-            BrowseScreen(viewModel { BrowseViewModel(registry, route.sourceId, route.node()) }, route.title, onPlay)
+            BrowseScreen(viewModel { BrowseViewModel(registry, route.sourceId, route.node()) }, route.title, onPlay, onLongPress)
+        }
+        composable<LibraryRoute> {
+            LibraryScreen(
+                viewModel { LibraryViewModel(favorites) },
+                sourceName = { id -> registry.sources.firstOrNull { it.info.id == id }?.info?.displayName ?: id },
+                onPlayQueue = onPlayQueue,
+                onLongPress = onLongPress,
+            )
         }
         composable<AboutRoute> { AboutScreen() }
     }

@@ -19,28 +19,16 @@
  */
 package icu.kairo.kairoify.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import icu.kairo.kairoify.core.model.Item
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalUriHandler
 
+/** Opens web links in the phone's browser, calling [onFailure] instead of crashing when nothing can open them. */
 @Composable
-fun StationCard(item: Item, onClick: (Item) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.width(136.dp).clickable { onClick(item) }) {
-        Artwork(item.artworkUrl, item.title, 136.dp)
-        Text(
-            item.title,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(top = 6.dp),
-        )
-    }
+fun rememberLinkOpener(onFailure: () -> Unit): (String) -> Unit {
+    val handler = LocalUriHandler.current
+    val failed by rememberUpdatedState(onFailure)
+    return remember(handler) { { url -> runCatching { handler.openUri(url) }.onFailure { failed() } } }
 }

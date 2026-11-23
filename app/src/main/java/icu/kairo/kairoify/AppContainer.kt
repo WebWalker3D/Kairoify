@@ -19,6 +19,10 @@
  */
 package icu.kairo.kairoify
 
+import icu.kairo.kairoify.core.data.FavoritesStore
+import icu.kairo.kairoify.core.data.KairoifyDatabase
+import icu.kairo.kairoify.core.data.RoomFavoritesStore
+import icu.kairo.kairoify.core.data.createDatabase
 import android.content.Context
 import icu.kairo.kairoify.core.network.createHttpClient
 import icu.kairo.kairoify.core.network.kairoifyUserAgent
@@ -47,4 +51,8 @@ class AppContainer(context: Context) : PlayerDependencies {
     )
 
     val playerConnection: PlayerConnection = PlayerConnection(context.applicationContext)
+
+    val database: KairoifyDatabase = createDatabase(context)
+
+    val favorites: FavoritesStore = RoomFavoritesStore(database)
 }
