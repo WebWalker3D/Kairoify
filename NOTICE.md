@@ -40,7 +40,10 @@ governed by the terms of the CPAL.
 
 ## Trademarks
 
-"Kairoify" and the Kairoify logo are trademarks of WebWalker3D. The License grants
+<p align="center"><img src="art/kairoify-logo.png" alt="The Kairoify logo: a K inside glowing headphones over a sound wave" width="200"></p>
+
+"Kairoify" and the Kairoify logo (above, also in [`art/kairoify-logo.png`](art/kairoify-logo.png)
+and as the app's icon) are trademarks of WebWalker3D. The License grants
 rights to the code only, not to the name or logo. If you distribute a modified version,
 give it your own name and logo. Displaying the Attribution Information above
 ("Powered by Kairoify") is required by the License and is the one permitted use of the
