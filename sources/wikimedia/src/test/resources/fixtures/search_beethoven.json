@@ -1,0 +1,827 @@
+{
+ "batchcomplete": "",
+ "continue": {
+  "gsroffset": 20,
+  "continue": "gsroffset||"
+ },
+ "query": {
+  "pages": {
+   "22303592": {
+    "pageid": 22303592,
+    "ns": 6,
+    "title": "File:Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - I. Grave - Allegro di molto e con brio.ogg",
+    "index": 4,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 10222065,
+      "width": 0,
+      "height": 0,
+      "duration": 419.7751247165533,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Beethoven%2C_Sonata_No._8_in_C_Minor_Pathetique%2C_Op._13_-_I._Grave_-_Allegro_di_molto_e_con_brio.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven,_Sonata_No._8_in_C_Minor_Pathetique,_Op._13_-_I._Grave_-_Allegro_di_molto_e_con_brio.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/22303592",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - I. Grave - Allegro di molto e con brio",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Sonata No. 8 in C Minor Pathetique, Op. 13 - I. Grave - allegro di molto e con brio",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "22303637": {
+    "pageid": 22303637,
+    "ns": 6,
+    "title": "File:Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - II. Adagio cantabile.ogg",
+    "index": 3,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 7450009,
+      "width": 0,
+      "height": 0,
+      "duration": 298.20990929705215,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/63/Beethoven%2C_Sonata_No._8_in_C_Minor_Pathetique%2C_Op._13_-_II._Adagio_cantabile.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven,_Sonata_No._8_in_C_Minor_Pathetique,_Op._13_-_II._Adagio_cantabile.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/22303637",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - II. Adagio cantabile",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "<a href=\"//commons.wikimedia.org/wiki/Category:Piano_Sonata_No._8_(Beethoven)\" title=\"Category:Piano Sonata No. 8 (Beethoven)\">Sonata No. 8 in C Minor \u201ePathetique\u201c</a>, Op. 13 - <a href=\"https://en.wikipedia.org/wiki/Piano_Sonata_No._8_(Beethoven)#II._Adagio_cantabile\" class=\"extiw\" title=\"en:Piano Sonata No. 8 (Beethoven)\">II. Adagio cantabile</a>.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "22303694": {
+    "pageid": 22303694,
+    "ns": 6,
+    "title": "File:Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - III. Rondo - Allegro.ogg",
+    "index": 1,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 6646486,
+      "width": 0,
+      "height": 0,
+      "duration": 275.19065759637186,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/87/Beethoven%2C_Sonata_No._8_in_C_Minor_Pathetique%2C_Op._13_-_III._Rondo_-_Allegro.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven,_Sonata_No._8_in_C_Minor_Pathetique,_Op._13_-_III._Rondo_-_Allegro.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/22303694",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven, Sonata No. 8 in C Minor Pathetique, Op. 13 - III. Rondo - Allegro",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Sonata No. 8 in C Minor Pathetique, Op. 13 - III. Rondo - allegro",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "1908097": {
+    "pageid": 1908097,
+    "ns": 6,
+    "title": "File:Beethoven Moonlight 2nd movement.ogg",
+    "index": 18,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 2317258,
+      "width": 0,
+      "height": 0,
+      "duration": 124.9677097505669,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Beethoven_Moonlight_2nd_movement.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven_Moonlight_2nd_movement.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/1908097",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven Moonlight 2nd movement",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Piano Sonata No. 14 (\"Moonlight sonata\"), 2<sup>nd</sup> movement.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 2.0 de",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/2.0/de/deed.en",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "1908117": {
+    "pageid": 1908117,
+    "ns": 6,
+    "title": "File:Beethoven Moonlight 3rd movement.ogg",
+    "index": 19,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 7848899,
+      "width": 0,
+      "height": 0,
+      "duration": 415.4234693877551,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Beethoven_Moonlight_3rd_movement.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven_Moonlight_3rd_movement.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/1908117",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven Moonlight 3rd movement",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Moonlight sonata 3rd movement, Sonata No. 14 C# minor , Opus 27/1, <i>Presto agitato</i> (6:50)",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 2.0 de",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/2.0/de/deed.en",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "3612108": {
+    "pageid": 3612108,
+    "ns": 6,
+    "title": "File:Beethoven Prometheus Creatures Op. 43 No. 14 - Solo della signora Cassentini.oga",
+    "index": 14,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 8207409,
+      "width": 0,
+      "height": 0,
+      "duration": 292.59630385487526,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Beethoven_Prometheus_Creatures_Op._43_No._14_-_Solo_della_signora_Cassentini.oga?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Beethoven_Prometheus_Creatures_Op._43_No._14_-_Solo_della_signora_Cassentini.oga",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/3612108",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Beethoven Prometheus Creatures Op. 43 No. 14 - Solo della signora Cassentini",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "<i>Creatures of Prometheus</i> \u2014 Op. 43/14, Solo della signora Casentini: oboe, basset horn, piano. Performed at the Meany Theatre on April 21, 1986 at 8:00 PM",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 2.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/2.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "5208617": {
+    "pageid": 5208617,
+    "ns": 6,
+    "title": "File:De-Ludwig van Beethoven (2 Varianten).ogg",
+    "index": 16,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 120173,
+      "width": 0,
+      "height": 0,
+      "duration": 6.817959183673469,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/De-Ludwig_van_Beethoven_%282_Varianten%29.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:De-Ludwig_van_Beethoven_(2_Varianten).ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/5208617",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "De-Ludwig van Beethoven (2 Varianten)",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Native speaker's pronunciation of \"Ludwig van Beethoven\" in both North and South German varieties",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<a href=\"//commons.wikimedia.org/wiki/User:Mravinszky\" title=\"User:Mravinszky\">Mravinszky</a>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY 3.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by/3.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "160946030": {
+    "pageid": 160946030,
+    "ns": 6,
+    "title": "File:F\u00fcr-Elise-Audio-Sample-measures-1-4.ogg",
+    "index": 11,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 222643,
+      "width": 0,
+      "height": 0,
+      "duration": 6.000979166666666,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/F%C3%BCr-Elise-Audio-Sample-measures-1-4.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:F%C3%BCr-Elise-Audio-Sample-measures-1-4.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/160946030",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "F\u00fcr-Elise-Audio-Sample-measures-1-4",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Ludwig van Beethoven - F\u00fcr Elise - Audio Sample, measures 1-4",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "Ludwig van Beethoven",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "160946029": {
+    "pageid": 160946029,
+    "ns": 6,
+    "title": "File:F\u00fcr-Elise-Audio-Sample-measures-11-14.ogg",
+    "index": 12,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 216463,
+      "width": 0,
+      "height": 0,
+      "duration": 5.9093333333333335,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/17/F%C3%BCr-Elise-Audio-Sample-measures-11-14.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:F%C3%BCr-Elise-Audio-Sample-measures-11-14.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/160946029",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "F\u00fcr-Elise-Audio-Sample-measures-11-14",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Ludwig van Beethoven - F\u00fcr Elise - Audio Sample, measures 11-14",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "Ludwig van Beethoven",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "160946028": {
+    "pageid": 160946028,
+    "ns": 6,
+    "title": "File:F\u00fcr-Elise-Audio-Sample-measures-23-27.ogg",
+    "index": 7,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 240529,
+      "width": 0,
+      "height": 0,
+      "duration": 6.504979166666667,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/74/F%C3%BCr-Elise-Audio-Sample-measures-23-27.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:F%C3%BCr-Elise-Audio-Sample-measures-23-27.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/160946028",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "F\u00fcr-Elise-Audio-Sample-measures-23-27",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Ludwig van Beethoven - F\u00fcr Elise - Audio Sample, measures 23-27",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "Ludwig van Beethoven",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "160946038": {
+    "pageid": 160946038,
+    "ns": 6,
+    "title": "File:F\u00fcr-Elise-Audio-Sample-measures-61-64.ogg",
+    "index": 15,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 221628,
+      "width": 0,
+      "height": 0,
+      "duration": 6.000979166666666,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/F%C3%BCr-Elise-Audio-Sample-measures-61-64.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:F%C3%BCr-Elise-Audio-Sample-measures-61-64.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/160946038",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "F\u00fcr-Elise-Audio-Sample-measures-61-64",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Ludwig van Beethoven - F\u00fcr Elise - Audio Sample, measures 61-64",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "Ludwig van Beethoven",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "74054632": {
+    "pageid": 74054632,
+    "ns": 6,
+    "title": "File:F\u00fcr Elise -Student Performance Zhe,Zhang.ogg",
+    "index": 13,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 2216714,
+      "width": 0,
+      "height": 0,
+      "duration": 197.64378684807255,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/F%C3%BCr_Elise_-Student_Performance_Zhe%2CZhang.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:F%C3%BCr_Elise_-Student_Performance_Zhe,Zhang.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/74054632",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "F\u00fcr Elise -Student Performance Zhe,Zhang",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "This sound image was once-recorded of Beethoven's F\u00fcr Elise  in my <a href=\"//commons.wikimedia.org/wiki/User:Jason_M._C.,_Han\" title=\"User:Jason M. C., Han\">Jason M. C., Han</a> (<a href=\"//commons.wikimedia.org/wiki/User_talk:Jason_M._C.,_Han\" title=\"User talk:Jason M. C., Han\"><span class=\"signature-talk\">talk</span></a>) 03:55, 2 November 2018 (UTC) classroom for the first classroom-level performance of a Chinese piano-learning boy 'Piano kid' - Zhe, Zhang (Around age 11), meanwhile, as a small teaching result of the courses in my Beethoven series. (Wikipedia introduction: <a class=\"external free\" href=\"https://en.wikipedia.org/wiki/Ludwig_van_Beethoven\">https://en.wikipedia.org/wiki/Ludwig_van_Beethoven</a>) Here, I have gotten the permission from this boy - Zhe, Zhang (Name's meaning: Zhang family's clever boy) to submit this sound image as a memory of his growth both in piano learning and from life.\n<p>To this boy: As his part-time piano family tutor for long time, firstly, I would like to give my congratulation. It's very happy to hear that he can reach a level of classroom real performance all by his hands, supported by some limited conditions like those in this recording. Thanks!\n</p><p>To be very honest, you may hear many problems, such as some ornaments and rough parts... It's a true story: in the first time when I and my mother 'touched' this boy's musicality (piano), we felt very hard - his thinking of music has almost broken into fragements without being threaded together as a whole, meanwhile, the routine from brain to hands' actions has almost been blocked, to a certain degree... though he has a very large hand with many good conditions.The same learning difficulties might also have appeared in his other subjects... We all knew it's a big project to teach him piano; but in our hearts, music language is fair to anyone, and we knew he loved music &amp; piano and wanted to express himself in this way. Then, we began to teach him notes, clefs, motives, how to thread those musical phrases together... to play a whole paragraph, and live performing knowledge... \nThere were many hard time and even failures in this boy's piano growth, such as failing to pass National Piano Grade Test 5th, crying many times for giving up, and coming across many difficulties from other subjects... We calmed down ourselves to describe music for his imagination, and associate him 'threading musical thinking pearls together in a whole necklace' between brain and hands, as one of my tutor in thinking skills who taught me... \n</p>\nDays and nights passed by, since one day he told us: I prefered Beethoven's F\u00fcr Elise which other kids had played, as if I saw the fate... please teach me, then, we have been researching this piece for another 3 months... When this recording came out, he successfully took a local piano competition and got a better result. I thought I liked his performance of Beethoven's fate-struggling and chromitic self-releasing... Now, please listen to him...",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 4.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "79822359": {
+    "pageid": 79822359,
+    "ns": 6,
+    "title": "File:Hy-\u053c\u0575\u0578\u0582\u0564\u057e\u056b\u0563 \u057e\u0561\u0576 \u0532\u0565\u0569\u0570\u0578\u057e\u0565\u0576 (Ludwig van Beethoven).ogg",
+    "index": 8,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 3838415,
+      "width": 0,
+      "height": 0,
+      "duration": 146.01360544217687,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Hy-%D4%BC%D5%B5%D5%B8%D6%82%D5%A4%D5%BE%D5%AB%D5%A3_%D5%BE%D5%A1%D5%B6_%D4%B2%D5%A5%D5%A9%D5%B0%D5%B8%D5%BE%D5%A5%D5%B6_%28Ludwig_van_Beethoven%29.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Hy-%D4%BC%D5%B5%D5%B8%D6%82%D5%A4%D5%BE%D5%AB%D5%A3_%D5%BE%D5%A1%D5%B6_%D4%B2%D5%A5%D5%A9%D5%B0%D5%B8%D5%BE%D5%A5%D5%B6_(Ludwig_van_Beethoven).ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/79822359",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Hy-\u053c\u0575\u0578\u0582\u0564\u057e\u056b\u0563 \u057e\u0561\u0576 \u0532\u0565\u0569\u0570\u0578\u057e\u0565\u0576 (Ludwig van Beethoven)",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "<p>This is  a spoken word version of the Wikipedia article: <b><span class=\"plainlinks\"><a class=\"external text\" href=\"https://hy.wikipedia.org/wiki/hy:%D4%BC%D5%B5%D5%B8%D6%82%D5%A4%D5%BE%D5%AB%D5%A3_%D5%BE%D5%A1%D5%B6_%D4%B2%D5%A5%D5%A9%D5%B0%D5%B8%D5%BE%D5%A5%D5%B6?oldid=6374268\">hy:\u053c\u0575\u0578\u0582\u0564\u057e\u056b\u0563 \u057e\u0561\u0576 \u0532\u0565\u0569\u0570\u0578\u057e\u0565\u0576</a></span></b><br><span class=\"audiolink\"><a href=\"https://upload.wikimedia.org/wikipedia/commons/a/ac/Hy-%D4%BC%D5%B5%D5%B8%D6%82%D5%A4%D5%BE%D5%AB%D5%A3_%D5%BE%D5%A1%D5%B6_%D4%B2%D5%A5%D5%A9%D5%B0%D5%B8%D5%BE%D5%A5%D5%B6_%28Ludwig_van_Beethoven%29.ogg?utm_source=commons.wikimedia.org&amp;utm_campaign=api&amp;utm_content=original\" class=\"internal\" title=\"Hy-\u053c\u0575\u0578\u0582\u0564\u057e\u056b\u0563 \u057e\u0561\u0576 \u0532\u0565\u0569\u0570\u0578\u057e\u0565\u0576 (Ludwig van Beethoven).ogg\">Listen to this article</a></span> <small>(<a href=\"//commons.wikimedia.org/wiki/Commons:Media_help\" title=\"Commons:Media help\">audio help</a>)</small>    \n</p>\n<style data-mw-deduplicate=\"TemplateStyles:r916284754\">.mw-parser-output .see-also{background:var(--background-color-interactive-subtle,#f8f9fa);margin:1em 0;border:1px solid var(--border-color-subtle,#c8ccd1);padding:2px;color:var(--color-base,#202122);clear:left;overflow:hidden}</style><div role=\"note\" class=\"see-also\"><span class=\"mw-valign-middle\" typeof=\"mw:File\"><span><img src=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/System-search.svg/40px-System-search.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail\" decoding=\"async\" loading=\"lazy\" width=\"25\" height=\"25\" class=\"mw-file-element\" srcset=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/System-search.svg/60px-System-search.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail 2x\" data-file-width=\"48\" data-file-height=\"48\"></span></span>See also: <a href=\"https://hy.wikipedia.org/wiki/Wikipedia:Spoken_articles\" class=\"extiw\" title=\"hy:Wikipedia:Spoken articles\">List of spoken articles</a> and <a href=\"https://hy.wikipedia.org/wiki/Wikipedia:Wikiproject_Spoken_Wikipedia\" class=\"extiw\" title=\"hy:Wikipedia:Wikiproject Spoken Wikipedia\">Spoken Wikipedia WikiProject</a>. </div>",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<p><b>Speaker:</b> Arusik Grigoryan / \u0531\u0580\u0578\u0582\u057d\u056b\u056f \u0533\u0580\u056b\u0563\u0578\u0580\u0575\u0561\u0576<br>\n</p>\n<b><span class=\"plainlinks\"><a rel=\"nofollow\" class=\"external text\" href=\"https://xtools.wmflabs.org/articleinfo/hy.wikipedia.org/hy%3A%D4%BC%D5%B5%D5%B8%D6%82%D5%A4%D5%BE%D5%AB%D5%A3%20%D5%BE%D5%A1%D5%B6%20%D4%B2%D5%A5%D5%A9%D5%B0%D5%B8%D5%BE%D5%A5%D5%B6/2019-06-20\">Authors of the article</a></span></b>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 4.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "149856773": {
+    "pageid": 149856773,
+    "ns": 6,
+    "title": "File:IMSLP534912-PMLP9407-01 Sonata in C, Op.102 -1, 1,2 Andante - Allegro vivace.ogg",
+    "index": 10,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 4352782,
+      "width": 0,
+      "height": 0,
+      "duration": 357.250612244898,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/IMSLP534912-PMLP9407-01_Sonata_in_C%2C_Op.102_-1%2C_1%2C2_Andante_-_Allegro_vivace.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:IMSLP534912-PMLP9407-01_Sonata_in_C,_Op.102_-1,_1,2_Andante_-_Allegro_vivace.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/149856773",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "IMSLP534912-PMLP9407-01 Sonata in C, Op.102 -1, 1,2 Andante - Allegro vivace",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Cello Sonata No.4, Op.102 No.1 is a composition which was made by Ludwig van Beethoven. This compositions made in 1815. This composition has 2 movements.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "John Michel (cello), Lisa Bergman? (piano)",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 3.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "149856774": {
+    "pageid": 149856774,
+    "ns": 6,
+    "title": "File:IMSLP534913-PMLP9407-02 Sonata in C, Op.102 -1, 3,4 Adagio - Allegro vivace.ogg",
+    "index": 9,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 5218659,
+      "width": 0,
+      "height": 0,
+      "duration": 429.3485714285714,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/IMSLP534913-PMLP9407-02_Sonata_in_C%2C_Op.102_-1%2C_3%2C4_Adagio_-_Allegro_vivace.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:IMSLP534913-PMLP9407-02_Sonata_in_C,_Op.102_-1,_3,4_Adagio_-_Allegro_vivace.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/149856774",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "IMSLP534913-PMLP9407-02 Sonata in C, Op.102 -1, 3,4 Adagio - Allegro vivace",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Cello Sonata No.4, Op.102 No.1 is a composition which was made by Ludwig van Beethoven. This compositions made in 1815. This composition has 2 movements.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "John Michel (cello), Lisa Bergman? (piano)",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 3.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "149855504": {
+    "pageid": 149855504,
+    "ns": 6,
+    "title": "File:IMSLP677735-PMLP148524-Abb\u00e9 Stadler, WoO 178.ogg",
+    "index": 6,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 824507,
+      "width": 0,
+      "height": 0,
+      "duration": 75.15501133786849,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/IMSLP677735-PMLP148524-Abb%C3%A9_Stadler%2C_WoO_178.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:IMSLP677735-PMLP148524-Abb%C3%A9_Stadler,_WoO_178.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/149855504",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "IMSLP677735-PMLP148524-Abb\u00e9 Stadler, WoO 178",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Abb\u00e9 Stadler, WoO 178 is a composition that made by Ludwig van Beethoven. This work made in 1820. Abb\u00e9 Stadler, WoO 178 has 1 Cannon movement.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "Michel Rondeau, 2021.",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 4.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "98649892": {
+    "pageid": 98649892,
+    "ns": 6,
+    "title": "File:Klaviersonate Nr. 15 D-Dur op.28 Pastorale - I. Allegro.ogg",
+    "index": 20,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 11047085,
+      "width": 0,
+      "height": 0,
+      "duration": 437.28979591836736,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Klaviersonate_Nr._15_D-Dur_op.28_Pastorale_-_I._Allegro.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Klaviersonate_Nr._15_D-Dur_op.28_Pastorale_-_I._Allegro.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/98649892",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Klaviersonate Nr. 15 D-Dur op.28 Pastorale - I. Allegro",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Klaviersonate Nr. 15 D-Dur op. 28, \u201cPastorale\u201d - I. allegro",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "98651519": {
+    "pageid": 98651519,
+    "ns": 6,
+    "title": "File:Klaviersonate Nr. 32 c-mollr op. 111 - I. Maestoso, Allegro con brio ed appassionato.ogg",
+    "index": 17,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 12674539,
+      "width": 0,
+      "height": 0,
+      "duration": 502.33469387755105,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/43/Klaviersonate_Nr._32_c-mollr_op._111_-_I._Maestoso%2C_Allegro_con_brio_ed_appassionato.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Klaviersonate_Nr._32_c-mollr_op._111_-_I._Maestoso,_Allegro_con_brio_ed_appassionato.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/98651519",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Klaviersonate Nr. 32 c-mollr op. 111 - I. Maestoso, Allegro con brio ed appassionato",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Klaviersonate Nr. 32 c-mollr op. 111 - I. Maestoso, allegro con brio e appassionato",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "Public domain",
+        "source": "commons-desc-page",
+        "hidden": ""
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "78943371": {
+    "pageid": 78943371,
+    "ns": 6,
+    "title": "File:Moonlight Sonata (Sharp c minor Sonata) 2nd Movement Beethoven JMC,Han.ogg",
+    "index": 2,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 1691974,
+      "width": 0,
+      "height": 0,
+      "duration": 144.5122902494331,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Moonlight_Sonata_%28Sharp_c_minor_Sonata%29_2nd_Movement_Beethoven_JMC%2CHan.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Moonlight_Sonata_(Sharp_c_minor_Sonata)_2nd_Movement_Beethoven_JMC,Han.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/78943371",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Moonlight Sonata (Sharp c minor Sonata) 2nd Movement Beethoven JMC,Han",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "As the caption's introduction, There are two editions of Moonlight Sonata (2nd Movement), regarding with which I cannot decided to keep or give up one, besides the other. They were all after a careful notation-reading, but, the first one was formal and more carefully; while, the other, a little bit of rough, but 'emotional reaches' onto a higher musicality, in my mind. If classroom-teaching, I would choose the first one, while, outside performing, the second one. \n<p>You may ask me: Jason, how could you understand the musicality of this movement? And, what type was it in your imagination? \n</p><p><b>My musicality of this edition's recording is:</b> those several weeks, in library and some CDs, I heard some... but not quite enough... I thought... I heard Liszt's translation through Wikipedia, almost: like a little flower smiling between two heavy rocky layers - 1st Movement (Funeral March- hopeless love in reality) and 3rd Movement (I have stated it's musicality in my field)... Further, I understood some of Austrian Freud's Dream-unconsciousness Analysis &amp; Therapy (some in my educational background... such as id, childhood), through I never would like to shoulder him or apply his ways with anyone of my pure Vienna music school... If without any 'mad complexes or self-reasonability', how could we appreciate so amazing a classic world including Beethoven?   Oh, sorry, plus Beethoven's  Heligenstadt Testament, it became so heavy and even breathless... Don't mention too many things, Jason! Just, You knew, between two severe emotions covering your head, there was usually a short and light self-relaxing complex, or to say, psychedelic (self-trancing or in drug condition) time, that Beethoven might feel he was wandering outside reality's consciousness-boundary and in his Wonderland...   that he saw the heaven and maybe, a happiness moment (a possible future but dying) with his beloved someone... and would be with some kids... in a whole &amp; normal family... Oh, Beethoven, all promises and words, in that moment, should become the truths and your dreams fulfilled out of your struggling reality... Just and only one moment, you felt 'enough good' and would like - wandering in that fantasy, never get back... It's Beethoven's own therapy for love, life and on-going fate. \n</p>\n<pre>This point, in musical language &amp; reality, should be mentioned as: \n</pre>\n<p><b>Here, from the historical observation, a thing needs to be clarified: Baroque-regression (back-reasoning) was usually made by classical composers (in Vienna school: Mozart, Haydn and Beethoven etc.), especially in their later years of life for calming down the dramatical emotions, and keeping Life's Reasonability. Meanwhile, from Haydn, they discussed and created classical counterpoints from symphony and string quartet together, to modify creative inspirations. Beethoven also inherited it. Therefore, when we play some in piano, we need to analyse and apply some special techniques, commonly used in classical polyphony, to pick up the main from the background, sentence by sentence, as an era-responding.)<a href=\"//commons.wikimedia.org/wiki/User:Jason_M._C.,_Han\" title=\"User:Jason M. C., Han\">Jason M. C., Han</a> (<a href=\"//commons.wikimedia.org/wiki/User_talk:Jason_M._C.,_Han\" title=\"User talk:Jason M. C., Han\"><span class=\"signature-talk\">talk</span></a>) 03:44, 15 May 2019 (UTC)</b>\n</p><p>Jason... we understood some... could you say some others, such as techniques? \nMany points, I would state in Wikiversity teaching &amp; learning field...but mention two: \nWhy so many 'sfs' or 'fp'?  They are 'Deaf Loves' - losing in his life-  not really want to 'sf' but the depth of emotions, among which , the peak of A (Rondo ABA) was my favorite. \nThe other, I preferred, was little 'Spiritual Wandering' (through Chromatic Roots) in B part... which gave me a short feeling of 'British Psychedelia'... (I used to be familiar with, or I thought). \n</p>\nThis is the first edition - the standard Chorus-piano Level for classrooms. I attempted to make out all layers in polyphony. It's like praying in church with chorus-boys and girls besides. Believing or not, every time after playing, I almost and still heard 'someone' singing all its parts in my brain - still actively.",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 4.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   },
+   "78448946": {
+    "pageid": 78448946,
+    "ns": 6,
+    "title": "File:Moonlight Sonata - 3rd Movement of Sharp c minor Sonata Beethoven.ogg",
+    "index": 5,
+    "imagerepository": "local",
+    "imageinfo": [
+     {
+      "size": 6138494,
+      "width": 0,
+      "height": 0,
+      "duration": 436.00979591836733,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Moonlight_Sonata_-_3rd_Movement_of_Sharp_c_minor_Sonata_Beethoven.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Moonlight_Sonata_-_3rd_Movement_of_Sharp_c_minor_Sonata_Beethoven.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/78448946",
+      "extmetadata": {
+       "ObjectName": {
+        "value": "Moonlight Sonata - 3rd Movement of Sharp c minor Sonata Beethoven",
+        "source": "mediawiki-metadata"
+       },
+       "ImageDescription": {
+        "value": "Another period got passed that Moonlight Sonata is still companying with me and my hands. I am very happy last day (April 28th, 2019) I can give a non-profit presentation &amp; report-performance of Beethoven's life and stories in piano's and my own academic views . In it, I have given my main theme about Beethoven's musical life - 'A Man's Whispering Cry under the Storming Moonlights above Dark Lake'; when choosing the associating sub-theme, I made it 'The suggestions (to mankind) in three LOVE levels of life - Honest Love (to Lord and Mozart), Flooding Love (no clear directions but wild to many girl students surrounding, the nephew Karl and hero Napoleon), and Grand Love (to humanity, peace and all peoples )'. Alongside it, I have commented, clarified and identified many references, arguments (thanks to Wikipedia but it wasn't at home now), course materials and fact points... \nOh, it's a long, crazy and remembrance day in my own life that I made myself very tried and said many heart-bottom words to the public, including my own life trip, especially the Moonlight Sonata - You knew, through playing it, I knew a great Rock friend in UK, and many other stories... <figure class=\"mw-default-size\" typeof=\"mw:File/Thumb\"><a href=\"//commons.wikimedia.org/wiki/File:Local_library_presentation_(Dalian)_of_Beethoven%27s_life_and_Moonlight_Sonata_in_bilingualism.jpg\" class=\"mw-file-description\"><img src=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Local_library_presentation_%28Dalian%29_of_Beethoven%27s_life_and_Moonlight_Sonata_in_bilingualism.jpg/250px-Local_library_presentation_%28Dalian%29_of_Beethoven%27s_life_and_Moonlight_Sonata_in_bilingualism.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail\" decoding=\"async\" loading=\"lazy\" width=\"250\" height=\"250\" class=\"mw-file-element\" srcset=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Local_library_presentation_%28Dalian%29_of_Beethoven%27s_life_and_Moonlight_Sonata_in_bilingualism.jpg/500px-Local_library_presentation_%28Dalian%29_of_Beethoven%27s_life_and_Moonlight_Sonata_in_bilingualism.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail 2x\" data-file-width=\"3120\" data-file-height=\"3120\"></a><figcaption> Library-presentation of Beethoven and Moonlight Sonata in bilingualism</figcaption></figure>In last day's piano presentation, indeed, I played Moonlight Sonata with full emotions and wild fashion, like a mental &amp; abstract Rock from Picasso style ... meanwhile, I am thinking of him, a station, Heligenstuad Testament,  Beethoven, and my own life - past and future... so complicated a feeling... But, it's not really a piano one - full emotions damaged many details... Today, right calming down myself and much quiet, I began to record one sound file of this life task... That's it, here! I didn't know whether this circle got passed - You know, Beethoven is lonely all life-long... I am a teacher, I just hoped to make a good classroom edition.      \n<p>This one wasn't my best... I thought the one left in UK and the video (recorded) right after my back were better than this.... But, I am now in his age and in this time, I got many deep thoughts... I would like to record...\n</p><p>Hopefully, you like... chances permitted, I will upgrade it... \n</p>\nThanks to many, and thanks, my life!",
+        "source": "commons-desc-page"
+       },
+       "Artist": {
+        "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Ludwig_van_Beethoven\" class=\"extiw\" title=\"w:en:Ludwig van Beethoven\"><span title=\"German composer (1770-1827)\">Ludwig van Beethoven</span></a></bdi>",
+        "source": "commons-desc-page"
+       },
+       "LicenseShortName": {
+        "value": "CC BY-SA 4.0",
+        "source": "commons-desc-page",
+        "hidden": ""
+       },
+       "LicenseUrl": {
+        "value": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons-desc-page"
+       }
+      },
+      "mime": "application/ogg"
+     }
+    ]
+   }
+  }
+ }
+}

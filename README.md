@@ -103,6 +103,11 @@ built into the app.
 | Bandcamp | Independent artists | ✓ Live |
 | Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | ✓ Live |
 | Audius | Independent artists | ✓ Live |
+| Mixcloud | DJ mixes and radio shows | ✓ Live (next release) |
+| NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live (next release) |
+| hearthis.at | DJ sets, live recordings, tracks | ✓ Live (next release) |
+| ccMixter | Creative Commons remixes and originals | Built, off (its files block plays from outside its site) |
+| Wikimedia Commons | Classical, folk and historical recordings | ✓ Live (next release) |
 | Jamendo | Creative Commons music | Built, off until a client ID is added |
 
 ### Jamendo
@@ -118,12 +123,14 @@ Jamendo's API needs a free client ID. Register an app at
 The ID is never stored in the repo. Without one, Jamendo stays out of the app, and
 About says it's off.
 
-More to follow — the goal is every free source there is.
+More to follow — the goal is every free source there is. [`AUDIO.md`](AUDIO.md) lists
+every current and planned source, with a dated change log.
 
 ## What's next
 
-- **More sources:** Mixcloud, hearthis.at, NTS and KEXP archives, ccMixter and
-  Wikimedia Commons. Jamendo switches on once it has a client ID.
+- **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from Openverse
+  and the Library of Congress to netlabels and federated catalogs. Jamendo switches on
+  once it has a client ID.
 - **Songs that never dead-end:** when a song fails on one service, find the same
   song on another and play that instead.
 - **Save the song on the radio:** turn what a station is playing into a song you can
@@ -146,6 +153,21 @@ More to follow — the goal is every free source there is.
 - **Licenses:** an open-source notices screen, and artist and license shown for
   Creative Commons tracks.
 - **Releases:** signed release builds published automatically by GitHub Actions.
+- **Streaming protocols.** These aren't single services; each one opens up many sources at once:
+  - **Icecast directory:** More internet radio stations.
+  - **RSS audio enclosures:** Music podcasts, artist releases, DJ shows.
+  - **Podcasting 2.0:** Independently distributed music, with optional artist tipping.
+  - **Canimus:** Artist-owned music catalogs.
+  - **ActivityPub:** Federated music distribution.
+  - **OpenSubsonic:** Compatible music servers.
+  - **Ampache API:** Community and personal music collections.
+  - **PeerTube API:** Music videos and concerts (audio-only in Kairoify unless the owner decides otherwise).
+  - **Owncast:** Independent live performances.
+  - **M3U / M3U8:** Authorized radio and media playlists.
+  - **PLS / XSPF:** More playlist formats.
+  - **Direct HTTP audio:** Artist-published MP3, FLAC, AAC and Ogg streams.
+  - **WebDAV:** Music collections you authorize on a remote server.
+  - **UPnP / DLNA:** Music you authorize on your local network.
 - **Further out:** an optional Kairoify server for sync, and Kairo, the companion
   AI, as a DJ.
 

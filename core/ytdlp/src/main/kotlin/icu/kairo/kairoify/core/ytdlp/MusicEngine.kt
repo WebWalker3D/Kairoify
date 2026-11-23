@@ -24,7 +24,8 @@ import icu.kairo.kairoify.core.model.StreamMime
 import kotlinx.serialization.json.JsonObject
 
 /** yt-dlp's two ways in: the fast JS-less YouTube client, or the full one that runs YouTube's JavaScript in QuickJS. */
-enum class ResolveMode(val arg: String) { FAST("fast"), FULL("full") }
+/** HLS: for services that also offer DASH, which the player can't use (Mixcloud). */
+enum class ResolveMode(val arg: String) { FAST("fast"), FULL("full"), HLS("hls") }
 
 /** A stream yt-dlp found. Never persisted: YouTube's URLs are tied to this phone's IP and expire. */
 data class EngineStream(
