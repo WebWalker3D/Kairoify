@@ -18,12 +18,13 @@ and one library.
 
 ## Status
 
-**Version 0.3.0 — concerts, archives and more sources.**
+**Version 0.4.0 — DJ mixes, NTS Radio and Wikimedia Commons.**
 
 - **Live radio:** browse and search ~50,000 stations from every country, and see
   what song is playing.
-- **Songs:** one search across YouTube Music, SoundCloud, Bandcamp and Audius. Play
-  any result, or start a radio from a YouTube Music song.
+- **Songs:** one search across YouTube Music, SoundCloud, Bandcamp, Audius, Mixcloud,
+  hearthis.at, NTS Radio's archive and Wikimedia Commons. Play any result, or start a
+  radio from a YouTube Music song.
 - **Concerts and archives:** Live Music Archive concerts, Great 78 Project records,
   netlabels and public-domain classical from the Internet Archive. Concerts open into
   their tracks, and Home shows concerts recorded on this day in past years.
@@ -103,11 +104,11 @@ built into the app.
 | Bandcamp | Independent artists | ✓ Live |
 | Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | ✓ Live |
 | Audius | Independent artists | ✓ Live |
-| Mixcloud | DJ mixes and radio shows | ✓ Live (next release) |
-| NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live (next release) |
-| hearthis.at | DJ sets, live recordings, tracks | ✓ Live (next release) |
+| Mixcloud | DJ mixes and radio shows | ✓ Live |
+| NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live |
+| hearthis.at | DJ sets, live recordings, tracks | ✓ Live |
 | ccMixter | Creative Commons remixes and originals | Built, off (its files block plays from outside its site) |
-| Wikimedia Commons | Classical, folk and historical recordings | ✓ Live (next release) |
+| Wikimedia Commons | Classical, folk and historical recordings | ✓ Live |
 | Jamendo | Creative Commons music | Built, off until a client ID is added |
 
 ### Jamendo
