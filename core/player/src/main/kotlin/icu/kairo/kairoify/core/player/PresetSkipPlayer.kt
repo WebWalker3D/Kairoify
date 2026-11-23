@@ -19,14 +19,17 @@
  */
 package icu.kairo.kairoify.core.player
 
+import androidx.annotation.OptIn
 import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 
 /**
  * The player every controller (notification, Bluetooth, Android Auto, the app) talks to. Stations behave like car
  * radio presets: ⏮ always goes to the previous station, because "restart from the beginning" means nothing on live radio.
  */
+@OptIn(UnstableApi::class)
 class PresetSkipPlayer(player: Player) : ForwardingPlayer(player) {
     override fun seekToPrevious() {
         val isStation = currentMediaItem?.mediaMetadata?.mediaType == MediaMetadata.MEDIA_TYPE_RADIO_STATION
