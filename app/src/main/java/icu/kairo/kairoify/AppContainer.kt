@@ -33,7 +33,6 @@ import icu.kairo.kairoify.core.ytdlp.YtDlpEngine
 import icu.kairo.kairoify.source.archive.ArchiveSource
 import icu.kairo.kairoify.source.audius.AudiusSource
 import icu.kairo.kairoify.source.jamendo.JamendoSource
-import icu.kairo.kairoify.source.ccmixter.CcMixterSource
 import icu.kairo.kairoify.source.hearthis.HearthisSource
 import icu.kairo.kairoify.source.wikimedia.WikimediaSource
 import icu.kairo.kairoify.source.ytdlp.BandcampSearchApi
@@ -95,7 +94,8 @@ class AppContainer(context: Context) : PlayerDependencies {
             MixcloudSource(MixcloudSearchApi(httpClient), engine),
             NtsSource(NtsApi(httpClient), engine),
             HearthisSource(httpClient),
-            CcMixterSource(httpClient),
+            // ccMixter is built but off: its MP3s answer 403 unless the request claims to come from ccMixter's own
+            // page (hotlink protection). Whether to send that Referer is the owner's call.
             WikimediaSource(httpClient),
         ) + listOfNotNull(
             // Switched off until a registered client ID is built in.

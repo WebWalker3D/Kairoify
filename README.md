@@ -106,7 +106,7 @@ built into the app.
 | Mixcloud | DJ mixes and radio shows | ✓ Live (next release) |
 | NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live (next release) |
 | hearthis.at | DJ sets, live recordings, tracks | ✓ Live (next release) |
-| ccMixter | Creative Commons remixes and originals | ✓ Live (next release) |
+| ccMixter | Creative Commons remixes and originals | Built, off (its files block plays from outside its site) |
 | Wikimedia Commons | Classical, folk and historical recordings | ✓ Live (next release) |
 | Jamendo | Creative Commons music | Built, off until a client ID is added |
 

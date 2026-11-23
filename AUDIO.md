@@ -39,6 +39,7 @@ table.
 | Source | What it brings | How to switch it on |
 |---|---|---|
 | [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Register a client ID at developer.jamendo.com, then build with `-Pkairoify.jamendo.clientId=…` (see the README) |
+| [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Search works, but its MP3s answer 403 unless the request carries ccMixter's own page as the Referer (hotlink protection). Owner decision: send that header, or ask ccMixter. |
 
 ## In progress (next release)
 
@@ -47,7 +48,6 @@ table.
 | [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | No |
 | [NTS Radio](https://www.nts.live) | Two live channels and an archive of ~90,000 shows | NTS's public API; episodes play from their SoundCloud or Mixcloud recordings | No |
 | [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public REST API with direct streams | No |
-| [ccMixter](https://ccmixter.org) | Creative Commons remixes, electronic music and independent artists | Public query API, which welcomes third-party apps | No |
 | [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings | MediaWiki API, with each file's license and attribution | No |
 
 ## Planned
@@ -135,6 +135,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | ccMixter | **Built, off**: its files refuse plays from outside ccmixter.org (403 without a ccMixter Referer); waiting on the owner. |
 | 2026-11-23 | Unreleased | Wikimedia Commons | **Added** (in progress): search across Commons audio, artist and license shown; plays the file itself. |
 | 2026-11-23 | Unreleased | 14 streaming protocols (Icecast, RSS, Podcasting 2.0, Canimus, ActivityPub, OpenSubsonic, Ampache, PeerTube, Owncast, M3U/M3U8, PLS/XSPF, direct HTTP, WebDAV, UPnP/DLNA) | **Planned**: added to the roadmap. |
 | 2026-11-23 | Unreleased | ccMixter | **Added** (in progress): search, Creative Commons remixes and originals with their license; plays the MP3. |
