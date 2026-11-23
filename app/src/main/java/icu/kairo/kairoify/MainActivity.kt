@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -37,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,7 +58,10 @@ import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.core.source.SourceException
 import icu.kairo.kairoify.player.PlayerConnection
+import icu.kairo.kairoify.player.canStartRadio
+import icu.kairo.kairoify.player.radioQueue
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
@@ -114,6 +120,16 @@ private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection,
     var actionsFor by remember { mutableStateOf<Item?>(null) }
     val openLink = rememberLinkOpener { scope.launch { snackbar.showSnackbar("No app on this phone can open that link.") } }
     val toggleFavorite: (Item) -> Unit = { item -> scope.launch { favorites.toggle(item) } }
+    val startRadio: (Item) -> Unit = { item ->
+        scope.launch {
+            try {
+                val related = registry.related(item.ref)
+                if (related.isEmpty()) snackbar.showSnackbar("No radio for this song yet.") else player.playAll(radioQueue(item, related))
+            } catch (e: SourceException) {
+                snackbar.showSnackbar(e.message ?: "Couldn't start radio.")
+            }
+        }
+    }
     val np = nowPlaying
     val npItem = np?.item
     val npFavorite by rememberIsFavorite(favorites, npItem?.ref)
@@ -172,6 +188,11 @@ private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection,
             onOpenLink = openLink,
             onStopped = { showSheet = false },
             onDismiss = { showSheet = false },
+            extraActions = {
+                if (npItem != null && canStartRadio(registry, npItem)) {
+                    TextButton(onClick = { startRadio(npItem) }) { Text("Start radio") }
+                }
+            },
         )
     }
     actionsFor?.let { item ->
@@ -182,6 +203,17 @@ private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection,
             onToggleFavorite = { toggleFavorite(item) },
             onOpenLink = openLink,
             onDismiss = { actionsFor = null },
+            extraActions = {
+                if (canStartRadio(registry, item)) {
+                    ListItem(
+                        leadingContent = { Icon(KairoifyIcons.Radio, contentDescription = null) },
+                        modifier = Modifier.clickable {
+                            startRadio(item)
+                            actionsFor = null
+                        },
+                    ) { Text("Start radio") }
+                }
+            },
         )
     }
 }
