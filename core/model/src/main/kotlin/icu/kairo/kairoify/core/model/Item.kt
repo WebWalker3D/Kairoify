@@ -19,6 +19,11 @@
  */
 package icu.kairo.kairoify.core.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+/** Anything Kairoify can list and play. Every item is serializable, so favorites and queues can keep it whole. */
+@Serializable
 sealed interface Item {
     val ref: MediaRef
     val title: String
@@ -26,16 +31,44 @@ sealed interface Item {
     val artworkUrl: String?
 }
 
+@Serializable
+@SerialName("station")
 data class Station(
     override val ref: MediaRef,
     override val title: String,
-    override val subtitle: String?,
-    override val artworkUrl: String?,
-    val countryCode: String?,
-    val tags: List<String>,
-    val codec: String?,
-    val bitrateKbps: Int?,
-    val homepage: String?,
+    override val subtitle: String? = null,
+    override val artworkUrl: String? = null,
+    val countryCode: String? = null,
+    val tags: List<String> = emptyList(),
+    val codec: String? = null,
+    val bitrateKbps: Int? = null,
+    val homepage: String? = null,
     val streamUrl: String,
-    val isHls: Boolean,
+    val isHls: Boolean = false,
 ) : Item
+
+/** One song (or DJ set, or any single recording) from an on-demand source. */
+@Serializable
+@SerialName("track")
+data class Track(
+    override val ref: MediaRef,
+    override val title: String,
+    override val subtitle: String? = null,
+    override val artworkUrl: String? = null,
+    val artists: List<String> = emptyList(),
+    val album: String? = null,
+    val durationMillis: Long? = null,
+    /** The song's own page on its service ("Open original"). */
+    val pageUrl: String? = null,
+    /** True when the service streams it as HLS, so the player can pick the right format before resolving. */
+    val isHls: Boolean = false,
+) : Item
+
+/** What kind of thing an item is, for filters and search sections. */
+enum class ItemKind { STATION, SONG }
+
+val Item.kind: ItemKind
+    get() = when (this) {
+        is Station -> ItemKind.STATION
+        is Track -> ItemKind.SONG
+    }

@@ -23,6 +23,7 @@ import icu.kairo.kairoify.core.model.BrowseNode
 import icu.kairo.kairoify.core.model.Facet
 import icu.kairo.kairoify.core.model.FacetKind
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.model.PageToken
@@ -31,12 +32,18 @@ import icu.kairo.kairoify.core.model.Shelf
 
 data class SourceInfo(val id: String, val displayName: String)
 
-enum class Capability { HOME, SEARCH, BROWSE, LIVE }
+enum class Capability { HOME, SEARCH, BROWSE, LIVE, RELATED }
 
 /** One free music service. Every service in Kairoify plugs in through this contract. */
 interface MusicSource {
     val info: SourceInfo
     val capabilities: Set<Capability>
+
+    /** What this source's search returns, so search can file its results under Songs or Stations. */
+    val searchKind: ItemKind
+
+    /** How long a search may take before it counts as failed; null uses the registry's default. */
+    val searchTimeoutMillis: Long? get() = null
 
     suspend fun home(): List<Shelf> = emptyList()
 
@@ -45,6 +52,9 @@ interface MusicSource {
     suspend fun facets(kind: FacetKind): List<Facet> = emptyList()
 
     suspend fun browse(node: BrowseNode, page: PageToken? = null): Page<Item> = Page.empty()
+
+    /** Items to play after [ref] ("Start radio"). Only sources with [Capability.RELATED] return anything. */
+    suspend fun related(ref: MediaRef): List<Item> = emptyList()
 
     suspend fun resolve(ref: MediaRef): ResolvedStream
 

@@ -21,6 +21,8 @@ package icu.kairo.kairoify.testing
 
 import icu.kairo.kairoify.core.model.BrowseNode
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.Track
+import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.model.PageToken
@@ -41,6 +43,8 @@ fun station(id: String, source: String = "fake") = Station(
     tags = emptyList(), codec = null, bitrateKbps = null, homepage = null, streamUrl = "http://x/$id", isHls = false,
 )
 
+fun track(id: String, source: String = "fake") = Track(ref = MediaRef(source, id), title = "Song $id", subtitle = "Artist $id")
+
 class FakeSource(
     id: String,
     var homeShelves: List<Shelf> = emptyList(),
@@ -52,6 +56,9 @@ class FakeSource(
     var browsePages: Map<String?, Page<Item>> = emptyMap(),
     var browseErrorOn: String? = null,
     override val capabilities: Set<Capability> = setOf(Capability.HOME, Capability.SEARCH, Capability.BROWSE),
+    override val searchKind: ItemKind = ItemKind.STATION,
+    var relatedItems: List<Item> = emptyList(),
+    var relatedError: Throwable? = null,
 ) : MusicSource {
     override val info = SourceInfo(id, id.uppercase())
     var homeCalls = 0
@@ -76,6 +83,11 @@ class FakeSource(
         browseCalls++
         if (browseErrorOn != null && browseErrorOn == page?.value) throw java.io.IOException("nope")
         return browsePages[page?.value] ?: Page.empty()
+    }
+
+    override suspend fun related(ref: MediaRef): List<Item> {
+        relatedError?.let { throw it }
+        return relatedItems
     }
 
     override suspend fun resolve(ref: MediaRef) = ResolvedStream(url = "http://x/${ref.itemId}", isLive = true)
