@@ -46,6 +46,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
@@ -68,7 +69,7 @@ class MainActivity : ComponentActivity() {
                         splashDone = true
                     })
                 } else {
-                    KairoifyScaffold(onPlay = {})
+                    KairoifyScaffold(registry = app.container.sourceRegistry, onPlay = {})
                 }
             }
         }
@@ -84,7 +85,7 @@ private val tabs = listOf(
 )
 
 @Composable
-private fun KairoifyScaffold(onPlay: (Item) -> Unit) {
+private fun KairoifyScaffold(registry: SourceRegistry, onPlay: (Item) -> Unit) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     Scaffold(
@@ -109,6 +110,6 @@ private fun KairoifyScaffold(onPlay: (Item) -> Unit) {
             }
         },
     ) { padding ->
-        KairoifyNavHost(navController, onPlay = onPlay, modifier = Modifier.padding(padding))
+        KairoifyNavHost(navController, registry, onPlay = onPlay, modifier = Modifier.padding(padding))
     }
 }

@@ -19,37 +19,48 @@
  */
 package icu.kairo.kairoify.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.ui.explore.BrowseScreen
+import icu.kairo.kairoify.ui.explore.BrowseViewModel
+import icu.kairo.kairoify.ui.explore.ExploreScreen
+import icu.kairo.kairoify.ui.explore.FacetsScreen
+import icu.kairo.kairoify.ui.explore.FacetsViewModel
+import icu.kairo.kairoify.ui.home.HomeScreen
+import icu.kairo.kairoify.ui.home.HomeViewModel
+import icu.kairo.kairoify.ui.search.SearchScreen
+import icu.kairo.kairoify.ui.search.SearchViewModel
 
 @Composable
 fun KairoifyNavHost(
     navController: NavHostController,
+    registry: SourceRegistry,
     onPlay: (Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                TextButton(onClick = { navController.navigate(AboutRoute) }) { Text("About Kairoify") }
+            HomeScreen(viewModel { HomeViewModel(registry) }, onPlay, onAbout = { navController.navigate(AboutRoute) })
+        }
+        composable<SearchRoute> { SearchScreen(viewModel { SearchViewModel(registry) }, onPlay) }
+        composable<ExploreRoute> { ExploreScreen(onOpenFacets = { navController.navigate(FacetsRoute(it)) }) }
+        composable<FacetsRoute> { entry ->
+            val route = entry.toRoute<FacetsRoute>()
+            FacetsScreen(viewModel { FacetsViewModel(registry, route.sourceId, route.kind) }, route.kind) { facet ->
+                navController.navigate(BrowseRoute.of(route.sourceId, facet.node, facet.label))
             }
         }
-        composable<SearchRoute> { Placeholder("Search") }
-        composable<ExploreRoute> { Placeholder("Explore") }
+        composable<BrowseRoute> { entry ->
+            val route = entry.toRoute<BrowseRoute>()
+            BrowseScreen(viewModel { BrowseViewModel(registry, route.sourceId, route.node()) }, route.title, onPlay)
+        }
         composable<AboutRoute> { AboutScreen() }
     }
-}
-
-@Composable
-private fun Placeholder(name: String) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text(name) }
 }

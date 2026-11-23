@@ -20,13 +20,24 @@
 package icu.kairo.kairoify
 
 import android.app.Application
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.crossfade
 import icu.kairo.kairoify.core.player.PlayerDependencies
 
-class KairoifyApp : Application(), PlayerDependencies.Provider {
+class KairoifyApp : Application(), PlayerDependencies.Provider, SingletonImageLoader.Factory {
     val container: AppContainer by lazy { AppContainer(this) }
 
     /** The attribution splash shows once per process start. */
     var attributionShown = false
 
     override val playerDependencies: PlayerDependencies get() = container
+
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader.Builder(context)
+            .components { add(OkHttpNetworkFetcherFactory(callFactory = { container.httpClient })) }
+            .crossfade(true)
+            .build()
 }
