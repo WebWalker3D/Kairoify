@@ -1,0 +1,321 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 1288,
+        "params": {
+            "query": "((collection:etree AND mediatype:etree) OR (collection:georgeblood AND mediatype:audio) OR (collection:netlabels AND mediatype:audio)) AND (text:&quot;grateful dead&quot; OR text:&quot;grateful dead&quot; OR text__reviews:&quot;grateful dead&quot;)",
+            "qin": "((collection:etree AND mediatype:etree) OR (collection:georgeblood AND mediatype:audio) OR (collection:netlabels AND mediatype:audio)) AND (&quot;grateful dead&quot;)",
+            "fields": "identifier,title,creator,date,year,venue,coverage,mediatype",
+            "wt": "json",
+            "sort": "downloads desc",
+            "rows": 30,
+            "start": 0
+        }
+    },
+    "response": {
+        "numFound": 28842,
+        "start": 0,
+        "docs": [
+            {
+                "coverage": "Ithaca, NY",
+                "creator": "Grateful Dead",
+                "date": "1977-05-08T00:00:00Z",
+                "identifier": "gd77-05-08.sbd.hicks.4982.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Barton Hall, Cornell University on 1977-05-08",
+                "venue": "Barton Hall, Cornell University",
+                "year": 1977
+            },
+            {
+                "coverage": "Washington, DC",
+                "creator": "Grateful Dead",
+                "date": "1973-06-10T00:00:00Z",
+                "identifier": "gd73-06-10.sbd.hollister.174.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Robert F. Kennedy Stadium on 1973-06-10",
+                "venue": "Robert F. Kennedy Stadium",
+                "year": 1973
+            },
+            {
+                "coverage": "Madison, WI",
+                "creator": "Grateful Dead",
+                "date": "1973-02-15T00:00:00Z",
+                "identifier": "gd73-02-15.sbd.hall.1580.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Dane County Coliseum on 1973-02-15",
+                "venue": "Dane County Coliseum",
+                "year": 1973
+            },
+            {
+                "coverage": "Boston, MA",
+                "creator": "Grateful Dead",
+                "date": "1977-05-07T00:00:00Z",
+                "identifier": "gd77-05-07.sbd.eaton.wizard.26085.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Boston Garden on 1977-05-07",
+                "venue": "Boston Garden",
+                "year": 1977
+            },
+            {
+                "coverage": "Worcester, MA",
+                "creator": "Grateful Dead",
+                "date": "1987-04-03T00:00:00Z",
+                "identifier": "gd87-04-03.sennme80.clark-miller.24898.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at The Centrum on 1987-04-03",
+                "venue": "The Centrum",
+                "year": 1987
+            },
+            {
+                "coverage": "Buffalo, NY",
+                "creator": "Grateful Dead",
+                "date": "1977-05-09T00:00:00Z",
+                "identifier": "gd77-05-09.sbd.connor.8304.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Buffalo Memorial Auditorium on 1977-05-09",
+                "venue": "Buffalo Memorial Auditorium",
+                "year": 1977
+            },
+            {
+                "coverage": "San Bernardino, CA",
+                "creator": "Grateful Dead",
+                "date": "1977-02-26T00:00:00Z",
+                "identifier": "gd77-02-26.sbd.alphadog.9752.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Swing Auditorium on 1977-02-26",
+                "venue": "Swing Auditorium",
+                "year": 1977
+            },
+            {
+                "coverage": "Hollywood, CA",
+                "creator": "Grateful Dead",
+                "date": "1971-08-06T00:00:00Z",
+                "identifier": "gd71-08-06.aud.bertrando.yerys.129.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Hollywood Palladium on 1971-08-06",
+                "venue": "Hollywood Palladium",
+                "year": 1971
+            },
+            {
+                "coverage": "Chicago, IL",
+                "creator": "Grateful Dead",
+                "date": "1995-07-09T00:00:00Z",
+                "identifier": "gd95-07-09.sbd.7233.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Soldier Field on 1995-07-09",
+                "venue": "Soldier Field",
+                "year": 1995
+            },
+            {
+                "coverage": "Ithaca, NY",
+                "creator": "Grateful Dead",
+                "date": "1977-05-08T00:00:00Z",
+                "identifier": "gd1977-05-08.shure57.stevenson.29303.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Barton Hall - Cornell University on 1977-05-08",
+                "venue": "Barton Hall - Cornell University",
+                "year": 1977
+            },
+            {
+                "coverage": "Ithaca, NY",
+                "creator": "Grateful Dead",
+                "date": "1977-05-08T00:00:00Z",
+                "identifier": "gd77-05-08.maizner.hicks.5002.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Barton Hall, Cornell University on 1977-05-08",
+                "venue": "Barton Hall, Cornell University",
+                "year": 1977
+            },
+            {
+                "coverage": "San Francisco, CA",
+                "creator": "Grateful Dead",
+                "date": "1975-06-17T00:00:00Z",
+                "identifier": "gd1975-06-17.aud.unknown.87560.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Winterland Arena on 1975-06-17",
+                "venue": "Winterland Arena",
+                "year": 1975
+            },
+            {
+                "coverage": "New York, NY",
+                "creator": "Grateful Dead",
+                "date": "1970-05-15T00:00:00Z",
+                "identifier": "gd70-05-15.early-late.sbd.97.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Fillmore East (Late Show) on 1970-05-15",
+                "venue": "Fillmore East (Late Show)",
+                "year": 1970
+            },
+            {
+                "coverage": "Mill Valley, CA",
+                "creator": "Grateful Dead",
+                "date": "1980-12-06T00:00:00Z",
+                "identifier": "gd1980-12-06.151263.betty.master.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Mill Valley Recreation Center on 1980-12-06",
+                "venue": "Mill Valley Recreation Center",
+                "year": 1980
+            },
+            {
+                "coverage": "Veneta, OR",
+                "creator": "Grateful Dead",
+                "date": "1972-08-27T00:00:00Z",
+                "identifier": "gd72-08-27.sbd.orf.3328.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Old Renaissance Faire Grounds on 1972-08-27",
+                "venue": "Old Renaissance Faire Grounds",
+                "year": 1972
+            },
+            {
+                "coverage": "Uniondale, NY",
+                "creator": "Grateful Dead",
+                "date": "1979-01-11T00:00:00Z",
+                "identifier": "gd79-01-11.gatto.kempka.308.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Nassau Coliseum on 1979-01-11",
+                "venue": "Nassau Coliseum",
+                "year": 1979
+            },
+            {
+                "coverage": "Nashville, TN",
+                "creator": "Grateful Dead",
+                "date": "1978-12-16T00:00:00Z",
+                "identifier": "gd1978-12-16.sonyecm250-no-dolby.walker-scotton.miller.82212.sbeok.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Nashville Municipal Auditorium on 1978-12-16",
+                "venue": "Nashville Municipal Auditorium",
+                "year": 1978
+            },
+            {
+                "coverage": "Ludwigshafen, Germany",
+                "creator": "Ryan Adams",
+                "date": "2006-10-17T00:00:00Z",
+                "identifier": "ryanadams2006-10-17.sbd.flac16",
+                "mediatype": "etree",
+                "title": "Ryan Adams Live at Das Haus on 2006-10-17",
+                "venue": "Das Haus",
+                "year": 2006
+            },
+            {
+                "coverage": "Orchard Park, NY",
+                "creator": "Grateful Dead",
+                "date": "1989-07-04T00:00:00Z",
+                "identifier": "gd89-07-04.aud.wiley.9045.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Rich Stadium on 1989-07-04",
+                "venue": "Rich Stadium",
+                "year": 1989
+            },
+            {
+                "coverage": "New York, NY",
+                "creator": "Grateful Dead",
+                "date": "1970-05-15T00:00:00Z",
+                "identifier": "gd_nrps70-05-15.sbd.reynolds-kaplan.29473.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Fillmore East (Late Show) on 1970-05-15",
+                "venue": "Fillmore East (Late Show)",
+                "year": 1970
+            },
+            {
+                "coverage": "New York City, NY",
+                "creator": "Grateful Dead",
+                "date": "1970-02-11T00:00:00Z",
+                "identifier": "gd70-02-11.early-late.sbd.sacks.90.sbefail.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Fillmore East on 1970-02-11",
+                "venue": "Fillmore East",
+                "year": 1970
+            },
+            {
+                "coverage": "San Francisco, CA",
+                "creator": "Grateful Dead",
+                "date": "1977-06-09T00:00:00Z",
+                "identifier": "gd1977-06-09.28614.sbeok.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Winterland Arena on 1977-06-09",
+                "venue": "Winterland Arena",
+                "year": 1977
+            },
+            {
+                "coverage": "San Francisco, CA",
+                "creator": "Grateful Dead",
+                "date": "1975-08-13T00:00:00Z",
+                "identifier": "gd75-08-13.fm.vernon.23661.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Great American Music Hall on 1975-08-13",
+                "venue": "Great American Music Hall",
+                "year": 1975
+            },
+            {
+                "coverage": "Jersey City, NJ",
+                "creator": "Grateful Dead",
+                "date": "1974-08-06T00:00:00Z",
+                "identifier": "gd74-08-06.merin.weiner.gdADT.5914.sbefail.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Roosevelt Stadium on 1974-08-06",
+                "venue": "Roosevelt Stadium",
+                "year": 1974
+            },
+            {
+                "coverage": "Lake Placid, NY",
+                "creator": "Grateful Dead",
+                "date": "1983-10-17T00:00:00Z",
+                "identifier": "gd1983-10-17.mtx.seamons.fix2.92424.sbeok.flac16",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Olympic Arena on 1983-10-17",
+                "venue": "Olympic Arena",
+                "year": 1983
+            },
+            {
+                "coverage": "San Francisco, CA",
+                "creator": "Grateful Dead",
+                "date": "1974-02-24T00:00:00Z",
+                "identifier": "gd74-02-24.sbd.windsor.199.sbefail.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Winterland Arena on 1974-02-24",
+                "venue": "Winterland Arena",
+                "year": 1974
+            },
+            {
+                "coverage": "Tuscaloosa, AL",
+                "creator": "Grateful Dead",
+                "date": "1977-05-17T00:00:00Z",
+                "identifier": "gd77-05-17.sbd.weiner.18554.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Memorial Coliseum, U of Alabama on 1977-05-17",
+                "venue": "Memorial Coliseum, U of Alabama",
+                "year": 1977
+            },
+            {
+                "coverage": "Palo Alto, CA",
+                "creator": "Grateful Dead",
+                "date": "1973-02-09T00:00:00Z",
+                "identifier": "gd73-02-09.sbd.bertha-fink.14939.sbeok.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at Roscoe Maples Pavilion, Stanford U. on 1973-02-09",
+                "venue": "Roscoe Maples Pavilion, Stanford U.",
+                "year": 1973
+            },
+            {
+                "coverage": "Hempstead, NY",
+                "creator": "Little Feat",
+                "date": "1974-09-19T00:00:00Z",
+                "identifier": "lf1974-09-19.shnf",
+                "mediatype": "etree",
+                "title": "Little Feat Live at Ultrasonic Studios [WLIR] on 1974-09-19",
+                "venue": "Ultrasonic Studios [WLIR]",
+                "year": 1974
+            },
+            {
+                "coverage": "Richmond, VA",
+                "creator": "Grateful Dead",
+                "date": "1977-05-25T00:00:00Z",
+                "identifier": "gd77-05-25.sbd.shannon.13399.sbefail.shnf",
+                "mediatype": "etree",
+                "title": "Grateful Dead Live at The Mosque on 1977-05-25",
+                "venue": "The Mosque",
+                "year": 1977
+            }
+        ]
+    }
+}
