@@ -68,13 +68,19 @@ class ArchiveSource(
     override val searchKind = ItemKind.ALBUM
 
     override suspend fun search(query: String, page: PageToken?): Page<Item> {
-        val phrase = query.trim().replace("\\", "\\\\").replace("\"", "\\\"")
-        return albums("(${COLLECTIONS.values.joinToString(" OR ") { "($it)" }}) AND (\"$phrase\")", page, SEARCH_ROWS)
+        // Every word must match somewhere (each quoted, so no word can change the query's meaning).
+        val words = query.trim().split(Regex("\\s+")).filter(String::isNotBlank)
+            .joinToString(" AND ") { "\"" + it.replace("\\", "\\\\").replace("\"", "\\\"") + "\"" }
+        if (words.isEmpty()) return Page.empty()
+        return albums("(${COLLECTIONS.values.joinToString(" OR ") { "($it)" }}) AND ($words)", page, SEARCH_ROWS)
     }
 
     override suspend fun home(): List<Shelf> {
         val day = today()
-        val dates = (FIRST_YEAR until day.year).joinToString(" OR ") { "date:%04d-%02d-%02d".format(it, day.monthValue, day.dayOfMonth) }
+        // Only dates that exist: on 29 February, skip the years that had none.
+        val dates = (FIRST_YEAR until day.year)
+            .mapNotNull { year -> runCatching { LocalDate.of(year, day.monthValue, day.dayOfMonth) }.getOrNull() }
+            .joinToString(" OR ") { "date:$it" }
         val concerts = albums("mediatype:etree AND ($dates)", null, HOME_ROWS).items
         if (concerts.isEmpty()) return emptyList()
         val month = day.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
@@ -134,7 +140,10 @@ class ArchiveSource(
             .addQueryParameter("page", number.toString())
             .addQueryParameter("output", "json")
             .build()
-        val response = parse(client.fetchText(url, info.displayName))["response"] as? JsonObject ?: return Page.empty()
+        val reply = parse(client.fetchText(url, info.displayName))
+        // The Archive answers backend trouble with HTTP 200 and {"error": …}: that's a failure, not "no results".
+        if (reply["error"] != null) throw SourceException.Unavailable("Couldn't reach Internet Archive.")
+        val response = reply["response"] as? JsonObject ?: throw SourceException.Unavailable("Couldn't reach Internet Archive.")
         val found = (response["numFound"] as? JsonPrimitive)?.intOrNull ?: 0
         val docs = (response["docs"] as? JsonArray).orEmpty().mapNotNull { (it as? JsonObject)?.let { doc -> album(doc, doc.string("identifier") ?: return@let null) } }
         return Page(docs, if (number * rows < found && docs.isNotEmpty()) PageToken((number + 1).toString()) else null)

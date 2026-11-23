@@ -33,7 +33,9 @@ import java.time.LocalDate
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import icu.kairo.kairoify.core.source.SourceException
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -82,10 +84,30 @@ class ArchiveSourceTest {
     }
 
     @Test
-    fun `search keeps the query as one quoted phrase`() = runTest {
-        source.search("AC/DC \"Live\"")
-        assertTrue(query().endsWith("AND (\"AC/DC \\\"Live\\\"\")"), query())
+    fun `search matches every word anywhere`() = runTest {
+        source.search("  grateful dead   cornell ")
+        assertTrue(query().endsWith("AND (\"grateful\" AND \"dead\" AND \"cornell\")"), query())
         assertTrue(query().contains("collection:etree AND mediatype:etree"))
+    }
+
+    @Test
+    fun `search words stay quoted and escaped`() = runTest {
+        source.search("AC/DC \"Live\"")
+        assertTrue(query().endsWith("AND (\"AC/DC\" AND \"\\\"Live\\\"\")"), query())
+    }
+
+    @Test
+    fun `backend errors are failures, not empty results`() = runTest {
+        searchFixture = "backend_error.json"
+        assertFailsWith<SourceException.Unavailable> { source.search("grateful dead") }
+    }
+
+    @Test
+    fun `leap day only asks for dates that exist`() = runTest {
+        source = ArchiveSource(OkHttpClient(), server.url("/"), today = { LocalDate.of(2028, 2, 29) })
+        source.home()
+        assertTrue(query().contains("date:2024-02-29"))
+        assertTrue(!query().contains("date:2025-02-29"), query())
     }
 
     @Test

@@ -22,6 +22,7 @@ package icu.kairo.kairoify.core.player
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.isPlayable
 import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.source.SourceRegistry
@@ -37,18 +38,24 @@ class LibraryTree(private val registry: SourceRegistry, private val favorites: s
     private val known = ConcurrentHashMap<String, MediaItem>()
     private val lastFolder = ConcurrentHashMap<String, String>()
 
-    @Volatile private var favoriteIds: List<String> = emptyList()
+    /** Folders whose contents play as one queue (Favorites, and each opened album or concert), by folder id. */
+    private val queueFolders = ConcurrentHashMap<String, List<String>>()
 
     @Volatile private var shelves: List<Shelf> = emptyList()
 
     suspend fun children(parentId: String): List<MediaItem> = when {
         parentId == ROOT_ID -> listOf(folder(FAVORITES_ID, "Favorites")) + loadShelves().map { folder(SHELF_PREFIX + it.id, it.title) }
         // Only playable favorites: albums would be dead entries in a car's preset queue.
-        parentId == FAVORITES_ID -> listed(FAVORITES_ID, favorites().filter { it.isPlayable }).also { list -> favoriteIds = list.map { it.mediaId } }
+        parentId == FAVORITES_ID -> listed(FAVORITES_ID, favorites().filter { it.isPlayable }).also { list -> queueFolders[FAVORITES_ID] = list.map { it.mediaId } }
         parentId.startsWith(SHELF_PREFIX) -> {
             val shelfId = parentId.removePrefix(SHELF_PREFIX)
             val shelf = shelves.firstOrNull { it.id == shelfId } ?: loadShelves().firstOrNull { it.id == shelfId }
             listed(parentId, shelf?.items.orEmpty())
+        }
+        // An album or concert the browser saw: open it into its tracks, which then play as one queue.
+        known[parentId]?.mediaMetadata?.mediaType == MediaMetadata.MEDIA_TYPE_ALBUM -> {
+            val tracks = runCatching { registry.details(MediaRef.decode(parentId)).tracks }.getOrDefault(emptyList())
+            listed(parentId, tracks).also { list -> queueFolders[parentId] = list.map { it.mediaId } }
         }
         else -> emptyList()
     }
@@ -56,10 +63,12 @@ class LibraryTree(private val registry: SourceRegistry, private val favorites: s
     /** Full metadata for an id a browser already saw; browsers often send back only the id. */
     fun item(mediaId: String): MediaItem? = if (mediaId == ROOT_ID) root() else known[mediaId]
 
-    /** When [mediaId] was last seen in the Favorites folder: that folder as a queue, and where the item sits in it. */
+    /**
+     * When [mediaId] was last seen in Favorites or inside an album: that folder as a queue, and where the item sits in
+     * it — so a car's ⏭/⏮ step through favorites like presets, or through a concert song by song.
+     */
     fun queueFor(mediaId: String): Pair<List<MediaItem>, Int>? {
-        if (lastFolder[mediaId] != FAVORITES_ID) return null
-        val ids = favoriteIds
+        val ids = lastFolder[mediaId]?.let { queueFolders[it] } ?: return null
         val index = ids.indexOf(mediaId).takeIf { it >= 0 } ?: return null
         return ids.mapNotNull { known[it] } to index
     }
