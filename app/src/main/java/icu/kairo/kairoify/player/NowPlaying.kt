@@ -49,6 +49,7 @@ fun nowPlayingOf(
 ): NowPlaying? {
     if (item == null) return null
     val fallback = item.mediaMetadata
+    val isLive = (metadata.mediaType ?: fallback.mediaType) == MediaMetadata.MEDIA_TYPE_RADIO_STATION
     return NowPlaying(
         ref = MediaItems.refOf(item),
         title = (metadata.title ?: fallback.title)?.toString().orEmpty(),
@@ -57,7 +58,7 @@ fun nowPlayingOf(
         homepage = (metadata.extras ?: fallback.extras)?.getString(MediaItems.EXTRA_HOMEPAGE),
         isPlaying = isPlaying,
         isBuffering = playbackState == Player.STATE_BUFFERING,
-        isLive = (metadata.mediaType ?: fallback.mediaType) == MediaMetadata.MEDIA_TYPE_RADIO_STATION,
-        errorMessage = error?.let { playbackErrorMessage(it.errorCode) },
+        isLive = isLive,
+        errorMessage = error?.let { playbackErrorMessage(it.errorCode, isLive) },
     )
 }

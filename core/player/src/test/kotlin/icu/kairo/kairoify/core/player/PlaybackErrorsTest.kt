@@ -36,7 +36,7 @@ class PlaybackErrorsTest {
     @Test
     fun `dead stream says not broadcasting`() {
         listOf(ERROR_CODE_IO_BAD_HTTP_STATUS, ERROR_CODE_IO_FILE_NOT_FOUND).forEach {
-            assertEquals("This station isn't broadcasting right now.", playbackErrorMessage(it))
+            assertEquals("This station isn't broadcasting right now.", playbackErrorMessage(it, isLive = true))
         }
     }
 
@@ -45,18 +45,30 @@ class PlaybackErrorsTest {
         listOf(
             ERROR_CODE_PARSING_CONTAINER_MALFORMED, ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
             ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED, ERROR_CODE_DECODING_FORMAT_UNSUPPORTED, ERROR_CODE_DECODER_INIT_FAILED,
-        ).forEach { assertEquals("This station uses a format your phone can't play.", playbackErrorMessage(it)) }
+        ).forEach { assertEquals("This station uses a format your phone can't play.", playbackErrorMessage(it, isLive = true)) }
     }
 
     @Test
     fun `network trouble says lost the connection`() {
         listOf(ERROR_CODE_IO_NETWORK_CONNECTION_FAILED, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT).forEach {
-            assertEquals("Lost the connection. Check your internet and try again.", playbackErrorMessage(it))
+            assertEquals("Lost the connection. Check your internet and try again.", playbackErrorMessage(it, isLive = true))
         }
     }
 
     @Test
     fun `anything else is generic`() {
-        assertEquals("Couldn't play this station.", playbackErrorMessage(ERROR_CODE_UNSPECIFIED))
+        assertEquals("Couldn't play this station.", playbackErrorMessage(ERROR_CODE_UNSPECIFIED, isLive = true))
+    }
+
+    @Test
+    fun `songs get song wording`() {
+        assertEquals("This song can't be played right now.", playbackErrorMessage(ERROR_CODE_IO_BAD_HTTP_STATUS, isLive = false))
+        assertEquals("This song can't be played right now.", playbackErrorMessage(ERROR_CODE_IO_FILE_NOT_FOUND, isLive = false))
+        assertEquals("This song uses a format your phone can't play.", playbackErrorMessage(ERROR_CODE_DECODER_INIT_FAILED, isLive = false))
+        assertEquals(
+            "Lost the connection. Check your internet and try again.",
+            playbackErrorMessage(ERROR_CODE_IO_NETWORK_CONNECTION_FAILED, isLive = false),
+        )
+        assertEquals("Couldn't play this song.", playbackErrorMessage(ERROR_CODE_UNSPECIFIED, isLive = false))
     }
 }

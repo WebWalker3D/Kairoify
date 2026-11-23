@@ -33,6 +33,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.extractor.metadata.icy.IcyInfo
@@ -44,39 +45,44 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import icu.kairo.kairoify.core.model.MediaRef
-import kotlinx.coroutines.CancellationException
+import icu.kairo.kairoify.core.source.SourceException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /** Background playback: notification, lock screen, Bluetooth and Android Auto all talk to this session. */
 @OptIn(UnstableApi::class)
 class PlaybackService : MediaLibraryService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val retryPolicy = LiveRetryPolicy()
+    private val liveRetry = LiveRetry(scope)
     private lateinit var deps: PlayerDependencies
     private lateinit var player: ExoPlayer
     private lateinit var tree: LibraryTree
+    private lateinit var resolver: StreamResolver
     private var session: MediaLibrarySession? = null
-    private var retryAttempt = 0
-    private var retryJob: Job? = null
     private var lastReportedId: String? = null
+    private var refreshedMediaId: String? = null
     private val networkWatcher = NetworkWatcher()
 
     override fun onCreate() {
         super.onCreate()
         deps = (application as PlayerDependencies.Provider).playerDependencies
         tree = LibraryTree(deps.sourceRegistry)
+        resolver = StreamResolver(deps.sourceRegistry)
         val http = DefaultHttpDataSource.Factory()
             .setUserAgent(deps.userAgent)
             .setAllowCrossProtocolRedirects(true)
+        // Streams are resolved when the player first reads from them, on its loading thread, so a queue of any
+        // length starts at once and the next item is resolved while the current one plays.
+        val streams = ResolvingDataSource.Factory(DefaultDataSource.Factory(this, http)) { spec ->
+            resolveDataSpec(spec) { ref -> runBlocking { resolver.resolve(ref) } }
+        }
         player = ExoPlayer.Builder(this)
-            .setMediaSourceFactory(DefaultMediaSourceFactory(DefaultDataSource.Factory(this, http)))
+            .setMediaSourceFactory(DefaultMediaSourceFactory(streams).setLoadErrorHandlingPolicy(ResolveAwareLoadErrorPolicy()))
             .setAudioAttributes(
                 AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MUSIC).build(),
                 true,
@@ -107,9 +113,7 @@ class PlaybackService : MediaLibraryService() {
             mediaSession: MediaSession,
             controller: MediaSession.ControllerInfo,
             mediaItems: MutableList<MediaItem>,
-        ): ListenableFuture<MutableList<MediaItem>> = scope.future {
-            resolveAll(mediaSession, controller, mediaItems, replacing = false)
-        }
+        ): ListenableFuture<MutableList<MediaItem>> = Futures.immediateFuture(mediaItems.map(::playable).toMutableList())
 
         override fun onSetMediaItems(
             mediaSession: MediaSession,
@@ -117,13 +121,9 @@ class PlaybackService : MediaLibraryService() {
             mediaItems: MutableList<MediaItem>,
             startIndex: Int,
             startPositionMs: Long,
-        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = scope.future {
-            MediaSession.MediaItemsWithStartPosition(
-                resolveAll(mediaSession, controller, mediaItems, replacing = true),
-                startIndex,
-                startPositionMs,
-            )
-        }
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = Futures.immediateFuture(
+            MediaSession.MediaItemsWithStartPosition(mediaItems.map(::playable), startIndex, startPositionMs),
+        )
 
         override fun onGetLibraryRoot(
             session: MediaLibrarySession,
@@ -160,57 +160,67 @@ class PlaybackService : MediaLibraryService() {
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            liveRetry.reset()
+            refreshedMediaId = null
             val id = mediaItem?.mediaId ?: return
             if (id == lastReportedId) return
             lastReportedId = id
-            retryAttempt = 0
             scope.launch { deps.sourceRegistry.reportPlay(MediaRef.decode(id)) }
         }
 
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            if (!playWhenReady) liveRetry.reset()
+        }
+
         override fun onPlaybackStateChanged(playbackState: Int) {
-            if (playbackState == Player.STATE_READY) retryAttempt = 0
+            if (playbackState == Player.STATE_READY) liveRetry.onReady()
             if (player.mediaItemCount == 0) lastReportedId = null
         }
 
         override fun onPlayerError(error: PlaybackException) {
             val item = player.currentMediaItem ?: return
-            if (item.mediaMetadata.mediaType != MediaMetadata.MEDIA_TYPE_RADIO_STATION) return
-            val wait = retryPolicy.delayFor(retryAttempt, error.errorCode) ?: return
-            retryAttempt++
-            retryJob?.cancel()
-            retryJob = scope.launch {
-                delay(wait)
-                player.restartCurrent()
-                player.play()
+            val ref = MediaItems.refOf(item)
+            val failure = error.resolveFailure()?.reason
+            failure?.let { tellControllers(resolveFailureMessage(it, sourceName(ref))) }
+            if (item.mediaMetadata.mediaType == MediaMetadata.MEDIA_TYPE_RADIO_STATION) {
+                // A station that is gone stays gone; only network-type trouble is worth retrying.
+                if (failure == null || failure is SourceException.Unavailable) {
+                    liveRetry.onError(error.errorCode) {
+                        player.restartCurrent()
+                        player.play()
+                    }
+                }
+                return
+            }
+            val refreshed = refreshedMediaId == item.mediaId
+            when (trackRecovery(error.errorCode, failure, refreshed, player.hasNextMediaItem())) {
+                Recovery.REFRESH_URL -> {
+                    refreshedMediaId = item.mediaId
+                    resolver.invalidate(ref)
+                    player.prepare()
+                }
+                Recovery.SKIP -> {
+                    val why = failure?.let { resolveFailureMessage(it, sourceName(ref)) } ?: playbackErrorMessage(error.errorCode, isLive = false)
+                    tellControllers("Skipped “${item.mediaMetadata.title}”: $why")
+                    player.seekToNextMediaItem()
+                    player.prepare()
+                    player.play()
+                }
+                Recovery.STOP -> Unit
             }
         }
     }
 
-    /**
-     * Resolves every item to a playable stream. If one fails while replacing the queue, the old item stops too,
-     * so the screen and the speaker never disagree about what is playing.
-     */
-    private suspend fun resolveAll(
-        mediaSession: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        mediaItems: List<MediaItem>,
-        replacing: Boolean,
-    ): MutableList<MediaItem> = mediaItems.map { requested ->
-        val ref = MediaItems.refOf(requested)
+    /** Fills in metadata browsers left out, then swaps the stream for a placeholder resolved at play time. */
+    private fun playable(requested: MediaItem): MediaItem {
         val item = if (requested.mediaMetadata.title == null) tree.item(requested.mediaId) ?: requested else requested
-        try {
-            MediaItems.withStream(item, deps.sourceRegistry.resolve(ref))
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            if (replacing) {
-                player.stop()
-                player.clearMediaItems()
-            }
-            mediaSession.sendError(controller, SessionError(SessionError.ERROR_IO, resolveFailureMessage(e, sourceName(ref))))
-            throw e
-        }
-    }.toMutableList()
+        return MediaItems.forPlayer(item)
+    }
+
+    private fun tellControllers(message: String) {
+        val current = session ?: return
+        current.connectedControllers.forEach { current.sendError(it, SessionError(SessionError.ERROR_IO, message)) }
+    }
 
     /** Brings a live stream back by itself when the phone finds a working network again (tunnels, lifts, dead zones). */
     private inner class NetworkWatcher : ConnectivityManager.NetworkCallback() {
@@ -219,8 +229,7 @@ class PlaybackService : MediaLibraryService() {
             scope.launch {
                 val live = player.currentMediaItem?.mediaMetadata?.mediaType == MediaMetadata.MEDIA_TYPE_RADIO_STATION
                 if (shouldResumeOnNetworkBack(live, player.playWhenReady, player.playbackState, player.playerError?.errorCode)) {
-                    retryJob?.cancel()
-                    retryAttempt = 0
+                    liveRetry.reset()
                     player.restartCurrent()
                 }
             }
