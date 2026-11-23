@@ -19,9 +19,11 @@
  */
 package icu.kairo.kairoify.ui.search
 
+import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.testing.FakeSource
 import icu.kairo.kairoify.testing.station
+import icu.kairo.kairoify.testing.track
 import icu.kairo.kairoify.testing.withMain
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -89,6 +91,77 @@ class SearchViewModelTest {
             advanceTimeBy(1_000)
             val results = assertIs<SearchUiState.Results>(vm.state.value)
             assertEquals(SearchSectionState.Failed("offline"), results.sections.single().state)
+        }
+    }
+
+    @Test
+    fun `song sections come before station sections`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val radio = FakeSource("radio", searchItems = listOf(station("1")))
+            val songs = FakeSource("songs", searchItems = listOf(track("1")), searchKind = ItemKind.SONG)
+            val vm = SearchViewModel(SourceRegistry(listOf(radio, songs)))
+            vm.onQueryChange("jazz")
+            advanceTimeBy(1_000)
+            val results = assertIs<SearchUiState.Results>(vm.state.value)
+            assertEquals(listOf("songs", "radio"), results.sections.map { it.source.id })
+            assertEquals(listOf(ItemKind.SONG, ItemKind.STATION), results.sections.map { it.kind })
+        }
+    }
+
+    @Test
+    fun `filter shows only that kind`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val radio = FakeSource("radio", searchItems = listOf(station("1")))
+            val songs = FakeSource("songs", searchItems = listOf(track("1")), searchKind = ItemKind.SONG)
+            val vm = SearchViewModel(SourceRegistry(listOf(radio, songs)))
+            vm.onQueryChange("jazz")
+            vm.setFilter(ItemKind.STATION)
+            advanceTimeBy(1_000)
+            val results = assertIs<SearchUiState.Results>(vm.state.value)
+            assertEquals(ItemKind.STATION, results.filter)
+            assertEquals(listOf("radio"), results.sections.map { it.source.id })
+            vm.setFilter(null)
+            advanceTimeBy(10)
+            assertEquals(2, assertIs<SearchUiState.Results>(vm.state.value).sections.size)
+        }
+    }
+
+    @Test
+    fun `retry re-runs only the failed source`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val a = FakeSource("a", searchError = IOException("offline"))
+            val b = FakeSource("b", searchItems = listOf(station("2")))
+            val vm = SearchViewModel(SourceRegistry(listOf(a, b)))
+            vm.onQueryChange("jazz")
+            advanceTimeBy(1_000)
+            a.searchError = null
+            a.searchItems = listOf(station("1"))
+            vm.retry("a")
+            advanceTimeBy(1_000)
+            val results = assertIs<SearchUiState.Results>(vm.state.value)
+            val section = results.sections.first { it.source.id == "a" }
+            assertEquals(1, assertIs<SearchSectionState.Loaded>(section.state).items.size)
+            assertEquals(listOf("jazz", "jazz"), a.searchQueries)
+            assertEquals(listOf("jazz"), b.searchQueries)
+        }
+    }
+
+    @Test
+    fun `all view shows four per source`() {
+        val items = (1..10).map { track("$it") }
+        assertEquals(ALL_VIEW_LIMIT, visibleItems(items, null).size)
+        assertEquals(10, visibleItems(items, ItemKind.SONG).size)
+    }
+
+    @Test
+    fun `duplicate results show once`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val songs = FakeSource("songs", searchItems = listOf(track("1"), track("1"), track("2")), searchKind = ItemKind.SONG)
+            val vm = SearchViewModel(SourceRegistry(listOf(songs)))
+            vm.onQueryChange("jazz")
+            advanceTimeBy(1_000)
+            val section = assertIs<SearchUiState.Results>(vm.state.value).sections.single()
+            assertEquals(listOf("1", "2"), assertIs<SearchSectionState.Loaded>(section.state).items.map { it.ref.itemId })
         }
     }
 }

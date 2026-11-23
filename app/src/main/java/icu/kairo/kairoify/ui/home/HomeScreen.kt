@@ -44,7 +44,7 @@ import icu.kairo.kairoify.ui.components.ShelfRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onPlay: (Item) -> Unit, onAbout: () -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit, onAbout: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
@@ -62,7 +62,7 @@ fun HomeScreen(viewModel: HomeViewModel, onPlay: (Item) -> Unit, onAbout: () -> 
                 LazyColumn(Modifier.fillMaxSize()) {
                     items(state.sections) { section ->
                         when (section) {
-                            is HomeSection.Loaded -> ShelfRow(section.shelf.title, section.shelf.items, onPlay)
+                            is HomeSection.Loaded -> ShelfRow(section.shelf.title, section.shelf.items, onPlay, onItemLongClick = onLongPress)
                             is HomeSection.Failed -> SectionError("${section.sourceName}: ${section.message}", viewModel::refresh)
                         }
                     }

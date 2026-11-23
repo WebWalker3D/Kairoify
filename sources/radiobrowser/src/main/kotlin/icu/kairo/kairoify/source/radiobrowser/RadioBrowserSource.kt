@@ -23,6 +23,7 @@ import icu.kairo.kairoify.core.model.BrowseNode
 import icu.kairo.kairoify.core.model.Facet
 import icu.kairo.kairoify.core.model.FacetKind
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.model.PageToken
@@ -47,6 +48,7 @@ class RadioBrowserSource(
 ) : MusicSource {
     override val info = SourceInfo(SOURCE_ID, "Radio Browser")
     override val capabilities = setOf(Capability.HOME, Capability.SEARCH, Capability.BROWSE, Capability.LIVE)
+    override val searchKind = ItemKind.STATION
 
     override suspend fun home(): List<Shelf> {
         val local = countryCode()?.let { cc ->

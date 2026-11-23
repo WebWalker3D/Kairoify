@@ -41,10 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.ui.components.SectionError
-import icu.kairo.kairoify.ui.components.StationRow
+import icu.kairo.kairoify.ui.components.ItemRow
 
 @Composable
-fun BrowseScreen(viewModel: BrowseViewModel, title: String, onPlay: (Item) -> Unit) {
+fun BrowseScreen(viewModel: BrowseViewModel, title: String, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     val nearEnd by remember {
@@ -58,7 +58,7 @@ fun BrowseScreen(viewModel: BrowseViewModel, title: String, onPlay: (Item) -> Un
     Column(Modifier.fillMaxSize()) {
         Text(title, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-            items(state.items, key = { it.ref.encode() }) { StationRow(it, onPlay) }
+            items(state.items, key = { it.ref.encode() }) { ItemRow(it, onPlay, onLongClick = onLongPress) }
             item(key = "footer") {
                 when {
                     state.error != null -> SectionError(state.error!!, viewModel::loadMore)

@@ -26,4 +26,7 @@ sealed class SourceException(message: String, cause: Throwable? = null) : Except
     class NotFound(message: String) : SourceException(message)
     class NeedsUpdate(message: String, cause: Throwable? = null) : SourceException(message, cause)
     class Geoblocked(message: String) : SourceException(message)
+
+    /** This one item can't be played (age-restricted, subscription-only, or a failure nobody classified); others still can. */
+    class Unplayable(message: String, cause: Throwable? = null) : SourceException(message, cause)
 }

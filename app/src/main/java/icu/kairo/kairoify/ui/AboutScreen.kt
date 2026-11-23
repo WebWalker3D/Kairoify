@@ -19,6 +19,11 @@
  */
 package icu.kairo.kairoify.ui
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,8 +41,9 @@ import androidx.compose.ui.unit.dp
 import icu.kairo.kairoify.BuildConfig
 
 @Composable
-fun AboutScreen(modifier: Modifier = Modifier) {
+fun AboutScreen(viewModel: AboutViewModel, modifier: Modifier = Modifier) {
     val uri = LocalUriHandler.current
+    val engine by viewModel.state.collectAsStateWithLifecycle()
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -56,6 +62,15 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         Text("Licensed under the ${Attribution.LICENSE}.")
         HorizontalDivider()
         Text("Station directory by Radio Browser — radio-browser.info")
+        Text("Songs from YouTube Music, SoundCloud and Bandcamp, played through yt-dlp (yt-dlp.org) and ytmusicapi.")
+        HorizontalDivider()
+        Text(engine.summary)
+        engine.message?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = viewModel::checkForUpdate, enabled = !engine.checking) { Text("Check for update") }
+            if (engine.canUseBuiltIn) TextButton(onClick = viewModel::useBuiltIn) { Text("Use built-in version") }
+        }
+        HorizontalDivider()
         Text("No ads. No tracking. No accounts.", color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

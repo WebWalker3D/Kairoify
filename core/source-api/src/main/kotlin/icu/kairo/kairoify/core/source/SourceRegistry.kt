@@ -50,8 +50,17 @@ class SourceRegistry(
     fun get(sourceId: String): MusicSource =
         sources.firstOrNull { it.info.id == sourceId } ?: throw SourceException.NotFound("Unknown source '$sourceId'")
 
-    fun search(query: String): Flow<SourceResult<Page<Item>>> =
-        fanOut(Capability.SEARCH, searchTimeoutMillis) { it.search(query) }
+    fun search(query: String): Flow<SourceResult<Page<Item>>> = channelFlow {
+        sources.filter { Capability.SEARCH in it.capabilities }.forEach { source ->
+            launch { send(searchOne(source, query)) }
+        }
+    }
+
+    /** Searches one source again, e.g. when the person taps Retry on its section. */
+    suspend fun searchSource(sourceId: String, query: String): SourceResult<Page<Item>> = searchOne(get(sourceId), query)
+
+    /** What to play after [ref] ("Start radio"). Throws [SourceException] when the source fails. */
+    suspend fun related(ref: MediaRef): List<Item> = get(ref.sourceId).related(ref)
 
     fun home(): Flow<SourceResult<List<Shelf>>> =
         fanOut(Capability.HOME, homeTimeoutMillis) { it.home() }
@@ -68,26 +77,32 @@ class SourceRegistry(
         }
     }
 
+    private suspend fun searchOne(source: MusicSource, query: String): SourceResult<Page<Item>> =
+        attempt(source, source.searchTimeoutMillis ?: searchTimeoutMillis) { it.search(query) }
+
     private fun <T> fanOut(
         capability: Capability,
         timeoutMillis: Long,
         call: suspend (MusicSource) -> T,
     ): Flow<SourceResult<T>> = channelFlow {
         sources.filter { capability in it.capabilities }.forEach { source ->
-            launch {
-                val result = try {
-                    SourceResult.Ok(source.info, withTimeout(timeoutMillis) { call(source) })
-                } catch (e: TimeoutCancellationException) {
-                    SourceResult.Failed(source.info, SourceException.Unavailable("${source.info.displayName} took too long", e))
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: SourceException) {
-                    SourceResult.Failed(source.info, e)
-                } catch (e: Exception) {
-                    SourceResult.Failed(source.info, SourceException.Unavailable(e.message ?: "${source.info.displayName} failed", e))
-                }
-                send(result)
-            }
+            launch { send(attempt(source, timeoutMillis, call)) }
         }
+    }
+
+    private suspend fun <T> attempt(
+        source: MusicSource,
+        timeoutMillis: Long,
+        call: suspend (MusicSource) -> T,
+    ): SourceResult<T> = try {
+        SourceResult.Ok(source.info, withTimeout(timeoutMillis) { call(source) })
+    } catch (e: TimeoutCancellationException) {
+        SourceResult.Failed(source.info, SourceException.Unavailable("${source.info.displayName} took too long", e))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: SourceException) {
+        SourceResult.Failed(source.info, e)
+    } catch (e: Exception) {
+        SourceResult.Failed(source.info, SourceException.Unavailable(e.message ?: "${source.info.displayName} failed", e))
     }
 }

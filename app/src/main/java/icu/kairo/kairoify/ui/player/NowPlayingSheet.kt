@@ -21,12 +21,15 @@ package icu.kairo.kairoify.ui.player
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,31 +39,48 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
+import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.player.NowPlaying
+import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.ui.components.Artwork
+import icu.kairo.kairoify.ui.components.formatDuration
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
+import kotlinx.coroutines.delay
 
+/** The full player: artwork, seek bar for songs, queue controls, ♥, and links. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NowPlayingSheet(
     nowPlaying: NowPlaying,
     sourceName: String,
-    onToggle: () -> Unit,
-    onStop: () -> Unit,
+    player: PlayerConnection,
+    isFavorite: Boolean,
+    onToggleFavorite: (() -> Unit)?,
+    onOpenLink: (String) -> Unit,
+    onStopped: () -> Unit,
     onDismiss: () -> Unit,
+    extraActions: @Composable ColumnScope.() -> Unit = {},
 ) {
-    val uri = LocalUriHandler.current
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(
-            Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 32.dp),
+            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp).padding(bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -74,9 +94,15 @@ fun NowPlayingSheet(
                     color = if (nowPlaying.errorMessage != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onStop) { Icon(KairoifyIcons.Stop, contentDescription = "Stop") }
-                FilledIconButton(onClick = onToggle, modifier = Modifier.size(72.dp)) {
+            nowPlaying.durationMs?.let { SeekBar(nowPlaying, it, player) }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                if (!nowPlaying.isLive) {
+                    ToggleIcon(KairoifyIcons.Shuffle, "Shuffle", on = nowPlaying.shuffle, onClick = player::toggleShuffle)
+                }
+                IconButton(onClick = player::skipPrevious, enabled = nowPlaying.hasPrevious) {
+                    Icon(KairoifyIcons.SkipPrevious, contentDescription = "Previous")
+                }
+                FilledIconButton(onClick = player::togglePlayPause, modifier = Modifier.size(72.dp)) {
                     if (nowPlaying.isBuffering) {
                         CircularProgressIndicator(Modifier.size(28.dp), strokeWidth = 3.dp, color = MaterialTheme.colorScheme.onPrimary)
                     } else {
@@ -87,13 +113,71 @@ fun NowPlayingSheet(
                         )
                     }
                 }
-                Spacer(Modifier.size(48.dp))
+                IconButton(onClick = player::skipNext, enabled = nowPlaying.hasNext) {
+                    Icon(KairoifyIcons.SkipNext, contentDescription = "Next")
+                }
+                if (!nowPlaying.isLive) {
+                    val one = nowPlaying.repeatMode == Player.REPEAT_MODE_ONE
+                    ToggleIcon(
+                        if (one) KairoifyIcons.RepeatOne else KairoifyIcons.Repeat,
+                        if (one) "Repeat one" else "Repeat",
+                        on = nowPlaying.repeatMode != Player.REPEAT_MODE_OFF,
+                        onClick = player::cycleRepeat,
+                    )
+                }
             }
-            nowPlaying.homepage?.let { home ->
-                TextButton(onClick = { uri.openUri(home) }) { Text("Open station website") }
+            Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
+                onToggleFavorite?.let { FavoriteButton(isFavorite, it) }
+                IconButton(onClick = {
+                    player.stop()
+                    onStopped()
+                }) { Icon(KairoifyIcons.Stop, contentDescription = "Stop") }
             }
+            extraActions()
+            val link = (nowPlaying.item as? Track)?.pageUrl?.let { "Open original" to it }
+                ?: nowPlaying.homepage?.let { "Open station website" to it }
+            link?.let { (label, url) -> TextButton(onClick = { onOpenLink(url) }) { Text(label) } }
             Spacer(Modifier.height(4.dp))
             Text("via $sourceName", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
+    }
+}
+
+/** Song position with drag-to-seek; polls the player twice a second while the sheet is open. */
+@Composable
+private fun SeekBar(nowPlaying: NowPlaying, durationMs: Long, player: PlayerConnection) {
+    var position by remember { mutableLongStateOf(0L) }
+    var dragging by remember { mutableStateOf<Float?>(null) }
+    LaunchedEffect(nowPlaying.ref) {
+        while (true) {
+            if (dragging == null) position = player.position()
+            delay(500)
+        }
+    }
+    val fraction = dragging ?: (position.toFloat() / durationMs).coerceIn(0f, 1f)
+    Column(Modifier.fillMaxWidth()) {
+        Slider(
+            value = fraction,
+            onValueChange = { dragging = it },
+            onValueChangeFinished = {
+                dragging?.let { player.seekTo((it * durationMs).toLong()) }
+                dragging = null
+            },
+        )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(formatDuration((fraction * durationMs).toLong()), style = MaterialTheme.typography.labelSmall)
+            Text(formatDuration(durationMs), style = MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+@Composable
+private fun ToggleIcon(icon: ImageVector, label: String, on: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            icon,
+            contentDescription = label,
+            tint = if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }

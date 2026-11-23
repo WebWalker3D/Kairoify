@@ -26,6 +26,8 @@ import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import icu.kairo.kairoify.core.player.PlayerDependencies
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class KairoifyApp : Application(), PlayerDependencies.Provider, SingletonImageLoader.Factory {
     val container: AppContainer by lazy { AppContainer(this) }
@@ -34,6 +36,16 @@ class KairoifyApp : Application(), PlayerDependencies.Provider, SingletonImageLo
     var attributionShown = false
 
     override val playerDependencies: PlayerDependencies get() = container
+
+    override fun onCreate() {
+        super.onCreate()
+        // Start Python and import yt-dlp now, so the first song search doesn't pay for it.
+        container.appScope.launch(Dispatchers.IO) {
+            runCatching { container.engine.start() }
+            // At most once a day: look for a newer yt-dlp, used from the next start.
+            runCatching { container.updater.check() }
+        }
+    }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader =
         ImageLoader.Builder(context)

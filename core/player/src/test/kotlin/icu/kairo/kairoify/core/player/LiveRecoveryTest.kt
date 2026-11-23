@@ -97,4 +97,9 @@ class LiveRecoveryTest {
         assertEquals("Couldn't reach Radio Browser. Try again.", resolveFailureMessage(SourceException.Unavailable("x"), "Radio Browser"))
         assertEquals("Couldn't reach Radio Browser. Try again.", resolveFailureMessage(IOException("socket"), "Radio Browser"))
     }
+
+    @Test
+    fun `unplayable uses the engine's own words`() {
+        assertEquals("That song is age-restricted.", resolveFailureMessage(SourceException.Unplayable("That song is age-restricted."), "YouTube Music"))
+    }
 }

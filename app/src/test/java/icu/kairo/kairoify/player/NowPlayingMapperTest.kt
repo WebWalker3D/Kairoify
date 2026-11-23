@@ -19,6 +19,9 @@
  */
 package icu.kairo.kairoify.player
 
+import icu.kairo.kairoify.core.model.Track
+import icu.kairo.kairoify.core.model.Item
+import androidx.media3.common.C
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import icu.kairo.kairoify.core.model.MediaRef
@@ -77,5 +80,37 @@ class NowPlayingMapperTest {
             "This station isn't broadcasting right now.",
             nowPlayingOf(item, item.mediaMetadata, false, Player.STATE_IDLE, error)?.errorMessage,
         )
+    }
+
+    private val song = Track(MediaRef("youtube", "v1"), "Song", subtitle = "Artist", durationMillis = 200_000)
+    private val songItem = MediaItems.fromItem(song)
+
+    @Test
+    fun `item comes from the media item`() {
+        assertEquals<Item?>(song, nowPlayingOf(songItem, songItem.mediaMetadata, true, Player.STATE_READY, null)?.item)
+        assertEquals<Item?>(station, nowPlayingOf(item, item.mediaMetadata, true, Player.STATE_READY, null)?.item)
+    }
+
+    @Test
+    fun `songs report their duration`() {
+        val np = nowPlayingOf(songItem, songItem.mediaMetadata, true, Player.STATE_READY, null, QueueState(durationMs = 200_000))
+        assertEquals(200_000L, np?.durationMs)
+        assertEquals(false, np?.isLive)
+    }
+
+    @Test
+    fun `live and unknown durations are null`() {
+        assertNull(nowPlayingOf(item, item.mediaMetadata, true, Player.STATE_READY, null, QueueState(durationMs = 5_000))?.durationMs)
+        assertNull(nowPlayingOf(songItem, songItem.mediaMetadata, true, Player.STATE_READY, null, QueueState(durationMs = C.TIME_UNSET))?.durationMs)
+    }
+
+    @Test
+    fun `queue flags are copied`() {
+        val queue = QueueState(hasPrevious = true, hasNext = true, shuffle = true, repeatMode = Player.REPEAT_MODE_ONE)
+        val np = assertNotNull(nowPlayingOf(songItem, songItem.mediaMetadata, true, Player.STATE_READY, null, queue))
+        assertTrue(np.hasPrevious)
+        assertTrue(np.hasNext)
+        assertTrue(np.shuffle)
+        assertEquals(Player.REPEAT_MODE_ONE, np.repeatMode)
     }
 }

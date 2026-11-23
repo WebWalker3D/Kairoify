@@ -19,10 +19,12 @@
  */
 package icu.kairo.kairoify.player
 
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.player.MediaItems
 import icu.kairo.kairoify.core.player.playbackErrorMessage
@@ -37,6 +39,23 @@ data class NowPlaying(
     val isBuffering: Boolean,
     val isLive: Boolean,
     val errorMessage: String?,
+    /** The full item playing, when the media item carries it. */
+    val item: Item? = null,
+    /** Length of a song; null for live radio or when unknown. */
+    val durationMs: Long? = null,
+    val hasPrevious: Boolean = false,
+    val hasNext: Boolean = false,
+    val shuffle: Boolean = false,
+    val repeatMode: Int = Player.REPEAT_MODE_OFF,
+)
+
+/** The queue-level facts the controller knows about. */
+data class QueueState(
+    val hasPrevious: Boolean = false,
+    val hasNext: Boolean = false,
+    val shuffle: Boolean = false,
+    val repeatMode: Int = Player.REPEAT_MODE_OFF,
+    val durationMs: Long = C.TIME_UNSET,
 )
 
 /** What the mini-player and Now Playing show, from the controller's current state. */
@@ -46,9 +65,11 @@ fun nowPlayingOf(
     isPlaying: Boolean,
     playbackState: Int,
     error: PlaybackException?,
+    queue: QueueState = QueueState(),
 ): NowPlaying? {
     if (item == null) return null
     val fallback = item.mediaMetadata
+    val isLive = (metadata.mediaType ?: fallback.mediaType) == MediaMetadata.MEDIA_TYPE_RADIO_STATION
     return NowPlaying(
         ref = MediaItems.refOf(item),
         title = (metadata.title ?: fallback.title)?.toString().orEmpty(),
@@ -57,7 +78,13 @@ fun nowPlayingOf(
         homepage = (metadata.extras ?: fallback.extras)?.getString(MediaItems.EXTRA_HOMEPAGE),
         isPlaying = isPlaying,
         isBuffering = playbackState == Player.STATE_BUFFERING,
-        isLive = (metadata.mediaType ?: fallback.mediaType) == MediaMetadata.MEDIA_TYPE_RADIO_STATION,
-        errorMessage = error?.let { playbackErrorMessage(it.errorCode) },
+        isLive = isLive,
+        errorMessage = error?.let { playbackErrorMessage(it.errorCode, isLive) },
+        item = MediaItems.itemOf(item),
+        durationMs = queue.durationMs.takeIf { !isLive && it != C.TIME_UNSET && it > 0 },
+        hasPrevious = queue.hasPrevious,
+        hasNext = queue.hasNext,
+        shuffle = queue.shuffle,
+        repeatMode = queue.repeatMode,
     )
 }

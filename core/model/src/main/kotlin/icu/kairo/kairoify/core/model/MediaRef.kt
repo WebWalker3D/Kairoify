@@ -19,7 +19,10 @@
  */
 package icu.kairo.kairoify.core.model
 
+import kotlinx.serialization.Serializable
+
 /** Stable identity of a playable or browsable thing: which source, and that source's own id. */
+@Serializable
 data class MediaRef(val sourceId: String, val itemId: String) {
     fun encode(): String = "$sourceId:$itemId"
 

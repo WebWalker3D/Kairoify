@@ -53,7 +53,7 @@ fun AttributionSplash(onFinished: () -> Unit, minMillis: Long = 1_200) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Image(painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.size(144.dp))
+        Image(painterResource(R.drawable.kairoify_logo), contentDescription = null, modifier = Modifier.size(144.dp))
         Text("Kairoify", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground)
         Spacer(Modifier.height(24.dp))
         Text(Attribution.PHRASE, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)

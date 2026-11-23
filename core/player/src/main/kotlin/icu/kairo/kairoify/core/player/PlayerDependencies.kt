@@ -19,12 +19,16 @@
  */
 package icu.kairo.kairoify.core.player
 
+import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.source.SourceRegistry
 
 /** What the playback service needs from the app. The Application implements [Provider]. */
 interface PlayerDependencies {
     val sourceRegistry: SourceRegistry
     val userAgent: String
+
+    /** The person's favorites, newest first, for the Android Auto Favorites folder. */
+    suspend fun favoriteItems(): List<Item>
 
     interface Provider {
         val playerDependencies: PlayerDependencies

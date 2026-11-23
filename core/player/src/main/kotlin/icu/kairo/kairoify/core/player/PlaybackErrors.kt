@@ -21,21 +21,21 @@ package icu.kairo.kairoify.core.player
 
 import androidx.media3.common.PlaybackException
 
-/** Plain-words message for a Media3 error code. */
-fun playbackErrorMessage(errorCode: Int): String = when (errorCode) {
+/** Plain-words message for a Media3 error code, worded for a live station or for a song. */
+fun playbackErrorMessage(errorCode: Int, isLive: Boolean): String = when (errorCode) {
     PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS,
     PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND,
-    -> "This station isn't broadcasting right now."
+    -> if (isLive) "This station isn't broadcasting right now." else "This song can't be played right now."
     in PARSING_CODES,
     PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
     PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
-    -> "This station uses a format your phone can't play."
+    -> if (isLive) "This station uses a format your phone can't play." else "This song uses a format your phone can't play."
     PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
     PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
     PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW,
     PlaybackException.ERROR_CODE_IO_UNSPECIFIED,
     -> "Lost the connection. Check your internet and try again."
-    else -> "Couldn't play this station."
+    else -> if (isLive) "Couldn't play this station." else "Couldn't play this song."
 }
 
 private val PARSING_CODES = 3000..3999

@@ -36,7 +36,12 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
+        // The embedded Python (3.14) and QuickJS ship for 64-bit phones and emulators only.
+        ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
     }
+
+    // QuickJS has to exist as a real file to be executed, so native libraries are extracted at install.
+    packaging { jniLibs { useLegacyPackaging = true } }
 
     buildFeatures {
         compose = true
@@ -60,6 +65,9 @@ licensee {
 
 dependencies {
     implementation(project(":core:player"))
+    implementation(project(":core:data"))
+    implementation(project(":core:ytdlp"))
+    implementation(project(":sources:ytdlp"))
     implementation(project(":sources:radiobrowser"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

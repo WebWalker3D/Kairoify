@@ -20,10 +20,12 @@
 package icu.kairo.kairoify.core.source
 
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.model.PageToken
 import icu.kairo.kairoify.core.model.ResolvedStream
+import icu.kairo.kairoify.core.model.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -39,11 +41,18 @@ private class FakeSource(
     override val capabilities: Set<Capability> = setOf(Capability.SEARCH),
     private val delayMillis: Long = 0,
     private val failWith: Throwable? = null,
+    override val searchTimeoutMillis: Long? = null,
+    private val relatedItems: List<Item> = emptyList(),
 ) : MusicSource {
     override val info = SourceInfo(id, id.replaceFirstChar { it.uppercase() })
+    override val searchKind = ItemKind.SONG
     var reported = 0
+    val queries = mutableListOf<String>()
+
+    override suspend fun related(ref: MediaRef): List<Item> = relatedItems
 
     override suspend fun search(query: String, page: PageToken?): Page<Item> {
+        queries += query
         delay(delayMillis)
         failWith?.let { throw it }
         return Page(emptyList(), null)
@@ -110,5 +119,45 @@ class SourceRegistryTest {
         val source = FakeSource("a", failWith = IOException("down"))
         SourceRegistry(listOf(source)).reportPlay(MediaRef("a", "x1"))
         assertTrue(source.reported == 1)
+    }
+    @Test
+    fun `search uses a source's own timeout`() = runTest {
+        val registry = SourceRegistry(
+            listOf(
+                FakeSource("quick", delayMillis = 100, searchTimeoutMillis = 50),
+                FakeSource("normal", delayMillis = 100),
+            ),
+            searchTimeoutMillis = 1_000,
+        )
+        val results = registry.search("jazz").toList().associateBy { it.source.id }
+        val failed = results.getValue("quick")
+        assertIs<SourceResult.Failed>(failed)
+        assertEquals("Quick took too long", failed.error.message)
+        assertIs<SourceResult.Ok<*>>(results.getValue("normal"))
+    }
+
+    @Test
+    fun `searchSource searches only that source`() = runTest {
+        val a = FakeSource("a")
+        val b = FakeSource("b")
+        val result = SourceRegistry(listOf(a, b)).searchSource("b", "jazz")
+        assertIs<SourceResult.Ok<*>>(result)
+        assertEquals(emptyList(), a.queries)
+        assertEquals(listOf("jazz"), b.queries)
+    }
+
+    @Test
+    fun `searchSource maps failures`() = runTest {
+        val result = SourceRegistry(listOf(FakeSource("a", failWith = IOException("boom")))).searchSource("a", "jazz")
+        assertIs<SourceResult.Failed>(result)
+        assertIs<SourceException.Unavailable>(result.error)
+        assertEquals("boom", result.error.message)
+    }
+
+    @Test
+    fun `related delegates to the item's source`() = runTest {
+        val song = Track(MediaRef("b", "2"), "Two")
+        val registry = SourceRegistry(listOf(FakeSource("a"), FakeSource("b", relatedItems = listOf(song))))
+        assertEquals(listOf<Item>(song), registry.related(MediaRef("b", "1")))
     }
 }
