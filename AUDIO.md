@@ -16,6 +16,9 @@ table.
 - **Planned**: on the list, not built yet.
 - **Needs key**: the service requires a registered API key, so it will be built
   switched off.
+- **Needs permission** / **To check**: the service has no open API for apps like
+  Kairoify, or its rights or terms need checking (and possibly asking) before it can
+  be added.
 
 ## Live
 
@@ -61,6 +64,33 @@ table.
 | [Free Music Archive](https://freemusicarchive.org) | Creative Commons independent music | Through Open Audio's mirror or Internet Archive copies; FMA has no public API | No |
 | [Europeana](https://www.europeana.eu) | European historical and cultural recordings | Search API, filtered by rights and media availability | **Needs key** (built off) |
 | [Freesound](https://freesound.org) | Experimental, ambient and musical recordings | Official REST API, free for noncommercial use | **Needs key** (built off) |
+| [Mirlo](https://mirlo.space) | Independent artists and albums | Canimus API, authorized HLS streaming | Check terms |
+| [Faircamp](https://simonrepp.com/faircamp/) | Artist-hosted music catalogs | Catalog discovery and federation | No |
+| Fairplayer | Federated independent music | Canimus-compatible catalogs | No |
+| [Wavlake](https://wavlake.com) | Independent music with optional artist tipping | Public RSS feeds | No |
+| Bandwagon | Federated independent artists | ActivityPub | Needs permission (playback) |
+| [The Indie Beat Radio](https://theindiebeat.fm) | 5,000+ opted-in independent tracks | Radio streams | Needs permission (third-party terms) |
+| The Indie Beat Live | Live independent concerts | HLS stream published for external players | No |
+| Tunestr | Independent live performances | Nostr-based discovery | Needs permission |
+| [Newgrounds Audio Portal](https://www.newgrounds.com/audio) | Electronic, gaming and independent music | License-filtered catalog | Needs permission (automated access) |
+| [Ampwall](https://ampwall.com) | Independent bands and artists | Official playback integration | Needs permission |
+| [jam.coop](https://jam.coop) | Cooperative independent music | Official playback integration | Needs permission |
+| [Subvert](https://subvert.fm) | Artist-owned music marketplace | Partnership | Needs permission |
+| [SoundClick](https://www.soundclick.com) | Independent artists, hip-hop and beats | Free listening exists | Needs permission (third-party rights) |
+| [ReverbNation](https://www.reverbnation.com) | Emerging bands and musicians | — | Needs permission |
+| ResonTune | Independent, freely streamable releases | Emerging platform | To check (availability and API) |
+| [Tribe of Noise](https://www.tribeofnoise.com) | Independent international artists | Catalog and API | To check (terms) |
+| [Musopen](https://musopen.org) | Classical recordings | — | To check (recording rights, automated access; API key) |
+| [IMSLP](https://imslp.org) | Classical performances and compositions | — | To check (copyright differs by country) |
+| [Open Music Archive](https://www.openmusicarchive.org) | Historical jazz, blues and early recordings | — | To check (UK public-domain status) |
+| [UCSB Cylinder Audio Archive](https://www.library.ucsb.edu/special-research-collections/cylinder-archive) | 15,000+ early cylinder recordings | — | To check (rights per item) |
+| [Raita](https://raita.fi) | Early Finnish recordings | CC0 catalog; OAI-PMH and OpenSearch | No |
+| [Virtual Gramophone](https://www.bac-lac.gc.ca) | ~7,300 digitized Canadian recordings | — | To check (rights by country) |
+| [Gallica](https://gallica.bnf.fr) | Historical French and European music | — | Noncommercial reuse with attribution |
+| Yale Berliner Gramophone Collection | Early gramophone recordings | Rights-filtered digital collections | To check |
+| [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API (CC0 audio where available) | To check (API key) |
+| Ohio State Public Domain Day Project | Newly recorded public-domain compositions | CC0 recordings | No |
+| [Public Domain Review](https://publicdomainreview.org) | Curated historical audio | Plays from the original archives it links to | No |
 | [KEXP](https://www.kexp.org) | Seattle's listener-supported station | The live stream is already in Radio Browser; the archive has no public audio | — |
 | Podcasts | Shows, via open RSS feeds and podcast directories | RSS | No |
 | Public-domain audiobooks ([LibriVox](https://librivox.org)) | Volunteer-read public-domain books | LibriVox API and Internet Archive | No |
@@ -70,7 +100,7 @@ table.
 
 These came up on the wishlist but conflict with decisions already in the design, so
 they wait for an owner decision:
-- **Music and concert video:** the app plays audio only.
+- **Music and concert video** (including PeerTube): the app plays audio only.
 - **Movies and TV:** outside a music app.
 - **Chromecast:** needs Google Play Services, which the app avoids.
 - **Spotify/Apple Music playback:** not free sources. Playlist *import*, matching
@@ -83,9 +113,11 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | hearthis.at | **Added** (in progress): search; DJ sets and tracks played from hearthis.at's own streams. |
 | 2026-11-23 | Unreleased | NTS Radio | **Added** (in progress): live channels NTS 1 and NTS 2 on Home; show archive search, played from each show's SoundCloud or Mixcloud recording. |
 | 2026-11-23 | Unreleased | Mixcloud | **Added** (in progress): search, DJ mixes played as HLS through yt-dlp. |
 | 2026-11-23 | Unreleased | NTS Radio, hearthis.at, ccMixter, Wikimedia Commons | **Started** (in progress). |
+| 2026-11-23 | Unreleased | Mirlo, Faircamp, Fairplayer, Wavlake, Bandwagon, The Indie Beat (Radio, Live), Tunestr, Newgrounds, Ampwall, jam.coop, Subvert, SoundClick, ReverbNation, ResonTune, Tribe of Noise, Musopen, IMSLP, Open Music Archive, UCSB Cylinder Archive, Raita, Virtual Gramophone, Gallica, Yale Berliner, Smithsonian, Ohio State PD Day, Public Domain Review | **Planned**: added from the owner's wishlists. |
 | 2026-11-23 | Unreleased | Openverse, Library of Congress, National Jukebox, Citizen DJ, Funkwhale, Open Audio, Dogmazic, Europeana, Freesound | **Planned**: added to this list from the owner's wishlist. |
 | 2026-11-23 | 0.3.0 | Internet Archive | **Added**: Live Music Archive, Great 78 Project, netlabels and classical; album pages; "On this day" on Home. |
 | 2026-11-23 | 0.3.0 | Internet Archive | **Changed**: search matches every word (not one exact phrase); server errors show as failures you can retry. |
