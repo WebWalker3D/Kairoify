@@ -87,8 +87,8 @@ class NtsApi(private val client: OkHttpClient, private val baseUrl: HttpUrl = "h
 }
 
 /**
- * NTS Radio: two live channels, and an archive of shows whose recordings live on SoundCloud or Mixcloud (played
- * through yt-dlp). Episodes with no recording there are left out.
+ * NTS Radio: two live channels, and an archive of shows played from their SoundCloud recordings (through yt-dlp).
+ * Shows recorded only on Mixcloud are left out: Mixcloud's terms exclude pulling its audio.
  */
 class NtsSource(private val api: NtsApi, private val engine: MusicEngine) : MusicSource {
     override val info = SourceInfo(ID, "NTS Radio")
@@ -116,8 +116,7 @@ class NtsSource(private val api: NtsApi, private val engine: MusicEngine) : Musi
     override suspend fun resolve(ref: MediaRef): ResolvedStream {
         LIVE[ref.itemId.removePrefix("live")]?.let { return ResolvedStream(url = it, isLive = true) }
         val source = playable(api.episode(ref.itemId)) ?: throw SourceException.NotFound("This NTS show has no recording to play.")
-        val mode = if (source.source == "mixcloud") ResolveMode.HLS else ResolveMode.FAST
-        return engine.resolve(source.url!!, mode).toResolvedStream()
+        return engine.resolve(source.url!!, ResolveMode.FAST).toResolvedStream()
     }
 
     private fun playable(episode: NtsEpisode): NtsAudioSource? =
@@ -133,13 +132,14 @@ class NtsSource(private val api: NtsApi, private val engine: MusicEngine) : Musi
             artworkUrl = e.image?.get("medium_large") ?: e.image?.get("large") ?: e.image?.get("medium"),
             artists = listOf("NTS Radio"),
             pageUrl = "https://www.nts.live$path",
-            isHls = playable(e)?.source == "soundcloud" || playable(e)?.source == "mixcloud",
+            isHls = playable(e)?.source == "soundcloud",
         )
     }
 
     companion object {
         const val ID = "nts"
-        private val PLAYABLE = setOf("soundcloud", "mixcloud")
+        // Mixcloud's terms exclude pulling its audio, so shows recorded only there are left out.
+        private val PLAYABLE = setOf("soundcloud")
         private val LIVE = linkedMapOf(
             "1" to "https://stream-relay-geo.ntslive.net/stream",
             "2" to "https://stream-relay-geo.ntslive.net/stream2",

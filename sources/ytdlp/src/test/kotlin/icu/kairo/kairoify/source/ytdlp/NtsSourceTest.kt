@@ -107,4 +107,16 @@ class NtsSourceTest {
         source.search("AC/DC \"Live\" & Sigur Rós")
         assertEquals("AC/DC \"Live\" & Sigur Rós", server.takeRequest().url.queryParameter("q"))
     }
+
+    @Test
+    fun `shows hosted only on Mixcloud are left out`() = runTest {
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest) = MockResponse.Builder().body(
+                """{"results":[
+                  {"title":"On SoundCloud","article":{"path":"/shows/a/episodes/sc"},"audio_sources":[{"url":"https://soundcloud.com/x/y","source":"soundcloud"}]},
+                  {"title":"On Mixcloud","article":{"path":"/shows/a/episodes/mc"},"audio_sources":[{"url":"https://www.mixcloud.com/x/y/","source":"mixcloud"}]}]}""",
+            ).build()
+        }
+        assertEquals(listOf("On SoundCloud"), source.search("x").items.map { it.title })
+    }
 }

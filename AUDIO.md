@@ -8,47 +8,43 @@ Every change to a source (added, changed, switched on or off, removed) gets a da
 line in the [change log](#change-log) at the bottom, and its row moves to the right
 table.
 
-**Status key**
-- **Live**: in the released app.
-- **Built (off)**: finished and tested, but switched off until a registered API key is
-  added at build time. The key is never stored in the repo.
-- **In progress**: being built now.
-- **Planned**: on the list, not built yet.
-- **Needs key**: the service requires a registered API key, so it will be built
-  switched off.
-- **Needs permission** / **To check**: the service has no open API for apps like
-  Kairoify, or its rights or terms need checking (and possibly asking) before it can
-  be added.
+**Two separate questions for every source**
+- **Status** (is it built?):
+  - **Live:** in the app.
+  - **Built (off):** finished and tested, but not switched on.
+  - **Planned:** not built yet.
+- **Authorization** (does the provider allow it?):
+  - **Official:** played through the provider's own public API or public streams, as they intend.
+  - **Official, key:** the official API, but it needs a registered key (built off until there is one).
+  - **Not authorized:** played by extracting the audio (yt-dlp), which the provider's terms don't allow. Kept only where the owner chose to include the source.
+  - **Blocked:** the provider technically blocks plays from apps (for example hotlink protection).
+  - **To confirm:** public endpoints, but the developer terms still need checking.
 
 ## Live
 
-| Source | What it brings | How Kairoify reaches it | Since |
-|---|---|---|---|
-| [Radio Browser](https://www.radio-browser.info) | ~50,000 live radio stations from every country, with the song that's playing | Public JSON API | 0.1 |
-| [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search and radio, yt-dlp for streams, on the phone | 0.2 |
-| [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams (HLS) | 0.2 |
-| [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search, yt-dlp for streams | 0.2 |
-| [Internet Archive](https://archive.org) — Live Music Archive | ~300,000 live concerts recorded with the bands' permission, plus "On this day" | Archive search and metadata APIs | 0.3 |
-| Internet Archive — Great 78 Project | ~190,000 digitized 78 rpm records, 1900s–1950s | Archive APIs | 0.3 |
-| Internet Archive — Netlabels | ~77,000 free netlabel releases | Archive APIs | 0.3 |
-| Internet Archive — Classical | Public-domain classical recordings | Archive APIs | 0.3 |
-| [Audius](https://audius.co) | Independent artists on an open music network, plus trending | Public REST API | 0.3 |
+| Source | What it brings | How Kairoify reaches it | Authorization | Since |
+|---|---|---|---|---|
+| [Radio Browser](https://www.radio-browser.info) | ~50,000 live radio stations from every country, with the song that's playing | Public JSON API; each station's own public stream | Official | 0.1 |
+| [Internet Archive](https://archive.org) — Live Music Archive | ~300,000 live concerts recorded with the bands' permission, plus "On this day" | Archive search and metadata APIs | Official | 0.3 |
+| Internet Archive — Great 78 Project | ~190,000 digitized 78 rpm records, 1900s–1950s | Archive APIs | Official | 0.3 |
+| Internet Archive — Netlabels | ~77,000 free netlabel releases | Archive APIs | Official | 0.3 |
+| Internet Archive — Classical | Public-domain classical recordings | Archive APIs | Official | 0.3 |
+| [Audius](https://audius.co) | Independent artists on an open music network, plus trending | Public REST API, including its stream endpoint | Official | 0.3 |
+| [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings, each with its license | MediaWiki API | Official | next release |
+| [NTS Radio](https://www.nts.live) — live | NTS 1 and NTS 2, live from London | NTS's public API and public stream relay | Official | next release |
+| [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | next release |
+| [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search, yt-dlp for streams, on the phone | **Not authorized** (owner's choice to include) | 0.2 |
+| [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams | **Not authorized** (owner's choice to include) | 0.2 |
+| NTS Radio — archive | ~90,000 shows, played from their SoundCloud recordings | NTS's public API, then yt-dlp on SoundCloud | **Not authorized**, same as SoundCloud | next release |
+| [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search endpoint (unofficial), yt-dlp for streams | **Not authorized** (owner's choice to include) | 0.2 |
 
 ## Built (off)
 
-| Source | What it brings | How to switch it on |
-|---|---|---|
-| [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Register a client ID at developer.jamendo.com, then build with `-Pkairoify.jamendo.clientId=…` (see the README) |
-| [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Search works, but its MP3s answer 403 unless the request carries ccMixter's own page as the Referer (hotlink protection). Owner decision: send that header, or ask ccMixter. |
-
-## In progress (next release)
-
-| Source | What it brings | How Kairoify will reach it | Key? |
+| Source | What it brings | Authorization | What it would take |
 |---|---|---|---|
-| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | No |
-| [NTS Radio](https://www.nts.live) | Two live channels and an archive of ~90,000 shows | NTS's public API; episodes play from their SoundCloud or Mixcloud recordings | No |
-| [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public REST API with direct streams | No |
-| [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings | MediaWiki API, with each file's license and attribution | No |
+| [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Official, key | Register a client ID at developer.jamendo.com, then build with `-Pkairoify.jamendo.clientId=…` (see the README) |
+| [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Blocked (hotlink protection) | Its MP3s answer 403 unless the request carries ccMixter's own page as the Referer. Owner decision: send that header, or ask ccMixter. |
+| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | **Not authorized**: its API excludes audio streams (royalty reporting and licensing), and its terms restrict extraction | Only with Mixcloud's permission. NTS shows recorded only on Mixcloud are left out for the same reason. |
 
 ## Planned
 
@@ -135,6 +131,8 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |
+| 2026-11-23 | Unreleased | All sources | **Changed**: this file now shows authorization separately from build status. |
 | 2026-11-23 | Unreleased | ccMixter | **Built, off**: its files refuse plays from outside ccmixter.org (403 without a ccMixter Referer); waiting on the owner. |
 | 2026-11-23 | Unreleased | Wikimedia Commons | **Added** (in progress): search across Commons audio, artist and license shown; plays the file itself. |
 | 2026-11-23 | Unreleased | 14 streaming protocols (Icecast, RSS, Podcasting 2.0, Canimus, ActivityPub, OpenSubsonic, Ampache, PeerTube, Owncast, M3U/M3U8, PLS/XSPF, direct HTTP, WebDAV, UPnP/DLNA) | **Planned**: added to the roadmap. |
