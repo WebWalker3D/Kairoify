@@ -1,0 +1,768 @@
+{
+ "results": [
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the World",
+   "album": {
+    "name": "Homework",
+    "id": "MPREb_dMHztPsrDgN"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "Jb6gcoR266U",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "7:10",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 430,
+   "views": "304M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the World / Harder, Better, Faster, Stronger",
+   "album": {
+    "name": "Alive 2007",
+    "id": "MPREb_CtOaObihCXA"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "kcxK1Tnwy5M",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "5:43",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 343,
+   "views": "47M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around The World (LaLaLa) (Super Slowed)",
+   "album": {
+    "name": "Around The World (La La La) [Hardtekk]",
+    "id": "MPREb_22kMYtf3s47"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "p6P4TBKz6kc",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "1:41",
+   "year": null,
+   "artists": [
+    {
+     "name": "snxff",
+     "id": "UC4Ed2Q50TG3k0Of5bu1N44Q"
+    },
+    {
+     "name": "STXSTN",
+     "id": "UCup2FqZg_1Uw4E48OpHlNsg"
+    }
+   ],
+   "duration_seconds": 101,
+   "views": "645K",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/93jETEMHjnWNvu-tqodfOTvw0-Wb1CXUwe3eBvyj_ywmZvnQ-ttwfvXx7uxtwsYhz1mBYdMUwAag1aU=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/93jETEMHjnWNvu-tqodfOTvw0-Wb1CXUwe3eBvyj_ywmZvnQ-ttwfvXx7uxtwsYhz1mBYdMUwAag1aU=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around The World (La La La La La) - Jersey",
+   "album": {
+    "name": "Around The World (La La La La La) - Jersey",
+    "id": "MPREb_fIvMf0TWAAN"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "gXV1t3rhUak",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "2:57",
+   "year": null,
+   "artists": [
+    {
+     "name": "Prodbyixyo",
+     "id": "UCePZ50QXRuSNnX8x8kn5Wlg"
+    }
+   ],
+   "duration_seconds": 177,
+   "views": "796K",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/qeQozoVscXJBTmsupYlAdY5xvYWevL5rGIJ54nYhLrX6slQGJ3H4PCnrDG27S35RAoi9Vs8OOLh59xiF=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/qeQozoVscXJBTmsupYlAdY5xvYWevL5rGIJ54nYhLrX6slQGJ3H4PCnrDG27S35RAoi9Vs8OOLh59xiF=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the World (Radio Edit)",
+   "album": {
+    "name": "Around the World",
+    "id": "MPREb_ePmUY37w4pZ"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "ARfJ55bUAw0",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "4:02",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 242,
+   "views": "304M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/ikvOfyHz2yG9cqXmGFIwKdJOdDuv6_s8YRQVsBNC9jL0BX_T4rff6vbkjHoszJxTFoP-mq5uatz-vZjdTw=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/ikvOfyHz2yG9cqXmGFIwKdJOdDuv6_s8YRQVsBNC9jL0BX_T4rff6vbkjHoszJxTFoP-mq5uatz-vZjdTw=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "One More Time (12 Mix)",
+   "album": {
+    "name": "One More Time",
+    "id": "MPREb_uWQeJO6Z53u"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "bmjsUsS8QuM",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "8:01",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 481,
+   "views": "861M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/_pY9BvNbeIpT2PUw_hQszOM3PZzmBRdi5uGNL8U6ZVE8AvApw7WqgMotzoGg7kk_ip8yj9VBkAJlgwv7_A=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/_pY9BvNbeIpT2PUw_hQszOM3PZzmBRdi5uGNL8U6ZVE8AvApw7WqgMotzoGg7kk_ip8yj9VBkAJlgwv7_A=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Superheroes",
+   "album": {
+    "name": "Discovery",
+    "id": "MPREb_7ltM34kr0mH"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "mZdfvOuRvFc",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:58",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 238,
+   "views": "44M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/qrY7xjdjqL0FEneZKHk845JeeFjdWOgexUa_BhsUxskJ2iflhzpbofqGJZBcPHDGU9JjoZflE4yn3P74=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/qrY7xjdjqL0FEneZKHk845JeeFjdWOgexUa_BhsUxskJ2iflhzpbofqGJZBcPHDGU9JjoZflE4yn3P74=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Prime Time of Your Life / Brainwasher / Rollin' & Scratchin' / Alive",
+   "album": {
+    "name": "Alive 2007",
+    "id": "MPREb_CtOaObihCXA"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "d-KAZjNmHpg",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "10:23",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 623,
+   "views": "5.1M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "AROUND THE WORLD (LA LA LA LA LA) - HYPERTECHNO",
+   "album": {
+    "name": "AROUND THE WORLD (LA LA LA LA LA) - HYPERTECHNO",
+    "id": "MPREb_08yWoPjgzIr"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "7NCXHEHygEM",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:00",
+   "year": null,
+   "artists": [
+    {
+     "name": "HYPERAVE",
+     "id": "UCxsMpeGICm8jApSdNSBHpLA"
+    },
+    {
+     "name": "BASSTON",
+     "id": "UCtqq24XH_2GAxXam6uCXWTQ"
+    }
+   ],
+   "duration_seconds": 180,
+   "views": "19M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/EGiYF18frwxP51PQd6k4kkiUNWh2bLrwABHEyqJ7HorFkYOSk8T2g4DrkVq5_svxmV3X1CXpjVMZEBco=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/EGiYF18frwxP51PQd6k4kkiUNWh2bLrwABHEyqJ7HorFkYOSk8T2g4DrkVq5_svxmV3X1CXpjVMZEBco=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Give Life Back to Music",
+   "album": {
+    "name": "Random Access Memories",
+    "id": "MPREb_K8qWMWVqXGi"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "zKSsP2084nU",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "4:36",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 276,
+   "views": "55M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/N55arCGj69gtw6thXK8JUPisxoVYiwuIEQ7I6SGlkEyNcSJ7xIWPe76Vuu1SiUqRyx5w9qvR_zV8fV3CWQ=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/N55arCGj69gtw6thXK8JUPisxoVYiwuIEQ7I6SGlkEyNcSJ7xIWPe76Vuu1SiUqRyx5w9qvR_zV8fV3CWQ=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the World (La La La La La)",
+   "album": {
+    "name": "Planet Pop",
+    "id": "MPREb_iKkK0UIzhhf"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "pSVbF6DGH9U",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:35",
+   "year": null,
+   "artists": [
+    {
+     "name": "A Touch of Class",
+     "id": "UCGPFyvUk_H9wpCiFA4xO9zQ"
+    }
+   ],
+   "duration_seconds": 215,
+   "views": "771M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/SPsBdwjWbdEpmXlyvreqdSyht6QLrh4rwfGJzYpQkfQJku1aoPM5Efz9Sh22ftG5gpD9bluX25_0x8E=w60-h60-s-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/SPsBdwjWbdEpmXlyvreqdSyht6QLrh4rwfGJzYpQkfQJku1aoPM5Efz9Sh22ftG5gpD9bluX25_0x8E=w120-h120-s-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the world",
+   "album": {
+    "name": "Around the world",
+    "id": "MPREb_AJX48Dej88O"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "Rot7TW5C5Jg",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:27",
+   "year": null,
+   "artists": [
+    {
+     "name": "Scythermane",
+     "id": "UCRa9SblQTf05hDV2WBz1UJg"
+    },
+    {
+     "name": "2EXRLY",
+     "id": "UCvcTNWdQBi3AT9vH6M4vOLw"
+    }
+   ],
+   "duration_seconds": 207,
+   "views": "43K",
+   "isExplicit": true,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/xZeHiBmWgSKVHhQ2G4QDEbQh3eGP9ZsqEyDiR65Zxh3-obxy2QzzZzF9qmlzkLmLK9OT3rAqntac7uVQ=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/xZeHiBmWgSKVHhQ2G4QDEbQh3eGP9ZsqEyDiR65Zxh3-obxy2QzzZzF9qmlzkLmLK9OT3rAqntac7uVQ=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Human After All / Together / One More Time / Music Sounds Better with You",
+   "album": {
+    "name": "Alive 2007",
+    "id": "MPREb_CtOaObihCXA"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "6u9xMu1Jqs4",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "9:59",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk - Stardust",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 599,
+   "views": "5.4M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Touch It / Technologic",
+   "album": {
+    "name": "Alive 2007",
+    "id": "MPREb_CtOaObihCXA"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "pHWj-hRP-cY",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "5:30",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 330,
+   "views": "9M",
+   "isExplicit": true,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/WcxKKKOBAyf3a4qI8N2FjOyylr6Th1wDdoofTEO3rDw5kmjI-DF2h0hPJeGURrCqPCs9BIhJAQj3f10=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around The World",
+   "album": {
+    "name": "Around The World",
+    "id": "MPREb_4UYk6V0iu1V"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "t5WiBftczOQ",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "2:21",
+   "year": null,
+   "artists": [
+    {
+     "name": "Niklas Dee",
+     "id": "UCWLgmttwhy-ChrIV-tVnaTg"
+    },
+    {
+     "name": "René Miller",
+     "id": "UCOGn_7PzLOatNCal1Eld4fQ"
+    }
+   ],
+   "duration_seconds": 141,
+   "views": "13M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/LN2fuF5e4qGVGkrzfMN3de2xeZJIgzeCgo1Zi2Dc7Ffp4x6vt_JZaBft7kJaW7KAm3L7pM_f6EIX-cyV=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/LN2fuF5e4qGVGkrzfMN3de2xeZJIgzeCgo1Zi2Dc7Ffp4x6vt_JZaBft7kJaW7KAm3L7pM_f6EIX-cyV=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Alive",
+   "album": {
+    "name": "Homework",
+    "id": "MPREb_dMHztPsrDgN"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "FgILRynkeNg",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "5:17",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 317,
+   "views": "3.8M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Infinity Repeating (2013 Demo) [feat. Julian Casablancas+The Voidz]",
+   "album": {
+    "name": "Random Access Memories (10th Anniversary Edition)",
+    "id": "MPREb_eMBjPmWySjR"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "f903wQHlE3w",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "4:00",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    },
+    {
+     "name": "Julian Casablancas",
+     "id": "UCWhpbdGLnR8XtXLr0yl2nYA"
+    },
+    {
+     "name": "The Voidz",
+     "id": "UCrAybpZxjq1B0rLp-OyJ0Gg"
+    }
+   ],
+   "duration_seconds": 240,
+   "views": "23M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/R5gMfIj_BHfnfJv_X24gjqUskPT9gwonal56ydS9bIkxsHxaaebzNwHjbIruM54pvcMwcI9PpTJpYPAJ=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/R5gMfIj_BHfnfJv_X24gjqUskPT9gwonal56ydS9bIkxsHxaaebzNwHjbIruM54pvcMwcI9PpTJpYPAJ=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Around the World (La La La La La) (Sped Up Version)",
+   "album": {
+    "name": "Around the World (La La La La La) (Sped Up Version)",
+    "id": "MPREb_DsUhjILsw5p"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "cdkKkvj2NDM",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:16",
+   "year": null,
+   "artists": [
+    {
+     "name": "A Touch Of Class",
+     "id": "UCGPFyvUk_H9wpCiFA4xO9zQ"
+    }
+   ],
+   "duration_seconds": 196,
+   "views": "445K",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/KJ84fNtWv4KLsJoqPFXjwyXmusOOgnak4ntihrQs3FYJvB9mcVg_rcoH0CT4Kfj9zW9QCfQlXnzdtW2daQ=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/KJ84fNtWv4KLsJoqPFXjwyXmusOOgnak4ntihrQs3FYJvB9mcVg_rcoH0CT4Kfj9zW9QCfQlXnzdtW2daQ=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "Rollin' & Scratchin'",
+   "album": {
+    "name": "Homework",
+    "id": "MPREb_dMHztPsrDgN"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "mSVBwwAZKkI",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "7:29",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 449,
+   "views": "6.4M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/1gXa4i8m_NecS7xNqLqzxy6rdOWBh_L6U91YYv5ULNdmvvYT1Pr6ld7_SyUs5L52pEQheVyfU9SnXUm9=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  },
+  {
+   "category": "Songs",
+   "resultType": "song",
+   "title": "High Life",
+   "album": {
+    "name": "Discovery",
+    "id": "MPREb_7ltM34kr0mH"
+   },
+   "inLibrary": false,
+   "pinnedToListenAgain": false,
+   "videoId": "IUpgPigGJ5s",
+   "videoType": "MUSIC_VIDEO_TYPE_ATV",
+   "isAvailable": true,
+   "duration": "3:22",
+   "year": null,
+   "artists": [
+    {
+     "name": "Daft Punk",
+     "id": "UCRr1xG_2WIDs18a6cIiCxeA"
+    }
+   ],
+   "duration_seconds": 202,
+   "views": "27M",
+   "isExplicit": false,
+   "thumbnails": [
+    {
+     "url": "https://yt3.googleusercontent.com/qrY7xjdjqL0FEneZKHk845JeeFjdWOgexUa_BhsUxskJ2iflhzpbofqGJZBcPHDGU9JjoZflE4yn3P74=w60-h60-l90-rj",
+     "width": 60,
+     "height": 60
+    },
+    {
+     "url": "https://yt3.googleusercontent.com/qrY7xjdjqL0FEneZKHk845JeeFjdWOgexUa_BhsUxskJ2iflhzpbofqGJZBcPHDGU9JjoZflE4yn3P74=w120-h120-l90-rj",
+     "width": 120,
+     "height": 120
+    }
+   ]
+  }
+ ]
+}
