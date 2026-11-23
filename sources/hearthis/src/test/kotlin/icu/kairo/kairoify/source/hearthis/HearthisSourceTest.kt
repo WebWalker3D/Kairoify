@@ -85,4 +85,10 @@ class HearthisSourceTest {
         assertEquals("https://hearthis.app/a/t/listen/?s=X", stream.url)
         assertEquals(false, stream.isLive)
     }
+
+    @Test
+    fun `no results is an empty page, not an outage`() = runTest {
+        server.enqueue(MockResponse.Builder().body("""{"success":false,"message":"No results found","timestamp":1}""").build())
+        assertEquals(emptyList(), source.search("zzqxqx").items)
+    }
 }

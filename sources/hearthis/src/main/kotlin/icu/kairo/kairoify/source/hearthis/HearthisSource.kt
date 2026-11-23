@@ -69,7 +69,15 @@ class HearthisSource(
         val url = baseUrl.newBuilder().addPathSegment("search")
             .addQueryParameter("t", query).addQueryParameter("type", "tracks")
             .addQueryParameter("page", "1").addQueryParameter("count", "30").build()
-        return Page(decode(url, ListSerializer(HtTrack.serializer())).mapNotNull(::track), next = null)
+        val text = client.fetchText(url, info.displayName)
+        // No matches comes back as {"success":false,"message":"No results found"} rather than [].
+        if (text.trimStart().startsWith("{")) return Page.empty()
+        val tracks = try {
+            json.decodeFromString(ListSerializer(HtTrack.serializer()), text)
+        } catch (e: IllegalArgumentException) {
+            throw SourceException.Unavailable("Couldn't reach hearthis.at.", e)
+        }
+        return Page(tracks.mapNotNull(::track), next = null)
     }
 
     /** The item id is "<user>/<track>", the track's path on hearthis.at; its API answers at the same path. */

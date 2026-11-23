@@ -70,8 +70,11 @@ class NtsApi(private val client: OkHttpClient, private val baseUrl: HttpUrl = "h
     suspend fun live(): List<NtsChannel> = get(baseUrl.resolve("live")!!, NtsResults.serializer(NtsChannel.serializer())).results
 
     suspend fun searchEpisodes(query: String): List<NtsEpisode> {
-        val url = baseUrl.newBuilder().addPathSegments("search/episodes")
-            .addQueryParameter("q", query).addQueryParameter("offset", "0").addQueryParameter("limit", "30").build()
+        // "search/episodes" ignores the query and lists the latest shows; "search" with version 2 filters properly.
+        val url = baseUrl.newBuilder().addPathSegment("search")
+            .addQueryParameter("q", query).addQueryParameter("version", "2")
+            .addQueryParameter("offset", "0").addQueryParameter("limit", "30")
+            .addQueryParameter("types[]", "episode").build()
         return get(url, NtsResults.serializer(NtsEpisode.serializer())).results
     }
 

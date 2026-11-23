@@ -84,4 +84,16 @@ class WikimediaSourceTest {
         assertTrue(stream.url.startsWith("https://upload.wikimedia.org/"), stream.url)
         assertEquals(false, stream.isLive)
     }
+
+    @Test
+    fun `midi files are left out`() = runTest {
+        server.enqueue(
+            MockResponse.Builder().body(
+                """{"query":{"pages":{
+                  "1":{"title":"File:Fugue.mid","index":1,"imageinfo":[{"url":"https://upload.wikimedia.org/a/Fugue.mid","mime":"audio/midi","extmetadata":{}}]},
+                  "2":{"title":"File:Fugue.ogg","index":2,"imageinfo":[{"url":"https://upload.wikimedia.org/a/Fugue.ogg","mime":"application/ogg","extmetadata":{}}]}}}}""",
+            ).build(),
+        )
+        assertEquals(listOf("Fugue"), source.search("fugue").items.map { it.title })
+    }
 }

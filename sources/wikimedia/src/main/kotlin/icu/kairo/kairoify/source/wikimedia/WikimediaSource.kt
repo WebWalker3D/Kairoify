@@ -101,6 +101,8 @@ class WikimediaSource(
         val title = page.title?.takeIf { it.startsWith("File:") } ?: return null
         val info = page.imageinfo.firstOrNull() ?: return null
         if (info.url.isNullOrBlank()) return null
+        // Commons' "audio" includes MIDI, which the player can't decode.
+        if (info.mime.orEmpty().lowercase() in UNPLAYABLE) return null
         val artist = info.extmetadata["Artist"]?.value?.let(::plainText)?.takeIf(String::isNotBlank)
         val name = title.removePrefix("File:").substringBeforeLast('.')
         return Track(
@@ -115,6 +117,7 @@ class WikimediaSource(
 
     companion object {
         const val ID = "wikimedia"
+        private val UNPLAYABLE = setOf("audio/midi", "audio/x-midi", "audio/mid")
     }
 }
 

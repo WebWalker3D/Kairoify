@@ -51,7 +51,7 @@ class NtsSourceTest {
                 synchronized(paths) { paths += request.url.encodedPath }
                 val body = when {
                     request.url.encodedPath == "/api/v2/live" -> fixture("nts_live.json")
-                    request.url.encodedPath == "/api/v2/search/episodes" -> fixture("nts_search_jazz.json")
+                    request.url.encodedPath == "/api/v2/search" -> fixture("nts_search_jazz.json")
                     request.url.encodedPath.startsWith("/api/v2/shows/") -> fixture("nts_episode.json")
                     else -> return MockResponse.Builder().code(404).build()
                 }
@@ -118,5 +118,15 @@ class NtsSourceTest {
             ).build()
         }
         assertEquals(listOf("On SoundCloud"), source.search("x").items.map { it.title })
+    }
+
+    @Test
+    fun `search uses the endpoint that filters by the query`() = runTest {
+        source.search("floating points")
+        val url = server.takeRequest().url
+        assertEquals("/api/v2/search", url.encodedPath)
+        assertEquals("floating points", url.queryParameter("q"))
+        assertEquals("episode", url.queryParameter("types[]"))
+        assertEquals("2", url.queryParameter("version"))
     }
 }

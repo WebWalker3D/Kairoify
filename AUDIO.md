@@ -131,6 +131,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app (next release). **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |
 | 2026-11-23 | Unreleased | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |
 | 2026-11-23 | Unreleased | All sources | **Changed**: this file now shows authorization separately from build status. |
 | 2026-11-23 | Unreleased | ccMixter | **Built, off**: its files refuse plays from outside ccmixter.org (403 without a ccMixter Referer); waiting on the owner. |
