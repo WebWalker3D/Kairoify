@@ -38,6 +38,11 @@ android {
         targetSdk = 36
         versionCode = 2
         versionName = "0.2.0"
+
+        // Jamendo needs a registered client ID. It never goes in the repo: pass -Pkairoify.jamendo.clientId=... or set
+        // KAIROIFY_JAMENDO_CLIENT_ID. Without one, the Jamendo source is left out of the app.
+        val jamendoClientId = (findProperty("kairoify.jamendo.clientId") as String?) ?: System.getenv("KAIROIFY_JAMENDO_CLIENT_ID") ?: ""
+        buildConfigField("String", "JAMENDO_CLIENT_ID", "\"${jamendoClientId.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
     }
 
     // QuickJS has to exist as a real file to be executed, so native libraries are extracted at install.
@@ -101,6 +106,9 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:ytdlp"))
     implementation(project(":sources:ytdlp"))
+    implementation(project(":sources:archive"))
+    implementation(project(":sources:audius"))
+    implementation(project(":sources:jamendo"))
     implementation(project(":sources:radiobrowser"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
