@@ -36,6 +36,9 @@ Kairoify is licensed under the **Common Public Attribution License Version 1.0
 (CPAL-1.0)** — see [`LICENSE`](LICENSE). Works built on Kairoify must display the
 attribution described in [`NOTICE.md`](NOTICE.md).
 
+The Kairoify name and logo are not licensed. Forks must use their own name and
+logo (see [`NOTICE.md`](NOTICE.md)).
+
 Music played through Kairoify belongs to its artists and is subject to the terms of
 the service it comes from. Creative Commons tracks are shown with their artist and
 license.

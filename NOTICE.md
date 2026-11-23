@@ -38,6 +38,14 @@ Display of Attribution Information is **required** in Larger Works, which are de
 in the CPAL as a work which combines Covered Code or portions thereof with code not
 governed by the terms of the CPAL.
 
+## Trademarks
+
+"Kairoify" and the Kairoify logo are trademarks of WebWalker3D. The License grants
+rights to the code only, not to the name or logo. If you distribute a modified version,
+give it your own name and logo. Displaying the Attribution Information above
+("Powered by Kairoify") is required by the License and is the one permitted use of the
+name in a fork.
+
 ## Source file header
 
 Per Section 3.5 of the License, every source file carries this notice:
