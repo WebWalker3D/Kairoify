@@ -91,7 +91,7 @@ class PlaybackService : MediaLibraryService() {
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
         player.addListener(PlayerEvents())
-        session = MediaLibrarySession.Builder(this, player, SessionCallback()).build()
+        session = MediaLibrarySession.Builder(this, PresetSkipPlayer(player), SessionCallback()).build()
         getSystemService(ConnectivityManager::class.java).registerDefaultNetworkCallback(networkWatcher)
     }
 

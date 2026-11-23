@@ -51,14 +51,43 @@ class PlayerConnection(private val context: Context) {
     /** Attach to the service so a session already playing (e.g. started from Android Auto) shows up. */
     fun connect() = withController { }
 
-    fun play(item: Item) = withController {
-        requested = item
-        sessionError = null
-        it.setMediaItem(MediaItems.fromItem(item))
-        it.prepare()
-        it.play()
-        publish(it)
+    fun play(item: Item) = playAll(listOf(item))
+
+    /** Plays [items] as the queue, from [startIndex] (or a random item when shuffling). */
+    fun playAll(items: List<Item>, startIndex: Int = 0, shuffle: Boolean = false) {
+        if (items.isEmpty()) return
+        val request = queueRequest(items, startIndex, shuffle)
+        withController {
+            requested = request.items[request.startIndex]
+            sessionError = null
+            it.shuffleModeEnabled = request.shuffle
+            it.repeatMode = request.repeatMode
+            it.setMediaItems(request.items.map(MediaItems::fromItem), request.startIndex, 0)
+            it.prepare()
+            it.play()
+            publish(it)
+        }
     }
+
+    fun skipNext() = withController { it.seekToNext() }
+
+    fun skipPrevious() = withController { it.seekToPrevious() }
+
+    fun seekTo(positionMs: Long) = withController { it.seekTo(positionMs) }
+
+    fun toggleShuffle() = withController { it.shuffleModeEnabled = !it.shuffleModeEnabled }
+
+    /** Off → all → one → off. */
+    fun cycleRepeat() = withController {
+        it.repeatMode = when (it.repeatMode) {
+            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
+            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF
+        }
+    }
+
+    /** Where playback is in the current item, for the seek bar; 0 before the controller connects. */
+    fun position(): Long = controllerFuture?.takeIf { it.isDone }?.get()?.currentPosition ?: 0
 
     fun togglePlayPause() = withController {
         if (it.isPlaying) {
@@ -112,6 +141,13 @@ class PlayerConnection(private val context: Context) {
             controller.isPlaying,
             controller.playbackState,
             controller.playerError,
+            QueueState(
+                hasPrevious = controller.hasPreviousMediaItem(),
+                hasNext = controller.hasNextMediaItem(),
+                shuffle = controller.shuffleModeEnabled,
+                repeatMode = controller.repeatMode,
+                durationMs = controller.duration,
+            ),
         )
         val error = sessionError
         val pending = requested
