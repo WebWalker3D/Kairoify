@@ -1,0 +1,12 @@
+{
+ "headers": {"status": "success", "code": 0, "error_message": "", "warnings": "", "results_count": 2, "next": "https://api.jamendo.com/v3.0/tracks/?offset=2"},
+ "results": [
+  {"id": "1532771", "name": "Wanderer", "duration": 214, "artist_id": "7903", "artist_name": "Ketsa", "album_name": "Saturated Colours", "album_id": "171432",
+   "license_ccurl": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "position": 3, "releasedate": "2018-05-01",
+   "album_image": "https://usercontent.jamendo.com?type=album&id=171432&width=300", "audio": "https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31&from=app-xxxx",
+   "audiodownload": "https://prod-1.storage.jamendo.com/download/track/1532771/mp32/", "audiodownload_allowed": true,
+   "shareurl": "https://www.jamendo.com/track/1532771", "shorturl": "https://jamen.do/t/1532771", "image": "https://usercontent.jamendo.com?type=album&id=171432&width=300&trackid=1532771"},
+  {"id": "1219978", "name": "Sunny Day", "duration": 0, "artist_id": "1", "artist_name": "", "album_name": "", "album_id": "",
+   "license_ccurl": "", "audio": "https://prod-1.storage.jamendo.com/?trackid=1219978&format=mp31", "shareurl": "https://www.jamendo.com/track/1219978", "image": ""}
+ ]
+}
