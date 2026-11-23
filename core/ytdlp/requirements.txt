@@ -1,0 +1,8 @@
+yt-dlp==2026.10.26
+yt-dlp-ejs==0.8.0
+ytmusicapi==1.12.4
+requests==2.34.2
+urllib3==2.8.0
+idna==3.20
+charset-normalizer==3.5.3
+certifi==2026.11.20

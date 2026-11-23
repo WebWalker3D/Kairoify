@@ -13,6 +13,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
       - uses: gradle/actions/setup-gradle@v6
       - name: Check and build
         run: ./gradlew check assembleDebug
