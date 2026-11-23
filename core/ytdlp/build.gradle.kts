@@ -126,13 +126,26 @@ val checkPythonLicenses = tasks.register("checkPythonLicenses") {
     }
 }
 
-tasks.named("check") { dependsOn(checkPythonLicenses) }
+/** The Python side's own tests (fake packages, no network); needs python3 on the PATH, as Chaquopy's build does. */
+val pythonEngineTests = tasks.register<Exec>("pythonEngineTests") {
+    description = "Runs the kairoify_engine.py unit tests."
+    group = "verification"
+    workingDir = projectDir
+    commandLine("python3", "-I", "-m", "unittest", "discover", "-s", "src/test/python")
+    inputs.dir("src/main/python")
+    inputs.dir("src/test/python")
+    outputs.upToDateWhen { false }
+}
+
+tasks.named("check") { dependsOn(checkPythonLicenses, pythonEngineTests) }
 
 dependencies {
     api(project(":core:source-api"))
     api(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.okhttp)
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.okhttp.mockwebserver3)
 }

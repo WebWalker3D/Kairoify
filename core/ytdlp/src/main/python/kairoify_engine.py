@@ -65,9 +65,13 @@ def _import_ytdlp(update_zip):
         try:
             import yt_dlp
 
+            # Python skips a path entry it can't read and finds the bundled copy instead, so check where it came from.
+            if not os.path.abspath(yt_dlp.__file__).startswith(os.path.abspath(update_zip) + os.sep):
+                raise ImportError("The downloaded engine isn't a readable yt-dlp release")
             return yt_dlp, True, None
         except Exception as e:
-            sys.path.remove(update_zip)
+            if update_zip in sys.path:
+                sys.path.remove(update_zip)
             for name in [m for m in sys.modules if m.startswith("yt_dlp")]:
                 del sys.modules[name]
             import yt_dlp

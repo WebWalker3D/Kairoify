@@ -40,7 +40,11 @@ class KairoifyApp : Application(), PlayerDependencies.Provider, SingletonImageLo
     override fun onCreate() {
         super.onCreate()
         // Start Python and import yt-dlp now, so the first song search doesn't pay for it.
-        container.appScope.launch(Dispatchers.IO) { runCatching { container.engine.start() } }
+        container.appScope.launch(Dispatchers.IO) {
+            runCatching { container.engine.start() }
+            // At most once a day: look for a newer yt-dlp, used from the next start.
+            runCatching { container.updater.check() }
+        }
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader =

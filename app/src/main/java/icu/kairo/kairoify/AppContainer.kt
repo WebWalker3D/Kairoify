@@ -27,6 +27,8 @@ import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
 import icu.kairo.kairoify.core.ytdlp.ChaquopyCall
+import icu.kairo.kairoify.core.ytdlp.EngineUpdater
+import kotlinx.coroutines.launch
 import icu.kairo.kairoify.core.ytdlp.YtDlpEngine
 import icu.kairo.kairoify.source.ytdlp.BandcampSearchApi
 import icu.kairo.kairoify.source.ytdlp.BandcampSource
@@ -56,10 +58,16 @@ class AppContainer(context: Context) : PlayerDependencies {
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     /** yt-dlp + ytmusicapi in the app's own Python, shared by the YouTube Music, SoundCloud and Bandcamp sources. */
+    /** Fetches newer yt-dlp releases; a downloaded one is loaded the next time the engine starts. */
+    val updater = EngineUpdater(httpClient, context.filesDir.resolve("engine-updates"))
+
     val engine = YtDlpEngine(
         python = ChaquopyCall(context),
         cacheDir = context.cacheDir.resolve("engine"),
         qjsPath = File(context.applicationInfo.nativeLibraryDir, "libqjs.so").path,
+        updateZip = updater::activeUpdate,
+        onNeedsUpdate = { appScope.launch { updater.check(force = true) } },
+        onUpdateFailed = { updater.activeVersion()?.let(updater::markBad) },
     )
 
     override val sourceRegistry: SourceRegistry = SourceRegistry(

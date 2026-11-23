@@ -46,6 +46,7 @@ fun KairoifyNavHost(
     navController: NavHostController,
     registry: SourceRegistry,
     favorites: FavoritesStore,
+    about: () -> AboutViewModel,
     onPlay: (Item) -> Unit,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
@@ -75,6 +76,6 @@ fun KairoifyNavHost(
                 onLongPress = onLongPress,
             )
         }
-        composable<AboutRoute> { AboutScreen() }
+        composable<AboutRoute> { AboutScreen(viewModel { about() }) }
     }
 }

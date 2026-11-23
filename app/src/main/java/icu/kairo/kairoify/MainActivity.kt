@@ -62,6 +62,7 @@ import icu.kairo.kairoify.core.source.SourceException
 import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.player.canStartRadio
 import icu.kairo.kairoify.player.radioQueue
+import icu.kairo.kairoify.ui.AboutViewModel
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
@@ -93,7 +94,9 @@ class MainActivity : ComponentActivity() {
                     })
                 } else {
                     val container = app.container
-                    KairoifyScaffold(container.sourceRegistry, container.playerConnection, container.favorites)
+                    KairoifyScaffold(container.sourceRegistry, container.playerConnection, container.favorites) {
+                        AboutViewModel(container.engine, container.updater)
+                    }
                 }
             }
         }
@@ -110,7 +113,12 @@ private val tabs = listOf(
 )
 
 @Composable
-private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection, favorites: FavoritesStore) {
+private fun KairoifyScaffold(
+    registry: SourceRegistry,
+    player: PlayerConnection,
+    favorites: FavoritesStore,
+    about: () -> AboutViewModel,
+) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val nowPlaying by player.nowPlaying.collectAsStateWithLifecycle()
@@ -172,6 +180,7 @@ private fun KairoifyScaffold(registry: SourceRegistry, player: PlayerConnection,
             navController,
             registry,
             favorites,
+            about = about,
             onPlay = player::play,
             onPlayQueue = { items, start, shuffle -> player.playAll(items, start, shuffle) },
             onLongPress = { actionsFor = it },

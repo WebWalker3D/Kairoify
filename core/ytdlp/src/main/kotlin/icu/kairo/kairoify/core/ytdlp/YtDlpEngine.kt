@@ -54,6 +54,9 @@ class YtDlpEngine(
 
     @Volatile private var status: EngineStatus? = null
 
+    /** What's running, once started; null before that. */
+    val currentStatus: EngineStatus? get() = status
+
     /** Starts the engine if it isn't running yet. Safe to call from many places at once. */
     suspend fun start(): EngineStatus = status ?: startLock.withLock {
         status ?: run {
