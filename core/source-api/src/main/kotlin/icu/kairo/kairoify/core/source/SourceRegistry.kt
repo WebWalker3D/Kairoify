@@ -62,6 +62,9 @@ class SourceRegistry(
     /** What to play after [ref] ("Start radio"). Throws [SourceException] when the source fails. */
     suspend fun related(ref: MediaRef): List<Item> = get(ref.sourceId).related(ref)
 
+    /** An album's tracks. Throws [SourceException] when the source fails. */
+    suspend fun details(ref: MediaRef): AlbumDetails = get(ref.sourceId).details(ref)
+
     fun home(): Flow<SourceResult<List<Shelf>>> =
         fanOut(Capability.HOME, homeTimeoutMillis) { it.home() }
 

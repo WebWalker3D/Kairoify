@@ -33,12 +33,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object LibraryRoute
 
+@Serializable data class AlbumRoute(val sourceId: String, val itemId: String, val title: String)
+
 @Serializable data class FacetsRoute(val kind: FacetKind, val sourceId: String = "radiobrowser")
 
 @Serializable data class BrowseRoute(val sourceId: String, val nodeType: String, val nodeValue: String, val title: String) {
     fun node(): BrowseNode = when (nodeType) {
         "country" -> BrowseNode.Country(nodeValue)
         "genre" -> BrowseNode.Genre(nodeValue)
+        "collection" -> BrowseNode.Collection(nodeValue)
         else -> error("Unknown browse node type '$nodeType'")
     }
 
@@ -46,6 +49,7 @@ import kotlinx.serialization.Serializable
         fun of(sourceId: String, node: BrowseNode, title: String): BrowseRoute = when (node) {
             is BrowseNode.Country -> BrowseRoute(sourceId, "country", node.code, title)
             is BrowseNode.Genre -> BrowseRoute(sourceId, "genre", node.name, title)
+            is BrowseNode.Collection -> BrowseRoute(sourceId, "collection", node.id, title)
         }
     }
 }

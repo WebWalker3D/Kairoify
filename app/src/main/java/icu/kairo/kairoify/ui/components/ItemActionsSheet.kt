@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.Station
 import icu.kairo.kairoify.core.model.Track
@@ -84,6 +85,7 @@ fun ItemActionsSheet(
             val link = when (item) {
                 is Track -> item.pageUrl?.let { "Open original" to it }
                 is Station -> item.homepage?.let { "Open station website" to it }
+                is Album -> item.pageUrl?.let { "Open original" to it }
             }
             link?.let { (label, url) ->
                 ListItem(

@@ -21,6 +21,7 @@ package icu.kairo.kairoify.player
 
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.License
 import androidx.media3.common.C
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -112,5 +113,13 @@ class NowPlayingMapperTest {
         assertTrue(np.hasNext)
         assertTrue(np.shuffle)
         assertEquals(Player.REPEAT_MODE_ONE, np.repeatMode)
+    }
+
+    @Test
+    fun `songs carry their license`() {
+        val cc = Track(MediaRef("jamendo", "1"), "CC song", license = License("CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/"))
+        val item = MediaItems.fromItem(cc)
+        assertEquals("CC BY 4.0", nowPlayingOf(item, item.mediaMetadata, true, Player.STATE_READY, null)?.license?.name)
+        assertNull(nowPlayingOf(songItem, songItem.mediaMetadata, true, Player.STATE_READY, null)?.license)
     }
 }

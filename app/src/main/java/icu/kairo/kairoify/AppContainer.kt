@@ -30,6 +30,9 @@ import icu.kairo.kairoify.core.ytdlp.ChaquopyCall
 import icu.kairo.kairoify.core.ytdlp.EngineUpdater
 import kotlinx.coroutines.launch
 import icu.kairo.kairoify.core.ytdlp.YtDlpEngine
+import icu.kairo.kairoify.source.archive.ArchiveSource
+import icu.kairo.kairoify.source.audius.AudiusSource
+import icu.kairo.kairoify.source.jamendo.JamendoSource
 import icu.kairo.kairoify.source.ytdlp.BandcampSearchApi
 import icu.kairo.kairoify.source.ytdlp.BandcampSource
 import icu.kairo.kairoify.source.ytdlp.SoundCloudSource
@@ -80,6 +83,11 @@ class AppContainer(context: Context) : PlayerDependencies {
             YouTubeMusicSource(engine),
             SoundCloudSource(engine),
             BandcampSource(BandcampSearchApi(httpClient), engine),
+            ArchiveSource(httpClient),
+            AudiusSource(httpClient),
+        ) + listOfNotNull(
+            // Switched off until a registered client ID is built in.
+            BuildConfig.JAMENDO_CLIENT_ID.takeIf { it.isNotBlank() }?.let { JamendoSource(httpClient, it) },
         ),
     )
 

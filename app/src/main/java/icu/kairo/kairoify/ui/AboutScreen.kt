@@ -63,6 +63,9 @@ fun AboutScreen(viewModel: AboutViewModel, modifier: Modifier = Modifier) {
         HorizontalDivider()
         Text("Station directory by Radio Browser — radio-browser.info")
         Text("Songs from YouTube Music, SoundCloud and Bandcamp, played through yt-dlp (yt-dlp.org) and ytmusicapi.")
+        Text("Concerts, 78s, netlabels and classical from the Internet Archive — archive.org")
+        Text("Independent artists on Audius — audius.co")
+        Text(if (BuildConfig.JAMENDO_CLIENT_ID.isBlank()) "Jamendo: off (needs a client ID)" else "Creative Commons music from Jamendo — jamendo.com")
         HorizontalDivider()
         Text(engine.summary)
         engine.message?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant) }

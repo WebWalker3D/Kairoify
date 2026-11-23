@@ -20,6 +20,7 @@
 package icu.kairo.kairoify.testing
 
 import icu.kairo.kairoify.core.model.BrowseNode
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.model.ItemKind
@@ -29,6 +30,7 @@ import icu.kairo.kairoify.core.model.PageToken
 import icu.kairo.kairoify.core.model.ResolvedStream
 import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.model.Station
+import icu.kairo.kairoify.core.source.AlbumDetails
 import icu.kairo.kairoify.core.source.Capability
 import icu.kairo.kairoify.core.source.MusicSource
 import icu.kairo.kairoify.core.source.SourceInfo
@@ -45,6 +47,8 @@ fun station(id: String, source: String = "fake") = Station(
 
 fun track(id: String, source: String = "fake") = Track(ref = MediaRef(source, id), title = "Song $id", subtitle = "Artist $id")
 
+fun album(id: String, source: String = "fake") = Album(ref = MediaRef(source, id), title = "Album $id", subtitle = "Band $id")
+
 class FakeSource(
     id: String,
     var homeShelves: List<Shelf> = emptyList(),
@@ -59,6 +63,8 @@ class FakeSource(
     override val searchKind: ItemKind = ItemKind.STATION,
     var relatedItems: List<Item> = emptyList(),
     var relatedError: Throwable? = null,
+    var albumTracks: List<Track> = emptyList(),
+    var detailsError: Throwable? = null,
 ) : MusicSource {
     override val info = SourceInfo(id, id.uppercase())
     var homeCalls = 0
@@ -88,6 +94,14 @@ class FakeSource(
     override suspend fun related(ref: MediaRef): List<Item> {
         relatedError?.let { throw it }
         return relatedItems
+    }
+
+    var detailsCalls = 0
+
+    override suspend fun details(ref: MediaRef): AlbumDetails {
+        detailsCalls++
+        detailsError?.let { throw it }
+        return AlbumDetails(album(ref.itemId, info.id), albumTracks)
     }
 
     override suspend fun resolve(ref: MediaRef) = ResolvedStream(url = "http://x/${ref.itemId}", isLive = true)

@@ -1,0 +1,129 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 730,
+        "params": {
+            "query": "collection:georgeblood AND mediatype:audio",
+            "qin": "collection:georgeblood AND mediatype:audio",
+            "fields": "identifier,title,creator,date,year,venue,coverage,mediatype",
+            "wt": "json",
+            "sort": "downloads desc",
+            "rows": 10,
+            "start": 0
+        }
+    },
+    "response": {
+        "numFound": 187034,
+        "start": 0,
+        "docs": [
+            {
+                "coverage": "USA",
+                "creator": "Josh White and his Guitar",
+                "date": "1942-01-01T00:00:00Z",
+                "identifier": "78_house-of-the-rising-sun_josh-white-and-his-guitar_gbia0001628b",
+                "mediatype": "audio",
+                "title": "House Of The Rising Sun",
+                "year": 1942
+            },
+            {
+                "coverage": "UK",
+                "creator": [
+                    "THE NEW CONCERT ORCHESTRA",
+                    "Andrew Basil"
+                ],
+                "identifier": "78_brass-tracks_the-new-concert-orchestra-andrew-basil_gbia3017256b",
+                "mediatype": "audio",
+                "title": "BRASS TRACKS"
+            },
+            {
+                "coverage": "Denmark",
+                "identifier": "78_musvit-parus-major-vibe-vanellus-vanellus-rdben-tringa-totanus-bogfinke-_gbia7028382b",
+                "mediatype": "audio",
+                "title": "Musvit (Parus major); Vibe (Vanellus vanellus); R\u00f8dben (Tringa totanus); Bogfinke (Fringilla coelebs)"
+            },
+            {
+                "coverage": "USA",
+                "creator": [
+                    "Hotel Nacional Orchestra",
+                    "Beltran",
+                    "Pozo",
+                    "Hernandez",
+                    "Estivill",
+                    "Estevill",
+                    "Hotel Nactional Orchestra",
+                    "A. Castro"
+                ],
+                "date": "1942-01-01T00:00:00Z",
+                "identifier": "78_cuban-rhythms_hotel-nacional-orchestra-beltran_gbia0002479",
+                "mediatype": "audio",
+                "title": "Cuban Rhythms",
+                "year": 1942
+            },
+            {
+                "coverage": "Germany",
+                "creator": [
+                    "Berliner Philharmoniker",
+                    "Franz Liszt",
+                    "Erich Kleiber"
+                ],
+                "identifier": "78_tarantella-venezia-e-napoli_berliner-philharmoniker-franz-liszt-erich-kleiber_gbia7027161a",
+                "mediatype": "audio",
+                "title": "Tarantella, Venezia e Napoli"
+            },
+            {
+                "coverage": "USA",
+                "creator": [
+                    "Warren Averel",
+                    "William Ashley Tappin"
+                ],
+                "identifier": "78_hark-the-herald-angels-sing_warren-averel-william-ashley-tappin_gbia0072877b",
+                "mediatype": "audio",
+                "title": "Hark the Herald Angels Sing"
+            },
+            {
+                "coverage": "USA",
+                "creator": [
+                    "The Chordettes",
+                    "Archie Bleyer",
+                    "Pat Ballard",
+                    "Archie Ballard"
+                ],
+                "date": "1954-01-01T00:00:00Z",
+                "identifier": "78_mr-sandman_the-chordettes-archie-bleyer-pat-ballard-archie-ballard_gbia0017988b",
+                "mediatype": "audio",
+                "title": "Mr. Sandman",
+                "year": 1954
+            },
+            {
+                "coverage": "Denmark",
+                "creator": [
+                    "Bror Kalles kapel",
+                    "Harry Jensen"
+                ],
+                "identifier": "78_rebild-schottish_bror-kalles-kapel-harry-jensen_gbia7023676a",
+                "mediatype": "audio",
+                "title": "Rebild - schottish"
+            },
+            {
+                "coverage": "UK",
+                "creator": [
+                    "SYDNEY GUSTARD",
+                    "Stuart"
+                ],
+                "identifier": "78_lily-of-laguna_sydney-gustard-stuart_gbia7031742b",
+                "mediatype": "audio",
+                "title": "LILY OF LAGUNA"
+            },
+            {
+                "coverage": "USA",
+                "creator": [
+                    "GROSSES BLAS ORCHESTER",
+                    "CHOR SA STURM 33"
+                ],
+                "identifier": "78_horst-wessel-lied-die-fahne-hoch_grosses-blas-orchester-chor-sa-sturm-33_gbia0363987a",
+                "mediatype": "audio",
+                "title": "HORST WESSEL LIED (DIE FAHNE HOCH)"
+            }
+        ]
+    }
+}

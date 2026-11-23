@@ -22,8 +22,11 @@ and one library.
 
 - **Live radio:** browse and search ~50,000 stations from every country, and see
   what song is playing.
-- **Songs:** one search across YouTube Music, SoundCloud and Bandcamp. Play any
-  result, or start a radio from a YouTube Music song.
+- **Songs:** one search across YouTube Music, SoundCloud, Bandcamp and Audius. Play
+  any result, or start a radio from a YouTube Music song.
+- **Concerts and archives:** Live Music Archive concerts, Great 78 Project records,
+  netlabels and public-domain classical from the Internet Archive. Concerts open into
+  their tracks, and Home shows concerts recorded on this day in past years.
 - **Favorites:** tap ♡ on anything playing, or long-press any station or song. The
   Library tab keeps one list with Play all and Shuffle. A queue of stations skips
   like the preset buttons on a car radio.
@@ -98,19 +101,41 @@ built into the app.
 | YouTube Music | The mainstream catalog | ✓ Live |
 | SoundCloud | Indie, DJ sets, remixes | ✓ Live |
 | Bandcamp | Independent artists | ✓ Live |
-| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | Planned |
-| Jamendo | Creative Commons music | Planned |
-| Audius | Independent artists | Planned |
+| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | ✓ Live |
+| Audius | Independent artists | ✓ Live |
+| Jamendo | Creative Commons music | Built, off until a client ID is added |
+
+### Jamendo
+
+Jamendo's API needs a free client ID. Register an app at
+[developer.jamendo.com](https://developer.jamendo.com), then build with:
+
+```bash
+./gradlew assembleDebug -Pkairoify.jamendo.clientId=YOUR_CLIENT_ID
+# or: KAIROIFY_JAMENDO_CLIENT_ID=YOUR_CLIENT_ID ./gradlew assembleDebug
+```
+
+The ID is never stored in the repo. Without one, Jamendo stays out of the app, and
+About says it's off.
 
 More to follow — the goal is every free source there is.
 
 ## What's next
 
-- **More sources:** Internet Archive (Live Music Archive concerts, the Great 78
-  Project, netlabels, public-domain classical), Jamendo and Audius. Later, Mixcloud,
-  hearthis.at, NTS and KEXP archives, ccMixter and Wikimedia Commons.
-- **Explore:** a world map, browsing by decade and by source, and "On this day"
-  concerts.
+- **More sources:** Mixcloud, hearthis.at, NTS and KEXP archives, ccMixter and
+  Wikimedia Commons. Jamendo switches on once it has a client ID.
+- **Songs that never dead-end:** when a song fails on one service, find the same
+  song on another and play that instead.
+- **Save the song on the radio:** turn what a station is playing into a song you can
+  favorite and play on demand.
+- **Playlist import** from other music services.
+- **Local music files** alongside everything streamed.
+- **Discovery** shaped by what you listen to, kept on your phone.
+- **Explore:** an interactive world radio globe, and browsing by decade and by
+  source.
+- **Listening:** synchronized lyrics, an equalizer and volume normalization.
+- **Android TV.**
+- **Podcasts and public-domain audiobooks.**
 - **Library:** playlists, history, and saved albums and concerts, plus export and
   import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.

@@ -19,6 +19,7 @@
  */
 package icu.kairo.kairoify.core.source
 
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.BrowseNode
 import icu.kairo.kairoify.core.model.Facet
 import icu.kairo.kairoify.core.model.FacetKind
@@ -29,10 +30,14 @@ import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.model.PageToken
 import icu.kairo.kairoify.core.model.ResolvedStream
 import icu.kairo.kairoify.core.model.Shelf
+import icu.kairo.kairoify.core.model.Track
 
 data class SourceInfo(val id: String, val displayName: String)
 
-enum class Capability { HOME, SEARCH, BROWSE, LIVE, RELATED }
+enum class Capability { HOME, SEARCH, BROWSE, LIVE, RELATED, DETAILS }
+
+/** An album or concert with its playable tracks. */
+data class AlbumDetails(val album: Album, val tracks: List<Track>)
 
 /** One free music service. Every service in Kairoify plugs in through this contract. */
 interface MusicSource {
@@ -55,6 +60,9 @@ interface MusicSource {
 
     /** Items to play after [ref] ("Start radio"). Only sources with [Capability.RELATED] return anything. */
     suspend fun related(ref: MediaRef): List<Item> = emptyList()
+
+    /** An album's tracks. Only sources with [Capability.DETAILS] have any. */
+    suspend fun details(ref: MediaRef): AlbumDetails = throw SourceException.NotFound("Nothing to open here")
 
     suspend fun resolve(ref: MediaRef): ResolvedStream
 

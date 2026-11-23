@@ -22,6 +22,7 @@ package icu.kairo.kairoify.ui.library
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.testing.InMemoryFavorites
+import icu.kairo.kairoify.testing.album
 import icu.kairo.kairoify.testing.station
 import icu.kairo.kairoify.testing.track
 import icu.kairo.kairoify.testing.withMain
@@ -92,6 +93,19 @@ class LibraryViewModelTest {
             advanceUntilIdle()
             assertFalse(vm.state.value.loading)
             assertEquals(emptyList(), vm.state.value.items)
+        }
+    }
+
+    @Test
+    fun `albums are listed but only songs and stations play`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val vm = LibraryViewModel(InMemoryFavorites(listOf(station("a"), album("x"), track("1"))))
+            advanceUntilIdle()
+            assertEquals(listOf(ItemKind.STATION, ItemKind.SONG, ItemKind.ALBUM), vm.state.value.kinds)
+            assertEquals(listOf<Item>(track("1"), station("a")), vm.state.value.playable)
+            vm.setFilter(ItemKind.ALBUM)
+            advanceUntilIdle()
+            assertEquals(emptyList(), vm.state.value.playable)
         }
     }
 }

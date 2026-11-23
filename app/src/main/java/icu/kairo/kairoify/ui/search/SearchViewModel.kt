@@ -145,6 +145,6 @@ class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
     private companion object {
         const val DEBOUNCE_MILLIS = 300L
         const val MIN_QUERY = 2
-        val KIND_ORDER = listOf(ItemKind.SONG, ItemKind.STATION)
+        val KIND_ORDER = listOf(ItemKind.SONG, ItemKind.ALBUM, ItemKind.STATION)
     }
 }

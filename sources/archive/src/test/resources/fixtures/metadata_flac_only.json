@@ -1,0 +1,230 @@
+{
+ "metadata": {
+  "identifier": "flac-only-show",
+  "mediatype": "etree",
+  "collection": [
+   "GratefulDead",
+   "etree",
+   "stream_only"
+  ],
+  "title": "Grateful Dead Live at Barton Hall, Cornell University on 1977-05-08",
+  "year": "1977",
+  "creator": "Grateful Dead",
+  "description": "Minglewood Blues, Loser, El Paso, They Love Each Other, Jack Straw, Deal, Lazy Lightning-> Supplication, Brown Eyed Women, Mama Tried, Row Jimmy, Dancin' In The Streets Scarlet Begonias-> Fire On The Mountain, Estimated Prophet, Saint Stephen-> Not Fade Away-> Saint Stephen-> Morning Dew, E: One More Saturday Night",
+  "coverage": "Ithaca, NY",
+  "date": "1977-05-08",
+  "venue": "Barton Hall, Cornell University"
+ },
+ "files": [
+  {
+   "name": "gd1977-05-08.4982.txt",
+   "source": "original",
+   "format": "Text"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t01.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "1",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Minglewood Blues",
+   "length": "232.58"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t02.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "2",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Loser",
+   "length": "299.06"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t03.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "3",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "El Paso",
+   "length": "178.43"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t04.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "4",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "They Love Each Other",
+   "length": "301.02"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t05.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "5",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Jack Straw",
+   "length": "278.55"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t06.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "6",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Deal",
+   "length": "262.25"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t07.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "7",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Lazy Lightning -> Supplication",
+   "length": "325.87"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t08.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "8",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Brown Eyed Women",
+   "length": "227.38"
+  },
+  {
+   "name": "gd77-05-08eaton-d1t09.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "9",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Mama Tried",
+   "length": "108"
+  },
+  {
+   "name": "gd77-05-08eaton-d2t01.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "10",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Row Jimmy",
+   "length": "454.99"
+  },
+  {
+   "name": "gd77-05-08eaton-d2t02.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "11",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Dancin' In The Streets",
+   "length": "645.5"
+  },
+  {
+   "name": "gd77-05-08eaton-d2t03.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "12",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Take A Step Back/Tuning",
+   "length": "52.65"
+  },
+  {
+   "name": "gd77-05-08eaton-d2t04.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "13",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Scarlet Begonias-> Fire On The Mountain",
+   "length": "1002.18"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t01.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "14",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Estimated Prophet",
+   "length": "350.25"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t02.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "15",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Tuning/Dead Air",
+   "length": "117.65"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t03.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "16",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Saint Stephen",
+   "length": "185.79"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t04.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "17",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Not Fade Away",
+   "length": "643.05"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t05.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "18",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Saint Stephen",
+   "length": "78.46"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t06.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "19",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Morning Dew",
+   "length": "514.38"
+  },
+  {
+   "name": "gd77-05-08eaton-d3t07.shn",
+   "source": "original",
+   "format": "Shorten",
+   "creator": "Grateful Dead",
+   "track": "20",
+   "album": "1977-05-08 - Barton Hall, Cornell University",
+   "title": "Saturday Night",
+   "length": "235.05"
+  },
+  {
+   "name": "shntool.txt",
+   "source": "original",
+   "format": "Text"
+  }
+ ]
+}

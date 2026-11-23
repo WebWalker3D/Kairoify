@@ -70,6 +70,7 @@ class RadioBrowserSource(
     override suspend fun browse(node: BrowseNode, page: PageToken?): Page<Item> = when (node) {
         is BrowseNode.Country -> stationPage(listOf("json", "stations", "bycountrycodeexact", node.code), page)
         is BrowseNode.Genre -> stationPage(listOf("json", "stations", "bytagexact", node.name), page)
+        is BrowseNode.Collection -> Page.empty()
     }
 
     override suspend fun facets(kind: FacetKind): List<Facet> = when (kind) {
@@ -81,6 +82,7 @@ class RadioBrowserSource(
             listOf("json", "tags"),
             mapOf("order" to "stationcount", "reverse" to "true", "limit" to "200", "hidebroken" to "true"),
         ).filter { it.name.isNotBlank() }.map { Facet(BrowseNode.Genre(it.name), it.name, it.stationcount) }
+        FacetKind.COLLECTION -> emptyList()
     }
 
     override suspend fun resolve(ref: MediaRef): ResolvedStream {

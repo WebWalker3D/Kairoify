@@ -78,4 +78,22 @@ class ItemJsonTest {
         assertEquals(ItemKind.STATION, station.kind)
         assertEquals(ItemKind.SONG, track.kind)
     }
+
+    private val album = Album(
+        ref = MediaRef("archive", "gd77-05-08"), title = "Live at Barton Hall", subtitle = "Grateful Dead",
+        artworkUrl = "https://archive.org/services/img/gd77-05-08", artists = listOf("Grateful Dead"), year = "1977",
+        trackCount = 20, pageUrl = "https://archive.org/details/gd77-05-08", license = License("Public domain", null),
+    )
+
+    @Test
+    fun `album round-trips`() = assertEquals<Item?>(album, ItemJson.decode(ItemJson.encode(album)))
+
+    @Test
+    fun `old tracks without a license still decode`() {
+        val item = ItemJson.decode("""{"type":"track","ref":{"sourceId":"youtube","itemId":"abc"},"title":"T","artists":["A"],"isHls":false}""")
+        assertEquals<Item?>(Track(MediaRef("youtube", "abc"), "T", artists = listOf("A")), item)
+    }
+
+    @Test
+    fun `albums are their own kind`() = assertEquals(ItemKind.ALBUM, album.kind)
 }

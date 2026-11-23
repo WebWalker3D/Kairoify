@@ -19,6 +19,9 @@
  */
 package icu.kairo.kairoify.core.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class License(val name: String, val url: String?)
 
 data class ResolvedStream(

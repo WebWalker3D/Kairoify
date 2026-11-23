@@ -26,4 +26,5 @@ val ItemKind.label: String
     get() = when (this) {
         ItemKind.STATION -> "Stations"
         ItemKind.SONG -> "Songs"
+        ItemKind.ALBUM -> "Albums & concerts"
     }

@@ -22,8 +22,11 @@ package icu.kairo.kairoify.core.model
 sealed interface BrowseNode {
     data class Country(val code: String) : BrowseNode
     data class Genre(val name: String) : BrowseNode
+
+    /** A source's own collection, e.g. the Internet Archive's Live Music Archive. */
+    data class Collection(val id: String) : BrowseNode
 }
 
-enum class FacetKind { COUNTRY, GENRE }
+enum class FacetKind { COUNTRY, GENRE, COLLECTION }
 
 data class Facet(val node: BrowseNode, val label: String, val count: Int?)
