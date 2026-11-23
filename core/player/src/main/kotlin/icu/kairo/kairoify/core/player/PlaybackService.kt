@@ -71,7 +71,7 @@ class PlaybackService : MediaLibraryService() {
     override fun onCreate() {
         super.onCreate()
         deps = (application as PlayerDependencies.Provider).playerDependencies
-        tree = LibraryTree(deps.sourceRegistry)
+        tree = LibraryTree(deps.sourceRegistry) { deps.favoriteItems() }
         resolver = StreamResolver(deps.sourceRegistry)
         val http = DefaultHttpDataSource.Factory()
             .setUserAgent(deps.userAgent)
@@ -121,9 +121,16 @@ class PlaybackService : MediaLibraryService() {
             mediaItems: MutableList<MediaItem>,
             startIndex: Int,
             startPositionMs: Long,
-        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = Futures.immediateFuture(
-            MediaSession.MediaItemsWithStartPosition(mediaItems.map(::playable), startIndex, startPositionMs),
-        )
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+            // A favorite picked in a car browser plays the whole Favorites folder from there, like radio presets.
+            val favoritesQueue = mediaItems.singleOrNull()?.let { tree.queueFor(it.mediaId) }
+            val result = if (favoritesQueue != null) {
+                MediaSession.MediaItemsWithStartPosition(favoritesQueue.first.map(::playable), favoritesQueue.second, startPositionMs)
+            } else {
+                MediaSession.MediaItemsWithStartPosition(mediaItems.map(::playable), startIndex, startPositionMs)
+            }
+            return Futures.immediateFuture(result)
+        }
 
         override fun onGetLibraryRoot(
             session: MediaLibrarySession,

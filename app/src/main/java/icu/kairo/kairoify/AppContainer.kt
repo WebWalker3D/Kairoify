@@ -23,6 +23,8 @@ import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.data.KairoifyDatabase
 import icu.kairo.kairoify.core.data.RoomFavoritesStore
 import icu.kairo.kairoify.core.data.createDatabase
+import icu.kairo.kairoify.core.model.Item
+import kotlinx.coroutines.flow.first
 import android.content.Context
 import icu.kairo.kairoify.core.network.createHttpClient
 import icu.kairo.kairoify.core.network.kairoifyUserAgent
@@ -55,4 +57,6 @@ class AppContainer(context: Context) : PlayerDependencies {
     val database: KairoifyDatabase = createDatabase(context)
 
     val favorites: FavoritesStore = RoomFavoritesStore(database)
+
+    override suspend fun favoriteItems(): List<Item> = favorites.favorites.first().map { it.item }
 }
