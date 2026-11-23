@@ -146,6 +146,21 @@ More to follow — the goal is every free source there is.
 - **Licenses:** an open-source notices screen, and artist and license shown for
   Creative Commons tracks.
 - **Releases:** signed release builds published automatically by GitHub Actions.
+- **Streaming protocols.** These aren't single services; each one opens up many sources at once:
+  - **Icecast directory:** More internet radio stations.
+  - **RSS audio enclosures:** Music podcasts, artist releases, DJ shows.
+  - **Podcasting 2.0:** Independently distributed music, with optional artist tipping.
+  - **Canimus:** Artist-owned music catalogs.
+  - **ActivityPub:** Federated music distribution.
+  - **OpenSubsonic:** Compatible music servers.
+  - **Ampache API:** Community and personal music collections.
+  - **PeerTube API:** Music videos and concerts (audio-only in Kairoify unless the owner decides otherwise).
+  - **Owncast:** Independent live performances.
+  - **M3U / M3U8:** Authorized radio and media playlists.
+  - **PLS / XSPF:** More playlist formats.
+  - **Direct HTTP audio:** Artist-published MP3, FLAC, AAC and Ogg streams.
+  - **WebDAV:** Music collections you authorize on a remote server.
+  - **UPnP / DLNA:** Music you authorize on your local network.
 - **Further out:** an optional Kairoify server for sync, and Kairo, the companion
   AI, as a DJ.
 

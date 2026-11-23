@@ -97,6 +97,27 @@ table.
 | Public-domain audiobooks ([LibriVox](https://librivox.org)) | Volunteer-read public-domain books | LibriVox API and Internet Archive | No |
 | Your own music files | Music already on your phone, alongside everything streamed | Android's media library | — |
 
+## Planned protocols
+
+These aren't single services. Each one can unlock many sources at once.
+
+| Protocol | What it unlocks |
+|---|---|
+| Icecast directory | More internet radio stations |
+| RSS audio enclosures | Music podcasts, artist releases, DJ shows |
+| Podcasting 2.0 | Independently distributed music, with optional artist tipping |
+| Canimus | Artist-owned music catalogs |
+| ActivityPub | Federated music distribution |
+| OpenSubsonic | Compatible music servers |
+| Ampache API | Community and personal music collections |
+| PeerTube API | Music videos and concerts (audio-only in Kairoify unless the owner decides otherwise) |
+| Owncast | Independent live performances |
+| M3U / M3U8 | Authorized radio and media playlists |
+| PLS / XSPF | More playlist formats |
+| Direct HTTP audio | Artist-published MP3, FLAC, AAC and Ogg streams |
+| WebDAV | Music collections you authorize on a remote server |
+| UPnP / DLNA | Music you authorize on your local network |
+
 ## Ideas the design rules out or leaves to the owner
 
 These came up on the wishlist but conflict with decisions already in the design, so
@@ -114,6 +135,8 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | Wikimedia Commons | **Added** (in progress): search across Commons audio, artist and license shown; plays the file itself. |
+| 2026-11-23 | Unreleased | 14 streaming protocols (Icecast, RSS, Podcasting 2.0, Canimus, ActivityPub, OpenSubsonic, Ampache, PeerTube, Owncast, M3U/M3U8, PLS/XSPF, direct HTTP, WebDAV, UPnP/DLNA) | **Planned**: added to the roadmap. |
 | 2026-11-23 | Unreleased | ccMixter | **Added** (in progress): search, Creative Commons remixes and originals with their license; plays the MP3. |
 | 2026-11-23 | Unreleased | 20 netlabels (Ektoplazm, Kahvi, blocSonic, Thinner, Monotonik and others) | **Planned**: through the Internet Archive where it mirrors them. |
 | 2026-11-23 | Unreleased | hearthis.at | **Added** (in progress): search; DJ sets and tracks played from hearthis.at's own streams. |
