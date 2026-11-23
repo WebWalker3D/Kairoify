@@ -30,13 +30,13 @@ table.
 | Internet Archive — Netlabels | ~77,000 free netlabel releases | Archive APIs | Official | 0.3 |
 | Internet Archive — Classical | Public-domain classical recordings | Archive APIs | Official | 0.3 |
 | [Audius](https://audius.co) | Independent artists on an open music network, plus trending | Public REST API, including its stream endpoint | Official | 0.3 |
-| [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings, each with its license | MediaWiki API | Official | next release |
-| [NTS Radio](https://www.nts.live) — live | NTS 1 and NTS 2, live from London | NTS's public API and public stream relay | Official | next release |
-| [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | next release |
+| [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings, each with its license | MediaWiki API | Official | 0.4 |
+| [NTS Radio](https://www.nts.live) — live | NTS 1 and NTS 2, live from London | NTS's public API and public stream relay | Official | 0.4 |
+| [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | 0.4 |
 | [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search, yt-dlp for streams, on the phone | **Not authorized** (owner's choice to include) | 0.2 |
 | [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams | **Not authorized** (owner's choice to include) | 0.2 |
-| NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | next release |
-| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | **Not authorized**: its API excludes audio streams (royalty reporting and licensing) and its terms restrict extraction. Included by the owner's choice. | next release |
+| NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | 0.4 |
+| [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | **Not authorized**: its API excludes audio streams (royalty reporting and licensing) and its terms restrict extraction. Included by the owner's choice. | 0.4 |
 | [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search endpoint (unofficial), yt-dlp for streams | **Not authorized** (owner's choice to include) | 0.2 |
 
 ## Built (off)
@@ -131,22 +131,22 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
-| 2026-11-23 | Unreleased | Wikimedia Commons | **Fixed**: search failed on the phone because some metadata values aren't text; checked on a Samsung S22+ along with NTS, Mixcloud and hearthis.at. |
-| 2026-11-23 | Unreleased | Mixcloud | **Switched back on** by the owner's choice, marked Not authorized like YouTube Music, SoundCloud and Bandcamp. NTS shows recorded on Mixcloud are back. |
-| 2026-11-23 | Unreleased | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app (next release). **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |
-| 2026-11-23 | Unreleased | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |
-| 2026-11-23 | Unreleased | All sources | **Changed**: this file now shows authorization separately from build status. |
-| 2026-11-23 | Unreleased | ccMixter | **Built, off**: its files refuse plays from outside ccmixter.org (403 without a ccMixter Referer); waiting on the owner. |
-| 2026-11-23 | Unreleased | Wikimedia Commons | **Added** (in progress): search across Commons audio, artist and license shown; plays the file itself. |
-| 2026-11-23 | Unreleased | 14 streaming protocols (Icecast, RSS, Podcasting 2.0, Canimus, ActivityPub, OpenSubsonic, Ampache, PeerTube, Owncast, M3U/M3U8, PLS/XSPF, direct HTTP, WebDAV, UPnP/DLNA) | **Planned**: added to the roadmap. |
-| 2026-11-23 | Unreleased | ccMixter | **Added** (in progress): search, Creative Commons remixes and originals with their license; plays the MP3. |
-| 2026-11-23 | Unreleased | 20 netlabels (Ektoplazm, Kahvi, blocSonic, Thinner, Monotonik and others) | **Planned**: through the Internet Archive where it mirrors them. |
-| 2026-11-23 | Unreleased | hearthis.at | **Added** (in progress): search; DJ sets and tracks played from hearthis.at's own streams. |
-| 2026-11-23 | Unreleased | NTS Radio | **Added** (in progress): live channels NTS 1 and NTS 2 on Home; show archive search, played from each show's SoundCloud or Mixcloud recording. |
-| 2026-11-23 | Unreleased | Mixcloud | **Added** (in progress): search, DJ mixes played as HLS through yt-dlp. |
-| 2026-11-23 | Unreleased | NTS Radio, hearthis.at, ccMixter, Wikimedia Commons | **Started** (in progress). |
-| 2026-11-23 | Unreleased | Mirlo, Faircamp, Fairplayer, Wavlake, Bandwagon, The Indie Beat (Radio, Live), Tunestr, Newgrounds, Ampwall, jam.coop, Subvert, SoundClick, ReverbNation, ResonTune, Tribe of Noise, Musopen, IMSLP, Open Music Archive, UCSB Cylinder Archive, Raita, Virtual Gramophone, Gallica, Yale Berliner, Smithsonian, Ohio State PD Day, Public Domain Review | **Planned**: added from the owner's wishlists. |
-| 2026-11-23 | Unreleased | Openverse, Library of Congress, National Jukebox, Citizen DJ, Funkwhale, Open Audio, Dogmazic, Europeana, Freesound | **Planned**: added to this list from the owner's wishlist. |
+| 2026-11-23 | 0.4.0 | Wikimedia Commons | **Fixed**: search failed on the phone because some metadata values aren't text; checked on a Samsung S22+ along with NTS, Mixcloud and hearthis.at. |
+| 2026-11-23 | 0.4.0 | Mixcloud | **Switched back on** by the owner's choice, marked Not authorized like YouTube Music, SoundCloud and Bandcamp. NTS shows recorded on Mixcloud are back. |
+| 2026-11-23 | 0.4.0 | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app (next release). **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |
+| 2026-11-23 | 0.4.0 | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |
+| 2026-11-23 | 0.4.0 | All sources | **Changed**: this file now shows authorization separately from build status. |
+| 2026-11-23 | 0.4.0 | ccMixter | **Built, off**: its files refuse plays from outside ccmixter.org (403 without a ccMixter Referer); waiting on the owner. |
+| 2026-11-23 | 0.4.0 | Wikimedia Commons | **Added** (in progress): search across Commons audio, artist and license shown; plays the file itself. |
+| 2026-11-23 | 0.4.0 | 14 streaming protocols (Icecast, RSS, Podcasting 2.0, Canimus, ActivityPub, OpenSubsonic, Ampache, PeerTube, Owncast, M3U/M3U8, PLS/XSPF, direct HTTP, WebDAV, UPnP/DLNA) | **Planned**: added to the roadmap. |
+| 2026-11-23 | 0.4.0 | ccMixter | **Added** (in progress): search, Creative Commons remixes and originals with their license; plays the MP3. |
+| 2026-11-23 | 0.4.0 | 20 netlabels (Ektoplazm, Kahvi, blocSonic, Thinner, Monotonik and others) | **Planned**: through the Internet Archive where it mirrors them. |
+| 2026-11-23 | 0.4.0 | hearthis.at | **Added** (in progress): search; DJ sets and tracks played from hearthis.at's own streams. |
+| 2026-11-23 | 0.4.0 | NTS Radio | **Added** (in progress): live channels NTS 1 and NTS 2 on Home; show archive search, played from each show's SoundCloud or Mixcloud recording. |
+| 2026-11-23 | 0.4.0 | Mixcloud | **Added** (in progress): search, DJ mixes played as HLS through yt-dlp. |
+| 2026-11-23 | 0.4.0 | NTS Radio, hearthis.at, ccMixter, Wikimedia Commons | **Started** (in progress). |
+| 2026-11-23 | 0.4.0 | Mirlo, Faircamp, Fairplayer, Wavlake, Bandwagon, The Indie Beat (Radio, Live), Tunestr, Newgrounds, Ampwall, jam.coop, Subvert, SoundClick, ReverbNation, ResonTune, Tribe of Noise, Musopen, IMSLP, Open Music Archive, UCSB Cylinder Archive, Raita, Virtual Gramophone, Gallica, Yale Berliner, Smithsonian, Ohio State PD Day, Public Domain Review | **Planned**: added from the owner's wishlists. |
+| 2026-11-23 | 0.4.0 | Openverse, Library of Congress, National Jukebox, Citizen DJ, Funkwhale, Open Audio, Dogmazic, Europeana, Freesound | **Planned**: added to this list from the owner's wishlist. |
 | 2026-11-23 | 0.3.0 | Internet Archive | **Added**: Live Music Archive, Great 78 Project, netlabels and classical; album pages; "On this day" on Home. |
 | 2026-11-23 | 0.3.0 | Internet Archive | **Changed**: search matches every word (not one exact phrase); server errors show as failures you can retry. |
 | 2026-11-23 | 0.3.0 | Audius | **Added**: search, full-length streams, "Trending on Audius". |
