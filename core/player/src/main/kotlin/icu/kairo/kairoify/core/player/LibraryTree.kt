@@ -22,6 +22,7 @@ package icu.kairo.kairoify.core.player
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.isPlayable
 import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.core.source.SourceResult
@@ -42,7 +43,8 @@ class LibraryTree(private val registry: SourceRegistry, private val favorites: s
 
     suspend fun children(parentId: String): List<MediaItem> = when {
         parentId == ROOT_ID -> listOf(folder(FAVORITES_ID, "Favorites")) + loadShelves().map { folder(SHELF_PREFIX + it.id, it.title) }
-        parentId == FAVORITES_ID -> listed(FAVORITES_ID, favorites()).also { list -> favoriteIds = list.map { it.mediaId } }
+        // Only playable favorites: albums would be dead entries in a car's preset queue.
+        parentId == FAVORITES_ID -> listed(FAVORITES_ID, favorites().filter { it.isPlayable }).also { list -> favoriteIds = list.map { it.mediaId } }
         parentId.startsWith(SHELF_PREFIX) -> {
             val shelfId = parentId.removePrefix(SHELF_PREFIX)
             val shelf = shelves.firstOrNull { it.id == shelfId } ?: loadShelves().firstOrNull { it.id == shelfId }

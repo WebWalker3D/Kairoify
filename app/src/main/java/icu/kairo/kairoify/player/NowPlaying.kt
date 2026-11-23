@@ -25,6 +25,8 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.License
+import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.player.MediaItems
 import icu.kairo.kairoify.core.player.playbackErrorMessage
@@ -47,6 +49,8 @@ data class NowPlaying(
     val hasNext: Boolean = false,
     val shuffle: Boolean = false,
     val repeatMode: Int = Player.REPEAT_MODE_OFF,
+    /** Creative Commons or public-domain license of the song, shown with the artist. */
+    val license: License? = null,
 )
 
 /** The queue-level facts the controller knows about. */
@@ -81,6 +85,7 @@ fun nowPlayingOf(
         isLive = isLive,
         errorMessage = error?.let { playbackErrorMessage(it.errorCode, isLive) },
         item = MediaItems.itemOf(item),
+        license = (MediaItems.itemOf(item) as? Track)?.license,
         durationMs = queue.durationMs.takeIf { !isLive && it != C.TIME_UNSET && it > 0 },
         hasPrevious = queue.hasPrevious,
         hasNext = queue.hasNext,

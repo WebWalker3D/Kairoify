@@ -19,6 +19,7 @@
  */
 package icu.kairo.kairoify.core.player
 
+import icu.kairo.kairoify.core.model.Album
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
@@ -91,5 +92,12 @@ class LibraryTreeTest {
         tree.children(LibraryTree.FAVORITES_ID)
         tree.children(LibraryTree.ROOT_ID).last().let { tree.children(it.mediaId) }
         assertNull(tree.queueFor(shelfStation.ref.encode()))
+    }
+
+    @Test
+    fun `albums stay out of the favorites folder`() = runTest {
+        val withAlbum = LibraryTree(SourceRegistry(listOf(source))) { favorites + Album(MediaRef("archive", "show"), "A show") }
+        val ids = withAlbum.children(LibraryTree.FAVORITES_ID).map { it.mediaId }
+        assertEquals(favorites.map { it.ref.encode() }, ids)
     }
 }
