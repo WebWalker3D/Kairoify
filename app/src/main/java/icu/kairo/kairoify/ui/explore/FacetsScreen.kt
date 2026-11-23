@@ -47,7 +47,11 @@ fun FacetsScreen(viewModel: FacetsViewModel, kind: FacetKind, onOpen: (Facet) ->
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
         Text(
-            if (kind == FacetKind.COUNTRY) "Countries" else "Genres",
+            when (kind) {
+                FacetKind.COUNTRY -> "Countries"
+                FacetKind.GENRE -> "Genres"
+                FacetKind.COLLECTION -> "Concerts & archives"
+            },
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(16.dp),
         )

@@ -49,7 +49,7 @@ import icu.kairo.kairoify.ui.components.ItemRow
 import icu.kairo.kairoify.ui.components.SectionError
 import icu.kairo.kairoify.ui.components.label
 
-private val CHIPS = listOf(null, ItemKind.SONG, ItemKind.STATION)
+private val CHIPS = listOf(null, ItemKind.SONG, ItemKind.ALBUM, ItemKind.STATION)
 
 @Composable
 fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit) {

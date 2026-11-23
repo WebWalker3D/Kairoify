@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.ItemKind
+import icu.kairo.kairoify.core.model.isPlayable
 import icu.kairo.kairoify.core.model.kind
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +39,10 @@ data class LibraryUiState(
     /** Chips to offer: only kinds that are in the favorites. */
     val kinds: List<ItemKind> = emptyList(),
     val items: List<Item> = emptyList(),
-)
+) {
+    /** What Play all and Shuffle queue: songs and stations (albums open instead). */
+    val playable: List<Item> get() = items.filter { it.isPlayable }
+}
 
 /** The Favorites list: newest first, narrowed by a chip. */
 class LibraryViewModel(store: FavoritesStore) : ViewModel() {

@@ -57,6 +57,7 @@ fun LibraryScreen(
     sourceName: (String) -> String,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
+    onOpen: (Item) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
@@ -76,22 +77,25 @@ fun LibraryScreen(
                     }
                 }
                 Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Button(onClick = { onPlayQueue(state.items, 0, false) }) {
+                    Button(onClick = { onPlayQueue(state.playable, 0, false) }, enabled = state.playable.isNotEmpty()) {
                         Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text("Play all")
                     }
-                    OutlinedButton(onClick = { onPlayQueue(state.items, 0, true) }) {
+                    OutlinedButton(onClick = { onPlayQueue(state.playable, 0, true) }, enabled = state.playable.isNotEmpty()) {
                         Icon(KairoifyIcons.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text("Shuffle")
                     }
                 }
                 LazyColumn(Modifier.fillMaxSize()) {
-                    itemsIndexed(state.items, key = { _, item -> item.ref.encode() }) { index, item ->
+                    itemsIndexed(state.items, key = { _, item -> item.ref.encode() }) { _, item ->
                         ItemRow(
                             item,
-                            onClick = { onPlayQueue(state.items, index, false) },
+                            onClick = {
+                                val start = state.playable.indexOf(item)
+                                if (start < 0) onOpen(item) else onPlayQueue(state.playable, start, false)
+                            },
                             onLongClick = onLongPress,
                             badge = sourceName(item.ref.sourceId),
                         )

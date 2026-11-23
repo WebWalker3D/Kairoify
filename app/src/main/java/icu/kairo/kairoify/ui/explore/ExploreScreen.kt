@@ -34,9 +34,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.unit.dp
 import icu.kairo.kairoify.core.model.FacetKind
+import icu.kairo.kairoify.ui.icons.KairoifyIcons
 
 @Composable
-fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit) {
+fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
         Text("Explore", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         ListItem(
@@ -49,5 +50,10 @@ fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit) {
             leadingContent = { Icon(Icons.Filled.Star, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.clickable { onOpenFacets(FacetKind.GENRE) },
         ) { Text("Genres") }
+        ListItem(
+            supportingContent = { Text("Live concerts, 78 rpm records, netlabels and classical from the Internet Archive") },
+            leadingContent = { Icon(KairoifyIcons.Library, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            modifier = Modifier.clickable(onClick = onOpenArchives),
+        ) { Text("Concerts & archives") }
     }
 }

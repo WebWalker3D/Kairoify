@@ -184,6 +184,8 @@ private fun KairoifyScaffold(
             onPlay = player::play,
             onPlayQueue = { items, start, shuffle -> player.playAll(items, start, shuffle) },
             onLongPress = { actionsFor = it },
+            onToggleFavorite = toggleFavorite,
+            onOpenLink = openLink,
             modifier = Modifier.padding(padding),
         )
     }

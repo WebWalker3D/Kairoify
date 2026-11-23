@@ -94,6 +94,14 @@ fun NowPlayingSheet(
                     color = if (nowPlaying.errorMessage != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            nowPlaying.license?.let { license ->
+                val url = license.url
+                if (url != null) {
+                    TextButton(onClick = { onOpenLink(url) }) { Text("License: ${license.name}") }
+                } else {
+                    Text("License: ${license.name}", style = MaterialTheme.typography.labelMedium)
+                }
+            }
             nowPlaying.durationMs?.let { SeekBar(nowPlaying, it, player) }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (!nowPlaying.isLive) {

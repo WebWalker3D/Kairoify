@@ -22,6 +22,7 @@ package icu.kairo.kairoify.ui.search
 import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.testing.FakeSource
+import icu.kairo.kairoify.testing.album
 import icu.kairo.kairoify.testing.station
 import icu.kairo.kairoify.testing.track
 import icu.kairo.kairoify.testing.withMain
@@ -162,6 +163,19 @@ class SearchViewModelTest {
             advanceTimeBy(1_000)
             val section = assertIs<SearchUiState.Results>(vm.state.value).sections.single()
             assertEquals(listOf("1", "2"), assertIs<SearchSectionState.Loaded>(section.state).items.map { it.ref.itemId })
+        }
+    }
+
+    @Test
+    fun `albums come between songs and stations`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val radio = FakeSource("radio", searchItems = listOf(station("1")))
+            val archive = FakeSource("archive", searchItems = listOf(album("x")), searchKind = ItemKind.ALBUM)
+            val songs = FakeSource("songs", searchItems = listOf(track("1")), searchKind = ItemKind.SONG)
+            val vm = SearchViewModel(SourceRegistry(listOf(radio, archive, songs)))
+            vm.onQueryChange("jazz")
+            advanceTimeBy(1_000)
+            assertEquals(listOf("songs", "archive", "radio"), assertIs<SearchUiState.Results>(vm.state.value).sections.map { it.source.id })
         }
     }
 }
