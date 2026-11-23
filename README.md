@@ -18,7 +18,7 @@ and one library.
 
 ## Status
 
-**Version 0.2.0 — songs and favorites.**
+**Version 0.3.0 — concerts, archives and more sources.**
 
 - **Live radio:** browse and search ~50,000 stations from every country, and see
   what song is playing.
@@ -27,8 +27,8 @@ and one library.
 - **Concerts and archives:** Live Music Archive concerts, Great 78 Project records,
   netlabels and public-domain classical from the Internet Archive. Concerts open into
   their tracks, and Home shows concerts recorded on this day in past years.
-- **Favorites:** tap ♡ on anything playing, or long-press any station or song. The
-  Library tab keeps one list with Play all and Shuffle. A queue of stations skips
+- **Favorites:** tap ♡ on anything playing, or long-press any station, song or
+  concert. The Library tab keeps one list with Play all and Shuffle. A queue of stations skips
   like the preset buttons on a car radio.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
