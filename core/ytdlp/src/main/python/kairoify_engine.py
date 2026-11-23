@@ -28,9 +28,12 @@ import sys
 import tempfile
 
 FORMAT = "bestaudio[ext=m4a][acodec^=mp4a]/bestaudio[acodec=opus]/bestaudio[ext=mp3]/bestaudio"
+# For services that also offer DASH (which the player can't use), e.g. Mixcloud: take HLS first.
+HLS_FORMAT = "bestaudio[protocol^=m3u8]/best[protocol^=m3u8]/bestaudio[protocol=https]/bestaudio"
 
 _fast = None
 _full = None
+_hls = None
 _flat = None
 _ytm = None
 
@@ -84,7 +87,7 @@ def _import_ytdlp(update_zip):
 
 @_guard
 def start(cache_dir, qjs_path, update_zip):
-    global _fast, _full, _flat
+    global _fast, _full, _flat, _hls
     os.makedirs(cache_dir, exist_ok=True)
     os.environ["TMPDIR"] = cache_dir
     tempfile.tempdir = cache_dir
@@ -99,8 +102,13 @@ def start(cache_dir, qjs_path, update_zip):
     }
     _fast = yt_dlp.YoutubeDL({**base, "extractor_args": {"youtube": {"player_client": ["visionos"]}}})
     _full = yt_dlp.YoutubeDL({**base, "js_runtimes": {"quickjs": {"path": qjs_path}}})
+    _hls = yt_dlp.YoutubeDL({**base, "format": HLS_FORMAT})
     _flat = yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True, "extract_flat": True})
     return _ok({"version": yt_dlp.version.__version__, "updated": updated, "update_error": update_error})
+
+
+def _engine_for(mode):
+    return {"fast": _fast, "hls": _hls}.get(mode, _full)
 
 
 def _need(engine):
@@ -111,7 +119,7 @@ def _need(engine):
 
 @_guard
 def resolve(url, mode):
-    ydl = _need(_fast if mode == "fast" else _full)
+    ydl = _need(_engine_for(mode))
     info = ydl.extract_info(url, download=False)
     return _ok(
         {

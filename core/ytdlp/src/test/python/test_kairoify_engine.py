@@ -98,5 +98,43 @@ class ImportUpdateTest(unittest.TestCase):
         self.assertNotIn(update, sys.path)
 
 
+
+class _FakeYoutubeDL:
+    def __init__(self, opts):
+        self.opts = opts
+
+
+class StartTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        pkg = os.path.join(self.tmp, "yt_dlp")
+        os.makedirs(pkg)
+        with open(os.path.join(pkg, "__init__.py"), "w") as f:
+            f.write("YoutubeDL = None\n")
+        with open(os.path.join(pkg, "version.py"), "w") as f:
+            f.write("__version__ = 'test'\n")
+        self.saved_path = list(sys.path)
+        sys.path.insert(1, self.tmp)
+        _purge()
+
+    def tearDown(self):
+        sys.path[:] = self.saved_path
+        _purge()
+        shutil.rmtree(self.tmp)
+
+    def test_start_builds_an_hls_engine(self):
+        import yt_dlp
+
+        yt_dlp.YoutubeDL = _FakeYoutubeDL
+        import json
+
+        reply = json.loads(engine.start(self.tmp, "/qjs", None))
+        self.assertEqual("test", reply["version"])
+        self.assertTrue(engine._hls.opts["format"].startswith("bestaudio[protocol^=m3u8]"))
+        self.assertIs(engine._engine_for("hls"), engine._hls)
+        self.assertIs(engine._engine_for("fast"), engine._fast)
+        self.assertIs(engine._engine_for("full"), engine._full)
+
+
 if __name__ == "__main__":
     unittest.main()
