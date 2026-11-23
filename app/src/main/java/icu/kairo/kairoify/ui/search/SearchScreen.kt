@@ -20,6 +20,8 @@
 package icu.kairo.kairoify.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -69,7 +71,8 @@ fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit, onLongPress
                 Text("Search songs and stations from every free source.", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             is SearchUiState.Results -> {
-                Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Scrolls sideways: four chips don't fit on narrow phones.
+                Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     CHIPS.forEach { kind ->
                         FilterChip(
                             selected = s.filter == kind,

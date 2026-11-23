@@ -20,6 +20,8 @@
 package icu.kairo.kairoify.ui.library
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -70,7 +72,8 @@ fun LibraryScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             else -> {
-                Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Scrolls sideways: four chips don't fit on narrow phones.
+                Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     FilterChip(selected = state.filter == null, onClick = { viewModel.setFilter(null) }, label = { Text("All") })
                     state.kinds.forEach { kind ->
                         FilterChip(selected = state.filter == kind, onClick = { viewModel.setFilter(kind) }, label = { Text(kind.label) })
