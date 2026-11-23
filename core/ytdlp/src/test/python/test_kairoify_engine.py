@@ -110,7 +110,7 @@ class StartTest(unittest.TestCase):
         pkg = os.path.join(self.tmp, "yt_dlp")
         os.makedirs(pkg)
         with open(os.path.join(pkg, "__init__.py"), "w") as f:
-            f.write("YoutubeDL = None\n")
+            f.write("from . import version\nYoutubeDL = None\n")
         with open(os.path.join(pkg, "version.py"), "w") as f:
             f.write("__version__ = 'test'\n")
         self.saved_path = list(sys.path)
@@ -129,6 +129,7 @@ class StartTest(unittest.TestCase):
         import json
 
         reply = json.loads(engine.start(self.tmp, "/qjs", None))
+        self.assertNotIn("error", reply, reply)
         self.assertEqual("test", reply["version"])
         self.assertTrue(engine._hls.opts["format"].startswith("bestaudio[protocol^=m3u8]"))
         self.assertIs(engine._engine_for("hls"), engine._hls)
