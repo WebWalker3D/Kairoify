@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2026 WebWalker3D. All Rights Reserved.
+ *
+ * The contents of this file are subject to the Common Public Attribution License
+ * Version 1.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * https://github.com/WebWalker3D/Kairoify/blob/main/LICENSE. The License is based on
+ * the Mozilla Public License Version 1.1 but Sections 14 and 15 have been added to
+ * cover use of software over a computer network and provide for limited attribution
+ * for the Original Developer. In addition, Exhibit A has been modified to be
+ * consistent with Exhibit B.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
+ * WARRANTY OF ANY KIND, either express or implied. See the License for the specific
+ * language governing rights and limitations under the License.
+ *
+ * The Original Code is Kairoify. The Initial Developer of the Original Code is
+ * WebWalker3D. Attribution information: see NOTICE.md.
+ */
+package icu.kairo.kairoify.core.source
+
+import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.MediaRef
+import icu.kairo.kairoify.core.model.Page
+import icu.kairo.kairoify.core.model.PageToken
+import icu.kairo.kairoify.core.model.ResolvedStream
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import java.io.IOException
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
+
+private class FakeSource(
+    id: String,
+    override val capabilities: Set<Capability> = setOf(Capability.SEARCH),
+    private val delayMillis: Long = 0,
+    private val failWith: Throwable? = null,
+) : MusicSource {
+    override val info = SourceInfo(id, id.replaceFirstChar { it.uppercase() })
+    var reported = 0
+
+    override suspend fun search(query: String, page: PageToken?): Page<Item> {
+        delay(delayMillis)
+        failWith?.let { throw it }
+        return Page(emptyList(), null)
+    }
+
+    override suspend fun resolve(ref: MediaRef): ResolvedStream {
+        failWith?.let { throw it }
+        return ResolvedStream(url = "https://example.com/${ref.itemId}", isLive = true)
+    }
+
+    override suspend fun reportPlay(ref: MediaRef) {
+        reported++
+        failWith?.let { throw it }
+    }
+}
+
+class SourceRegistryTest {
+    @Test
+    fun `search emits results in completion order`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("slow", delayMillis = 500), FakeSource("fast", delayMillis = 100)))
+        val results = registry.search("jazz").toList()
+        assertEquals(listOf("fast", "slow"), results.map { it.source.id })
+    }
+
+    @Test
+    fun `failing source does not stop others`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("bad", failWith = IOException("boom")), FakeSource("good")))
+        val results = registry.search("jazz").toList()
+        val failed = results.filterIsInstance<SourceResult.Failed>().single()
+        assertIs<SourceException.Unavailable>(failed.error)
+        assertEquals("boom", failed.error.message)
+        assertEquals("good", results.filterIsInstance<SourceResult.Ok<*>>().single().source.id)
+    }
+
+    @Test
+    fun `search timeout becomes Unavailable`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("slow", delayMillis = 9_000)))
+        val failed = registry.search("jazz").toList().single()
+        assertIs<SourceResult.Failed>(failed)
+        assertIs<SourceException.Unavailable>(failed.error)
+        assertEquals("Slow took too long", failed.error.message)
+    }
+
+    @Test
+    fun `search skips sources without SEARCH`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("radio", capabilities = setOf(Capability.LIVE)), FakeSource("music")))
+        assertEquals(listOf("music"), registry.search("jazz").toList().map { it.source.id })
+    }
+
+    @Test
+    fun `resolve routes by sourceId`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("a"), FakeSource("b")))
+        assertEquals("https://example.com/x1", registry.resolve(MediaRef("b", "x1")).url)
+    }
+
+    @Test
+    fun `resolve unknown source throws NotFound`() = runTest {
+        val registry = SourceRegistry(listOf(FakeSource("a")))
+        assertFailsWith<SourceException.NotFound> { registry.resolve(MediaRef("zzz", "x1")) }
+    }
+
+    @Test
+    fun `reportPlay swallows exceptions`() = runTest {
+        val source = FakeSource("a", failWith = IOException("down"))
+        SourceRegistry(listOf(source)).reportPlay(MediaRef("a", "x1"))
+        assertTrue(source.reported == 1)
+    }
+}

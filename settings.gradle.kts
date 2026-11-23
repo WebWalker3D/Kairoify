@@ -33,3 +33,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Kairoify"
 include(":app")
+include(":core:model")
+include(":core:source-api")
