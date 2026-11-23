@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+# Read-only token: the build only checks out code and uploads APKs as build artifacts.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
