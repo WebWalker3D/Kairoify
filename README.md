@@ -14,7 +14,28 @@ and one library.
 
 ## Status
 
-In design. Platforms: Android and iOS.
+**Phase 1: worldwide live radio.** Browse and search ~50,000 stations from every
+country, see what song is playing, and listen in the background with notification,
+lock-screen and Bluetooth controls. More sources follow in the next phases.
+
+Platform: Android 8.0 and newer.
+
+## Build it yourself
+
+```bash
+./gradlew assembleDebug
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+Needs JDK 21 and the Android SDK. Every push also builds a debug APK in GitHub Actions.
+
+## Android Auto
+
+Kairoify shows up in Android Auto with "Live now in <your country>" and "Most popular
+worldwide". Because it isn't installed from the Play Store, Android Auto only lists
+it after you enable **Unknown sources** in Android Auto's developer settings (open
+Android Auto settings, tap the version number ten times to unlock developer
+settings).
 
 ## Planned sources
 
