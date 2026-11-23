@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":core:player"))
     implementation(project(":core:data"))
     implementation(project(":core:ytdlp"))
+    implementation(project(":sources:ytdlp"))
     implementation(project(":sources:radiobrowser"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

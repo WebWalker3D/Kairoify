@@ -53,8 +53,8 @@ class BandcampSource(private val api: BandcampSearchApi, private val engine: Mus
             ref = MediaRef(ID, page),
             title = title,
             subtitle = band,
-            // "_3" is Bandcamp's 100 px size; "_2" is 350 px, enough for rows and Now Playing.
-            artworkUrl = result.img?.replace(Regex("_3\\.jpg$"), "_2.jpg"),
+            // Size "_2" is 350 px: enough for rows and Now Playing.
+            artworkUrl = result.artId?.let { "https://f4.bcbits.com/img/a${it}_2.jpg" },
             artists = listOfNotNull(band),
             album = result.albumName,
             pageUrl = page,

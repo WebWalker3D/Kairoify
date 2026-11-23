@@ -26,6 +26,16 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.core.ytdlp.ChaquopyCall
+import icu.kairo.kairoify.core.ytdlp.YtDlpEngine
+import icu.kairo.kairoify.source.ytdlp.BandcampSearchApi
+import icu.kairo.kairoify.source.ytdlp.BandcampSource
+import icu.kairo.kairoify.source.ytdlp.SoundCloudSource
+import icu.kairo.kairoify.source.ytdlp.YouTubeMusicSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import java.io.File
 import icu.kairo.kairoify.core.network.createHttpClient
 import icu.kairo.kairoify.core.network.kairoifyUserAgent
 import icu.kairo.kairoify.core.player.PlayerDependencies
@@ -42,6 +52,16 @@ class AppContainer(context: Context) : PlayerDependencies {
 
     val httpClient: OkHttpClient = createHttpClient(userAgent, context.cacheDir.resolve("http"))
 
+    /** Lives as long as the process: engine warm-up and other background work that outlasts any screen. */
+    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    /** yt-dlp + ytmusicapi in the app's own Python, shared by the YouTube Music, SoundCloud and Bandcamp sources. */
+    val engine = YtDlpEngine(
+        python = ChaquopyCall(context),
+        cacheDir = context.cacheDir.resolve("engine"),
+        qjsPath = File(context.applicationInfo.nativeLibraryDir, "libqjs.so").path,
+    )
+
     override val sourceRegistry: SourceRegistry = SourceRegistry(
         listOf(
             RadioBrowserSource(
@@ -49,6 +69,9 @@ class AppContainer(context: Context) : PlayerDependencies {
                 baseUrl = RadioBrowserServers(httpClient)::baseUrl,
                 countryCode = { Locale.getDefault().country.takeIf { it.length == 2 } },
             ),
+            YouTubeMusicSource(engine),
+            SoundCloudSource(engine),
+            BandcampSource(BandcampSearchApi(httpClient), engine),
         ),
     )
 

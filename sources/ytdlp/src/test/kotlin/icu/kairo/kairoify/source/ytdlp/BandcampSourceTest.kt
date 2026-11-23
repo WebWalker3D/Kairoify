@@ -81,9 +81,21 @@ class BandcampSourceTest {
             assertEquals("bandcamp", track.ref.sourceId)
             assertTrue(track.ref.itemId.startsWith("https://") && "/track/" in track.ref.itemId, track.ref.itemId)
             assertEquals(track.ref.itemId, track.pageUrl)
-            assertTrue(track.artworkUrl == null || track.artworkUrl!!.endsWith("_2.jpg"), track.artworkUrl)
+            assertTrue(Regex("https://f4\\.bcbits\\.com/img/a\\d+_2\\.jpg").matches(track.artworkUrl.orEmpty()), track.artworkUrl)
             assertTrue(!track.subtitle.isNullOrBlank())
         }
+    }
+
+    @Test
+    fun `artwork comes from the art id`() = runTest {
+        reply(
+            """{"auto":{"results":[
+              {"type":"t","name":"With art","band_name":"B","item_url_path":"https://b.bandcamp.com/track/one","art_id":123,"img":"https://f4.bcbits.com/img/123_3.jpg"},
+              {"type":"t","name":"No art","band_name":"B","item_url_path":"https://b.bandcamp.com/track/two","art_id":null,"img":null}]}}""",
+        )
+        val (withArt, noArt) = source.search("x").items
+        assertEquals("https://f4.bcbits.com/img/a123_2.jpg", withArt.artworkUrl)
+        assertEquals(null, noArt.artworkUrl)
     }
 
     @Test

@@ -30,7 +30,8 @@ data class BcResult(
     @SerialName("band_name") val bandName: String? = null,
     @SerialName("album_name") val albumName: String? = null,
     @SerialName("item_url_path") val itemUrlPath: String? = null,
-    val img: String? = null,
+    /** Album or track cover id; the art lives at img/a<id>_<size>.jpg (the "img" field leaves out the "a" and 404s). */
+    @SerialName("art_id") val artId: Long? = null,
 )
 
 @Serializable
