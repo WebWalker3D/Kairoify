@@ -131,6 +131,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | Wikimedia Commons | **Fixed**: search failed on the phone because some metadata values aren't text; checked on a Samsung S22+ along with NTS, Mixcloud and hearthis.at. |
 | 2026-11-23 | Unreleased | Mixcloud | **Switched back on** by the owner's choice, marked Not authorized like YouTube Music, SoundCloud and Bandcamp. NTS shows recorded on Mixcloud are back. |
 | 2026-11-23 | Unreleased | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app (next release). **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |
 | 2026-11-23 | Unreleased | Mixcloud | **Switched off**: its API excludes audio streams and its terms restrict extraction. NTS shows recorded only on Mixcloud are left out. |

@@ -35,12 +35,17 @@ import icu.kairo.kairoify.core.source.SourceException
 import icu.kairo.kairoify.core.source.SourceInfo
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 
+/** Most metadata values are text, but some are numbers, booleans or objects (e.g. CommonsMetadataExtension). */
 @Serializable
-internal data class WmMetaValue(val value: String? = null)
+internal data class WmMetaValue(val value: JsonElement? = null) {
+    val text: String? get() = (value as? JsonPrimitive)?.takeIf { it.isString }?.content
+}
 
 @Serializable
 internal data class WmImageInfo(val url: String? = null, val mime: String? = null, val extmetadata: Map<String, WmMetaValue> = emptyMap())
@@ -95,7 +100,7 @@ class WikimediaSource(
     }
 
     private fun license(info: WmImageInfo): License? =
-        wikimediaLicense(info.extmetadata["LicenseUrl"]?.value, info.extmetadata["LicenseShortName"]?.value)
+        wikimediaLicense(info.extmetadata["LicenseUrl"]?.text, info.extmetadata["LicenseShortName"]?.text)
 
     private fun track(page: WmPage): Track? {
         val title = page.title?.takeIf { it.startsWith("File:") } ?: return null
@@ -103,7 +108,7 @@ class WikimediaSource(
         if (info.url.isNullOrBlank()) return null
         // Commons' "audio" includes MIDI, which the player can't decode.
         if (info.mime.orEmpty().lowercase() in UNPLAYABLE) return null
-        val artist = info.extmetadata["Artist"]?.value?.let(::plainText)?.takeIf(String::isNotBlank)
+        val artist = info.extmetadata["Artist"]?.text?.let(::plainText)?.takeIf(String::isNotBlank)
         val name = title.removePrefix("File:").substringBeforeLast('.')
         return Track(
             ref = MediaRef(ID, title),

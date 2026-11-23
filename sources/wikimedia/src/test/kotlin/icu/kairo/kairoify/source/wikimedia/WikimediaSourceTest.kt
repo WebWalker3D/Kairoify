@@ -96,4 +96,17 @@ class WikimediaSourceTest {
         )
         assertEquals(listOf("Fugue"), source.search("fugue").items.map { it.title })
     }
+
+    @Test
+    fun `metadata that isn't text doesn't break search`() = runTest {
+        server.enqueue(
+            MockResponse.Builder().body(
+                """{"query":{"pages":{"1":{"title":"File:Ode.ogg","index":1,"imageinfo":[{"url":"https://upload.wikimedia.org/a/Ode.ogg","mime":"application/ogg",
+                  "extmetadata":{"Artist":{"value":"<b>Choir</b>"},"Copyrighted":{"value":false},"Size":{"value":12345},"Assessments":{"value":{"poty":"1"}}}}]}}}}""",
+            ).build(),
+        )
+        val track = source.search("ode").items.single()
+        assertEquals("Ode", track.title)
+        assertEquals("Choir", track.subtitle)
+    }
 }
