@@ -91,6 +91,7 @@ table.
 | [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API (CC0 audio where available) | To check (API key) |
 | Ohio State Public Domain Day Project | Newly recorded public-domain compositions | CC0 recordings | No |
 | [Public Domain Review](https://publicdomainreview.org) | Curated historical audio | Plays from the original archives it links to | No |
+| Netlabels by name, through the Internet Archive | Ektoplazm (psytrance), Kahvi Collective (ambient/IDM), blocSonic (hip-hop/electronic), 8Bitpeoples (chiptune), Dusted Wax Kingdom (downtempo), Phonocake, Petroglyph Music, Mahorka, insectorama, weareallghosts, ODrex Music, S27, Comfort Stand, Monotonik, Thinner (minimal techno), Textone, Webbed Hand Records, Test Tube, Peppermill Records, Zeromoon | The existing Internet Archive source, as one browse entry per label wherever the Archive mirrors its catalog; labels it doesn't mirror get checked one by one | No |
 | [KEXP](https://www.kexp.org) | Seattle's listener-supported station | The live stream is already in Radio Browser; the archive has no public audio | — |
 | Podcasts | Shows, via open RSS feeds and podcast directories | RSS | No |
 | Public-domain audiobooks ([LibriVox](https://librivox.org)) | Volunteer-read public-domain books | LibriVox API and Internet Archive | No |
@@ -113,6 +114,8 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-23 | Unreleased | ccMixter | **Added** (in progress): search, Creative Commons remixes and originals with their license; plays the MP3. |
+| 2026-11-23 | Unreleased | 20 netlabels (Ektoplazm, Kahvi, blocSonic, Thinner, Monotonik and others) | **Planned**: through the Internet Archive where it mirrors them. |
 | 2026-11-23 | Unreleased | hearthis.at | **Added** (in progress): search; DJ sets and tracks played from hearthis.at's own streams. |
 | 2026-11-23 | Unreleased | NTS Radio | **Added** (in progress): live channels NTS 1 and NTS 2 on Home; show archive search, played from each show's SoundCloud or Mixcloud recording. |
 | 2026-11-23 | Unreleased | Mixcloud | **Added** (in progress): search, DJ mixes played as HLS through yt-dlp. |
