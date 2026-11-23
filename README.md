@@ -28,7 +28,7 @@ and one library.
 
 More sources follow in the next phases.
 
-Platform: Android 8.0 and newer, 64-bit phones (nearly every phone since 2017).
+Platform: Android 8.0 and newer, on 64-bit phones.
 
 ## Build it yourself
 
