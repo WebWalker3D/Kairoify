@@ -1,0 +1,22 @@
+[
+    {
+        "name": "pop",
+        "stationcount": 5196
+    },
+    {
+        "name": "music",
+        "stationcount": 3644
+    },
+    {
+        "name": "news",
+        "stationcount": 2710
+    },
+    {
+        "name": "rock",
+        "stationcount": 2633
+    },
+    {
+        "name": "talk",
+        "stationcount": 1617
+    }
+]

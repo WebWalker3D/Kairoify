@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Brazil",
+    "iso_3166_1": "BR",
+    "stationcount": 1584
+  },
+  {
+    "name": "Germany",
+    "iso_3166_1": "DE",
+    "stationcount": 5626
+  },
+  {
+    "name": "Ghana",
+    "iso_3166_1": "GH",
+    "stationcount": 91
+  },
+  {
+    "name": "Japan",
+    "iso_3166_1": "JP",
+    "stationcount": 116
+  },
+  {
+    "name": "Nowhereland",
+    "iso_3166_1": "ZZ",
+    "stationcount": 0
+  }
+]
