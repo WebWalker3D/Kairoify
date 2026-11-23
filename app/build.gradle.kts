@@ -17,6 +17,8 @@
  * The Original Code is Kairoify. The Initial Developer of the Original Code is
  * WebWalker3D. Attribution information: see NOTICE.md.
  */
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -34,14 +36,45 @@ android {
         applicationId = "icu.kairo.kairoify"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
-        // The embedded Python (3.14) and QuickJS ship for 64-bit phones and emulators only.
-        ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
+        versionCode = 2
+        versionName = "0.2.0"
     }
 
     // QuickJS has to exist as a real file to be executed, so native libraries are extracted at install.
     packaging { jniLibs { useLegacyPackaging = true } }
+
+    // Release signing comes from a properties file kept outside the repo (storeFile, storePassword, keyAlias,
+    // keyPassword). Point to it with -Pkairoify.signing=/path or KAIROIFY_SIGNING; without it, release builds are unsigned.
+    val signingFile = (findProperty("kairoify.signing") as String?) ?: System.getenv("KAIROIFY_SIGNING")
+    val signing = signingFile?.let { path ->
+        Properties().apply { file(path).inputStream().use { load(it) } }
+    }
+    signingConfigs {
+        if (signing != null) {
+            create("release") {
+                storeFile = file(signing.getProperty("storeFile"))
+                storePassword = signing.getProperty("storePassword")
+                keyAlias = signing.getProperty("keyAlias")
+                keyPassword = signing.getProperty("keyPassword")
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (signing != null) signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    // One APK per CPU type keeps downloads small: arm64-v8a for phones, x86_64 for emulators. These are the only ABIs
+    // built at all: the embedded Python (3.14) and QuickJS are 64-bit only.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "x86_64")
+            isUniversalApk = false
+        }
+    }
 
     buildFeatures {
         compose = true

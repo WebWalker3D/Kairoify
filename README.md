@@ -2,6 +2,10 @@
 
 **The encyclopedia of free music. Open-source radio.**
 
+- Project home: <https://github.com/WebWalker3D/Kairoify>
+- Downloads: <https://github.com/WebWalker3D/Kairoify/releases>
+- Bugs and ideas: <https://github.com/WebWalker3D/Kairoify/issues>
+
 Kairoify puts every free source of music under one app: live radio from every
 country, recorded live concerts, public-domain recordings, Creative Commons
 catalogs, and the free tiers of mainstream services. Search them all at once,
@@ -14,7 +18,7 @@ and one library.
 
 ## Status
 
-**Phase 2: songs and favorites.**
+**Version 0.2.0 — songs and favorites.**
 
 - **Live radio:** browse and search ~50,000 stations from every country, and see
   what song is playing.
@@ -26,19 +30,46 @@ and one library.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
-More sources follow in the next phases.
-
 Platform: Android 8.0 and newer, on 64-bit phones.
+
+## Install
+
+1. Open the [latest release](https://github.com/WebWalker3D/Kairoify/releases/latest).
+2. Download `kairoify-<version>-arm64-v8a.apk`. That's the one for phones; the
+   `x86_64` APK is for emulators.
+3. Open the file on your phone and allow installing from that app when Android asks.
+
+Kairoify isn't on the Play Store. Each release lists the SHA-256 of its APKs and
+of the signing certificate, so you can check what you installed:
+
+```
+Signing certificate SHA-256:
+22:A5:67:F6:B2:90:29:82:EC:45:D2:14:3A:B0:CD:DB:5A:46:F5:78:8B:88:7C:C6:DE:4E:6F:A8:DA:A2:06:D4
+```
+
+Updates install over the top as long as they're signed with the same certificate.
+Kairoify doesn't check for its own updates yet, so watch the
+[releases page](https://github.com/WebWalker3D/Kairoify/releases).
 
 ## Build it yourself
 
 ```bash
 ./gradlew assembleDebug
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
 ```
 
 Needs JDK 21, the Android SDK and Python 3.14 on the `PATH` (for the embedded
-Python's packages). Every push also builds a debug APK in GitHub Actions.
+Python's packages). The build makes one APK per CPU type: `arm64-v8a` for phones,
+`x86_64` for emulators. Every push also builds debug APKs in GitHub Actions.
+
+Signed release builds read their signing key from a properties file kept outside
+the repo (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`):
+
+```bash
+./gradlew assembleRelease -Pkairoify.signing=/path/to/release.properties
+```
+
+Without it, release APKs come out unsigned.
 
 ## Android Auto
 
@@ -72,6 +103,26 @@ built into the app.
 | Audius | Independent artists | Planned |
 
 More to follow — the goal is every free source there is.
+
+## What's next
+
+- **More sources:** Internet Archive (Live Music Archive concerts, the Great 78
+  Project, netlabels, public-domain classical), Jamendo and Audius. Later, Mixcloud,
+  hearthis.at, NTS and KEXP archives, ccMixter and Wikimedia Commons.
+- **Explore:** a world map, browsing by decade and by source, and "On this day"
+  concerts.
+- **Library:** playlists, history, and saved albums and concerts, plus export and
+  import of the whole library.
+- **Downloads** for offline listening, wherever the source allows it.
+- **Settings:** switch sources on or off, audio quality for Wi-Fi and mobile data,
+  a sleep timer, and an in-app check for new Kairoify releases.
+- **Search:** artist, album and playlist results, a "Top results" strip, and source
+  filters.
+- **Licenses:** an open-source notices screen, and artist and license shown for
+  Creative Commons tracks.
+- **Releases:** signed release builds published automatically by GitHub Actions.
+- **Further out:** an optional Kairoify server for sync, and Kairo, the companion
+  AI, as a DJ.
 
 ## License
 
