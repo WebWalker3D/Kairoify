@@ -72,6 +72,11 @@ import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.player.FreeRadio
 import icu.kairo.kairoify.player.seedArtist
+import icu.kairo.kairoify.player.RadioSong
+import icu.kairo.kairoify.player.findRadioSong
+import icu.kairo.kairoify.player.radioSong
+import androidx.compose.material3.SnackbarResult
+import kotlinx.coroutines.flow.first
 import androidx.compose.material3.SnackbarDuration
 import icu.kairo.kairoify.core.source.MusicSource
 import icu.kairo.kairoify.settings.SourceCategory
@@ -175,6 +180,31 @@ private fun KairoifyScaffold(
             }
         }
     }
+    // A station's current song, found on demand on the song sources and kept in Favorites.
+    val saveRadioSong: (RadioSong) -> Unit = { song ->
+        scope.launch {
+            snackbar.showSnackbar("Looking for “${song.title}” by ${song.artist}…", duration = SnackbarDuration.Short)
+        }
+        scope.launch {
+            val found = try {
+                registry.findRadioSong(song)
+            } catch (e: SourceException) {
+                null
+            }
+            snackbar.currentSnackbarData?.dismiss()
+            if (found == null) {
+                snackbar.showSnackbar("Couldn't find “${song.title}” by ${song.artist} on your sources.")
+            } else {
+                if (!favorites.isFavorite(found.ref).first()) favorites.toggle(found)
+                val result = snackbar.showSnackbar(
+                    "Saved “${found.title}” to Favorites (from ${sourceName(registry, found.ref.sourceId)}).",
+                    actionLabel = "Play",
+                    duration = SnackbarDuration.Long,
+                )
+                if (result == SnackbarResult.ActionPerformed) player.play(found)
+            }
+        }
+    }
     val startRadio: (Item) -> Unit = { item ->
         scope.launch {
             try {
@@ -268,6 +298,9 @@ private fun KairoifyScaffold(
                 }
                 if (npItem != null && npItem.isPlayable) {
                     TextButton(onClick = { addingToPlaylist = listOf(npItem) }) { Text("Add to playlist") }
+                }
+                radioSong(np)?.let { song ->
+                    TextButton(onClick = { saveRadioSong(song) }) { Text("Save this song") }
                 }
             },
         )
