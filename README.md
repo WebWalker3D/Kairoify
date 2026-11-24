@@ -120,6 +120,13 @@ built into the app.
 | Europeana | European cultural recordings | Off until its API key is entered in Settings |
 | ccMixter | Creative Commons remixes and originals | Off by default (its files block plays from outside its site; switching it on sends its page as the Referer) |
 
+**Free radio** (on any song or album with an artist) builds a station on the phone from
+every switched-on music source, not just one service. It plays the song you picked at once,
+looks up similar artists in [MusicBrainz](https://musicbrainz.org) and
+[ListenBrainz](https://listenbrainz.org) (open, keyless), searches every music source for
+them, and adds songs really credited to them as they're found, artists taking turns. The
+player shows the station and its **Up next** list. No server involved.
+
 Songs, episodes, mixes and audiobook chapters pick up where you left them when you play
 them again (live radio doesn't). A **Start track over?** button shows for five seconds
 whenever that happens.

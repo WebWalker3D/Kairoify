@@ -66,6 +66,9 @@ import icu.kairo.kairoify.ui.AboutViewModel
 import icu.kairo.kairoify.ui.components.StartOverPill
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
+import icu.kairo.kairoify.player.FreeRadio
+import icu.kairo.kairoify.player.seedArtist
+import androidx.compose.material3.SnackbarDuration
 import icu.kairo.kairoify.core.source.MusicSource
 import icu.kairo.kairoify.settings.SourceCategory
 import icu.kairo.kairoify.ui.AttributionSplash
@@ -106,6 +109,7 @@ class MainActivity : ComponentActivity() {
                         settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
                         sourceChanges = container.sourceSettings.changes,
                         inCategory = container.sourceCatalog::inCategory,
+                        freeRadio = container.freeRadio,
                     )
                 }
             }
@@ -131,6 +135,7 @@ private fun KairoifyScaffold(
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
     inCategory: (MusicSource, SourceCategory) -> Boolean,
+    freeRadio: FreeRadio,
 ) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
@@ -141,6 +146,25 @@ private fun KairoifyScaffold(
     var actionsFor by remember { mutableStateOf<Item?>(null) }
     val openLink = rememberLinkOpener { scope.launch { snackbar.showSnackbar("No app on this phone can open that link.") } }
     val toggleFavorite: (Item) -> Unit = { item -> scope.launch { favorites.toggle(item) } }
+    // Free radio plays the chosen song at once and adds similar music from every source as it's found.
+    val startFreeRadio: (Item) -> Unit = { item ->
+        player.play(item)
+        val generation = player.queueGeneration
+        val title = "Free radio · " + (seedArtist(item) ?: item.title)
+        player.markStation(generation, title, building = true)
+        showSheet = true
+        scope.launch {
+            var added = 0
+            freeRadio.stream(item) { batch ->
+                player.append(generation, batch)
+                added += batch.size
+            }
+            player.markStation(generation, title, building = false)
+            if (added == 0 && generation == player.queueGeneration) {
+                snackbar.showSnackbar("Couldn't find similar free music for this one.")
+            }
+        }
+    }
     val startRadio: (Item) -> Unit = { item ->
         scope.launch {
             try {
@@ -153,6 +177,8 @@ private fun KairoifyScaffold(
     }
     val np = nowPlaying
     val npItem = np?.item
+    val station by player.station.collectAsStateWithLifecycle()
+    val upNext by player.upNext.collectAsStateWithLifecycle()
     val npFavorite by rememberIsFavorite(favorites, npItem?.ref)
     LaunchedEffect(Unit) { player.connect() }
     Scaffold(
@@ -217,9 +243,14 @@ private fun KairoifyScaffold(
             onOpenLink = openLink,
             onStopped = { showSheet = false },
             onDismiss = { showSheet = false },
+            station = station,
+            upNext = upNext,
             extraActions = {
                 if (npItem != null && canStartRadio(registry, npItem)) {
                     TextButton(onClick = { startRadio(npItem) }) { Text("Start radio") }
+                }
+                if (npItem != null && seedArtist(npItem) != null) {
+                    TextButton(onClick = { startFreeRadio(npItem) }) { Text("Free radio") }
                 }
             },
         )
@@ -241,6 +272,16 @@ private fun KairoifyScaffold(
                             actionsFor = null
                         },
                     ) { Text("Start radio") }
+                }
+                if (seedArtist(item) != null) {
+                    ListItem(
+                        supportingContent = { Text("A station from every free music source") },
+                        leadingContent = { Icon(KairoifyIcons.Radio, contentDescription = null) },
+                        modifier = Modifier.clickable {
+                            startFreeRadio(item)
+                            actionsFor = null
+                        },
+                    ) { Text("Free radio") }
                 }
             },
         )

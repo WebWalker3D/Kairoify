@@ -19,6 +19,10 @@
  */
 package icu.kairo.kairoify.ui.player
 
+import icu.kairo.kairoify.player.UpNextEntry
+import icu.kairo.kairoify.player.StationLabel
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -77,6 +81,8 @@ fun NowPlayingSheet(
     onStopped: () -> Unit,
     onDismiss: () -> Unit,
     extraActions: @Composable ColumnScope.() -> Unit = {},
+    station: StationLabel? = null,
+    upNext: List<UpNextEntry> = emptyList(),
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(
@@ -84,6 +90,7 @@ fun NowPlayingSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            station?.let { Text(it.title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary) }
             Artwork(nowPlaying.artworkUrl, nowPlaying.title, 240.dp)
             if (nowPlaying.isLive) LiveBadge()
             Text(nowPlaying.title, style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
@@ -147,6 +154,7 @@ fun NowPlayingSheet(
             link?.let { (label, url) -> TextButton(onClick = { onOpenLink(url) }) { Text(label) } }
             Spacer(Modifier.height(4.dp))
             Text("via $sourceName", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            UpNext(upNext, building = station?.building == true, onSkipTo = player::skipTo)
         }
     }
 }
@@ -187,5 +195,35 @@ private fun ToggleIcon(icon: ImageVector, label: String, on: Boolean, onClick: (
             contentDescription = label,
             tint = if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+/** "Up next": the coming songs, tap one to jump to it; while a station is still being built, says so. */
+@Composable
+private fun UpNext(entries: List<UpNextEntry>, building: Boolean, onSkipTo: (Int) -> Unit) {
+    if (entries.isEmpty() && !building) return
+    Column(Modifier.fillMaxWidth().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("Up next", style = MaterialTheme.typography.titleMedium)
+        entries.forEach { entry ->
+            Row(
+                Modifier.fillMaxWidth().clickable { onSkipTo(entry.index) }.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Artwork(entry.artworkUrl, entry.title, 48.dp)
+                Column(Modifier.weight(1f)) {
+                    Text(entry.title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    entry.subtitle?.let {
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+            }
+        }
+        if (building) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
+                Text("Finding similar music…", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }

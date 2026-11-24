@@ -138,6 +138,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | All music sources | **Added**: Free radio, a station mixed on the phone from every music source. Similar artists come from MusicBrainz and ListenBrainz (metadata only, no audio; open APIs, no key). |
 | 2026-11-24 | Unreleased | Audiobooks & poetry | **Changed**: LibriVox grew into Audiobooks & poetry, adding the Internet Archive's Audio Books & Poetry collection and 17 genres to browse. Favorites saved from LibriVox still play. |
 | 2026-11-24 | Unreleased | Internet Archive | **Added**: Hip-hop mixtapes, searched and browsable. |
 | 2026-11-24 | Unreleased | All sources | **Changed**: sources are grouped into six sections (Music, Radio, Audiobooks & poetry, Podcasts, Historical recordings, Sounds), each with its own page, search and browse in Explore. |

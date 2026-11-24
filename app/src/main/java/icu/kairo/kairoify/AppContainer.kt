@@ -26,6 +26,8 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.player.FreeRadio
+import icu.kairo.kairoify.source.listenbrainz.SimilarArtists
 import icu.kairo.kairoify.player.ResumePositions
 import icu.kairo.kairoify.source.radioparadise.RadioParadiseSource
 import icu.kairo.kairoify.source.wavlake.WavlakeSource
@@ -155,6 +157,15 @@ class AppContainer(context: Context) : PlayerDependencies {
                 category = SourceCategory.MUSIC),
             ),
             sourceSettings,
+        )
+    }
+
+    /** "Free radio": stations mixed on the phone from every music source, with similar artists from ListenBrainz. */
+    val freeRadio: FreeRadio by lazy {
+        FreeRadio(
+            sourceRegistry,
+            similar = SimilarArtists(httpClient)::similarTo,
+            isMusic = { sourceCatalog.inCategory(it, SourceCategory.MUSIC) },
         )
     }
 
