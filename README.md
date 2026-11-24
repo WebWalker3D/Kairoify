@@ -120,6 +120,10 @@ built into the app.
 | Europeana | European cultural recordings | Off until its API key is entered in Settings |
 | ccMixter | Creative Commons remixes and originals | Off by default (its files block plays from outside its site; switching it on sends its page as the Referer) |
 
+Songs, episodes, mixes and audiobook chapters pick up where you left them when you play
+them again (live radio doesn't). A **Start track over?** button shows for five seconds
+whenever that happens.
+
 Explore's Countries, Genres and Concerts & archives lists each have a filter box: type
 part of a name (accents and case don't matter; a country's two-letter code works too).
 

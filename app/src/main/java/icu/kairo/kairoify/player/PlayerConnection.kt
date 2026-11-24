@@ -23,7 +23,10 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import icu.kairo.kairoify.core.model.MediaRef
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionError
@@ -38,9 +41,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+/** Offered after a track picks up where it was left: "Start track over?" for a few seconds. */
+data class ResumeOffer(val ref: MediaRef, val positionMs: Long, val id: Long)
+
 /** The app's handle on the playback service. Everything the UI shows about playback comes from [nowPlaying]. */
 @OptIn(UnstableApi::class)
-class PlayerConnection(private val context: Context) {
+class PlayerConnection(private val context: Context, private val positions: ResumePositions? = null) {
+    private val _resumeOffer = MutableStateFlow<ResumeOffer?>(null)
+
+    /** Set when the track just started from where the person left it; the UI offers to start it over. */
+    val resumeOffer: StateFlow<ResumeOffer?> = _resumeOffer.asStateFlow()
+
     private val _nowPlaying = MutableStateFlow<NowPlaying?>(null)
     val nowPlaying: StateFlow<NowPlaying?> = _nowPlaying.asStateFlow()
 
@@ -58,13 +69,17 @@ class PlayerConnection(private val context: Context) {
         if (items.isEmpty()) return
         val request = queueRequest(items, startIndex, shuffle)
         withController {
-            requested = request.items[request.startIndex]
+            saveCurrent(it)
+            val start = request.items[request.startIndex]
+            requested = start
             sessionError = null
+            val resumeAt = if (start is Station) null else positions?.positionFor(start.ref)
+            _resumeOffer.value = resumeAt?.let { ms -> ResumeOffer(start.ref, ms, System.nanoTime()) }
             // Shuffle goes off, the queue is set, then shuffle goes on: the service orders the shuffle from the
             // start item when shuffle turns on, so every item plays.
             it.shuffleModeEnabled = false
             it.repeatMode = request.repeatMode
-            it.setMediaItems(request.items.map(MediaItems::fromItem), request.startIndex, 0)
+            it.setMediaItems(request.items.map(MediaItems::fromItem), request.startIndex, resumeAt ?: 0)
             it.shuffleModeEnabled = request.shuffle
             it.prepare()
             it.play()
@@ -72,9 +87,34 @@ class PlayerConnection(private val context: Context) {
         }
     }
 
-    fun skipNext() = withController { it.seekToNext() }
+    fun skipNext() = withController {
+        saveCurrent(it)
+        it.seekToNext()
+    }
 
-    fun skipPrevious() = withController { it.seekToPrevious() }
+    fun skipPrevious() = withController {
+        saveCurrent(it)
+        it.seekToPrevious()
+    }
+
+    /** "Start track over?": back to the beginning, and forget the saved spot. */
+    fun startOver() = withController {
+        _resumeOffer.value?.let { offer -> positions?.forget(offer.ref) }
+        _resumeOffer.value = null
+        it.seekTo(0)
+    }
+
+    fun dismissResumeOffer() {
+        _resumeOffer.value = null
+    }
+
+    /** Remembers where the current (non-live) item is, so playing it again picks up there. */
+    private fun saveCurrent(controller: MediaController) {
+        val current = _nowPlaying.value ?: return
+        if (current.isLive || controller.currentMediaItem == null) return
+        val duration = controller.duration.takeIf { it != C.TIME_UNSET && it > 0 }
+        positions?.remember(current.ref, controller.currentPosition, duration)
+    }
 
     fun seekTo(positionMs: Long) = withController { it.seekTo(positionMs) }
 
@@ -127,7 +167,19 @@ class PlayerConnection(private val context: Context) {
         future.addListener({
             val controller = future.get()
             controller.addListener(object : Player.Listener {
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    // The previous item played to its end: next time it starts from the top.
+                    if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) _nowPlaying.value?.let { positions?.forget(it.ref) }
+                }
+
                 override fun onEvents(player: Player, events: Player.Events) {
+                    if (events.contains(Player.EVENT_IS_PLAYING_CHANGED) && !player.isPlaying) {
+                        if (player.playbackState == Player.STATE_ENDED) {
+                            _nowPlaying.value?.let { positions?.forget(it.ref) }
+                        } else {
+                            saveCurrent(controller)
+                        }
+                    }
                     if (player.playbackState == Player.STATE_READY) sessionError = null
                     publish(controller)
                 }
