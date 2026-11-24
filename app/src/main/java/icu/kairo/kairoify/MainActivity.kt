@@ -63,6 +63,7 @@ import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.player.canStartRadio
 import icu.kairo.kairoify.player.radioQueue
 import icu.kairo.kairoify.ui.AboutViewModel
+import icu.kairo.kairoify.ui.components.StartOverPill
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.ui.AttributionSplash
@@ -154,6 +155,8 @@ private fun KairoifyScaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
             Column {
+                val resumeOffer by player.resumeOffer.collectAsStateWithLifecycle()
+                StartOverPill(resumeOffer, onStartOver = player::startOver, onDismiss = player::dismissResumeOffer)
                 np?.let {
                     MiniPlayer(
                         it,

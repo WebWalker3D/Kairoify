@@ -26,6 +26,7 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.player.ResumePositions
 import icu.kairo.kairoify.source.radioparadise.RadioParadiseSource
 import icu.kairo.kairoify.source.wavlake.WavlakeSource
 import icu.kairo.kairoify.source.podcasts.PodcastSource
@@ -160,7 +161,10 @@ class AppContainer(context: Context) : PlayerDependencies {
         SourceRegistry(sourceCatalog.entries.map { it.source }, isEnabled = sourceCatalog::isEnabled)
     }
 
-    val playerConnection: PlayerConnection = PlayerConnection(context.applicationContext)
+    val playerConnection: PlayerConnection = PlayerConnection(
+        context.applicationContext,
+        ResumePositions(context.getSharedPreferences("resume", Context.MODE_PRIVATE)),
+    )
 
     val database: KairoifyDatabase = createDatabase(context)
 
