@@ -64,6 +64,7 @@ import icu.kairo.kairoify.player.canStartRadio
 import icu.kairo.kairoify.player.radioQueue
 import icu.kairo.kairoify.ui.AboutViewModel
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
+import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
@@ -76,7 +77,6 @@ import icu.kairo.kairoify.ui.icons.KairoifyIcons
 import icu.kairo.kairoify.ui.player.MiniPlayer
 import icu.kairo.kairoify.ui.player.NowPlayingSheet
 import icu.kairo.kairoify.ui.theme.KairoifyTheme
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
@@ -101,6 +101,7 @@ class MainActivity : ComponentActivity() {
                         container.favorites,
                         about = { AboutViewModel(container.engine, container.updater) },
                         settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
+                        sourceChanges = container.sourceSettings.changes,
                     )
                 }
             }
@@ -124,6 +125,7 @@ private fun KairoifyScaffold(
     favorites: FavoritesStore,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
+    sourceChanges: Flow<Int>,
 ) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
@@ -188,6 +190,7 @@ private fun KairoifyScaffold(
             favorites,
             about = about,
             settings = settings,
+            sourceChanges = sourceChanges,
             onPlay = player::play,
             onPlayQueue = { items, start, shuffle -> player.playAll(items, start, shuffle) },
             onLongPress = { actionsFor = it },

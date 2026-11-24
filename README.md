@@ -113,6 +113,7 @@ built into the app.
 | Library of Congress | Historical recordings, including the National Jukebox | ✓ Live |
 | LibriVox | Public-domain audiobooks | ✓ Live |
 | Podcasts | Any show in Apple's public directory, played from its own feed | ✓ Live |
+| Wavlake | Independent artists, free to stream | ✓ Live |
 | Jamendo | Creative Commons music | Off until its client ID is entered in Settings |
 | Freesound | Experimental, ambient and musical recordings | Off until its API key is entered in Settings |
 | Europeana | European cultural recordings | Off until its API key is entered in Settings |
@@ -142,7 +143,7 @@ every current and planned source, with a dated change log.
 
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
-  and Smithsonian Open Access.
+  and more public-domain collections.
 - **Songs that never dead-end:** when a song fails on one service, find the same
   song on another and play that instead.
 - **Save the song on the radio:** turn what a station is playing into a song you can

@@ -25,7 +25,10 @@ import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.core.source.SourceResult
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -38,13 +41,15 @@ sealed interface HomeSection {
 
 data class HomeUiState(val loading: Boolean, val sections: List<HomeSection>)
 
-class HomeViewModel(private val registry: SourceRegistry) : ViewModel() {
+/** @param sourceChanges ticks whenever a source is switched on or off, or gets a key; home reloads then. */
+class HomeViewModel(private val registry: SourceRegistry, sourceChanges: Flow<Int> = emptyFlow()) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState(loading = true, sections = emptyList()))
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
     private var job: Job? = null
 
     init {
         refresh()
+        viewModelScope.launch { sourceChanges.drop(1).collect { refresh() } }
     }
 
     fun refresh() {

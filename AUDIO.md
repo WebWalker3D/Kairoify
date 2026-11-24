@@ -42,6 +42,7 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [LibriVox](https://librivox.org) audiobooks | ~22,000 volunteer-read public-domain audiobooks | The Internet Archive's `librivoxaudio` collection (LibriVox's own API was down) | Official | Unreleased |
 | Internet Archive — netlabels by name | Monotonik, Thinner, Kahvi Collective, blocSonic, 8bitpeoples, Dusted Wax Kingdom, Phonocake, Petroglyph Music, Mahorka, Comfort Stand, Textone, Webbed Hand, Test Tube, Zeromoon, Ektoplazm, Peppermill Records | One browse entry per label, from the Archive's mirror of its catalog | Official | Unreleased |
 | Podcasts | Any show in Apple's public podcast directory | iTunes Search API to find shows; episodes from each show's own RSS feed | Official (public directory and the shows' own feeds) | Unreleased |
+| [Wavlake](https://wavlake.com) | Independent artists who publish free to stream, with optional listener tips | Public search API; the track's own MP3 | Official | Unreleased |
 | [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search, yt-dlp for streams, on the phone | **Not authorized** (owner's choice to include) | 0.2 |
 | [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams | **Not authorized** (owner's choice to include) | 0.2 |
 | NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | 0.4 |
@@ -62,14 +63,13 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | Source | What it brings | How Kairoify will reach it | Key? |
 |---|---|---|---|
 | [Citizen DJ](https://citizen-dj.labs.loc.gov) | Public-domain historical music and recordings | Downloadable datasets; some overlap with the Library of Congress | No |
-| [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | No (public instances) |
+| [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | Checked 2026-11-24: the open instance found (tanukitunes.com) has unlicensed commercial uploads, so it doesn't meet the free-and-legal rule. Needs an instance that only hosts licensed music. |
 | [Open Audio](https://open.audio) | Creative Commons music, including a Free Music Archive mirror | Funkwhale API; each track's license needs checking | No |
 | [Dogmazic](https://play.dogmazic.net) | Tens of thousands of freely licensed independent tracks (since 2004) | Ampache/Subsonic API, which supports third-party apps | To check (may need an account) |
 | [Free Music Archive](https://freemusicarchive.org) | Creative Commons independent music | Through Open Audio's mirror or Internet Archive copies; FMA has no public API | No |
 | [Mirlo](https://mirlo.space) | Independent artists and albums | Canimus API, authorized HLS streaming | Check terms |
 | [Faircamp](https://simonrepp.com/faircamp/) | Artist-hosted music catalogs | Catalog discovery and federation | No |
 | Fairplayer | Federated independent music | Canimus-compatible catalogs | No |
-| [Wavlake](https://wavlake.com) | Independent music with optional artist tipping | Public RSS feeds | No |
 | Bandwagon | Federated independent artists | ActivityPub | Needs permission (playback) |
 | [The Indie Beat Radio](https://theindiebeat.fm) | 5,000+ opted-in independent tracks | Radio streams | Needs permission (third-party terms) |
 | The Indie Beat Live | Live independent concerts | HLS stream published for external players | No |
@@ -90,7 +90,7 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [Virtual Gramophone](https://www.bac-lac.gc.ca) | ~7,300 digitized Canadian recordings | — | To check (rights by country) |
 | [Gallica](https://gallica.bnf.fr) | Historical French and European music | — | Noncommercial reuse with attribution |
 | Yale Berliner Gramophone Collection | Early gramophone recordings | Rights-filtered digital collections | To check |
-| [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API (CC0 audio where available) | To check (API key) |
+| [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API | Checked 2026-11-24: its open-access data has no sound recordings to play. Revisit if it adds some. |
 | Ohio State Public Domain Day Project | Newly recorded public-domain compositions | CC0 recordings | No |
 | [Public Domain Review](https://publicdomainreview.org) | Curated historical audio | Plays from the original archives it links to | No |
 | More netlabels | insectorama, weareallghosts, ODrex Music, S27 | The Archive doesn't mirror these catalogs; each needs checking for another free, legal way in | No |
@@ -135,6 +135,8 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Wavlake | **Added**, on by default; checked on the phone. |
+| 2026-11-24 | Unreleased | All sources | **Changed**: Home reloads as soon as a source is switched on or off in Settings. |
 | 2026-11-24 | Unreleased | Library of Congress | **Fixed**: search now waits up to 20 s; loc.gov often takes 3–8 s and timed out on the phone. Checked on a Samsung S22+ along with SomaFM, Openverse, LibriVox, Podcasts, netlabels and ccMixter. |
 | 2026-11-24 | Unreleased | All sources | **Added**: Settings (Home → ⚙) to switch any source on or off and enter API keys. Keyed sources stay off until they have a key. |
 | 2026-11-24 | Unreleased | SomaFM, Openverse, Library of Congress (with the National Jukebox), LibriVox, Podcasts | **Added**, on by default. |

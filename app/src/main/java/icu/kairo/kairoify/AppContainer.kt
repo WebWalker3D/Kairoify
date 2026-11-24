@@ -26,6 +26,7 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.source.wavlake.WavlakeSource
 import icu.kairo.kairoify.source.podcasts.PodcastSource
 import icu.kairo.kairoify.source.europeana.EuropeanaSource
 import icu.kairo.kairoify.source.freesound.FreesoundSource
@@ -129,6 +130,7 @@ class AppContainer(context: Context) : PlayerDependencies {
                 SourceEntry(OpenverseSource(httpClient), true, note = "Creative Commons audio from many sites. Official API."),
                 SourceEntry(LocSource(httpClient), true, note = "Library of Congress recordings, including the National Jukebox. Official API."),
                 SourceEntry(PodcastSource(httpClient), true, note = "Shows from Apple's public podcast directory; episodes play from each show's own feed."),
+                SourceEntry(WavlakeSource(httpClient), true, note = "Independent artists who publish free to stream, with optional tips. Public API."),
                 SourceEntry(ArchiveSource.librivox(httpClient), true, note = "Public-domain audiobooks read by volunteers, hosted by the Internet Archive."),
                 SourceEntry(
                     FreesoundSource(httpClient, { sourceCatalog.key("freesound") }),
