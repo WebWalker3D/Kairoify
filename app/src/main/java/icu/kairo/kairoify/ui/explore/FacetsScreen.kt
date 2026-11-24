@@ -20,6 +20,17 @@
 package icu.kairo.kairoify.ui.explore
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +56,8 @@ import icu.kairo.kairoify.ui.components.SectionError
 @Composable
 fun FacetsScreen(viewModel: FacetsViewModel, kind: FacetKind, onOpen: (Facet) -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val keyboard = LocalSoftwareKeyboardController.current
     Column(Modifier.fillMaxSize()) {
         Text(
             when (kind) {
@@ -55,10 +68,39 @@ fun FacetsScreen(viewModel: FacetsViewModel, kind: FacetKind, onOpen: (Facet) ->
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(16.dp),
         )
+        OutlinedTextField(
+            value = filter,
+            onValueChange = viewModel::setFilter,
+            placeholder = {
+                Text(
+                    when (kind) {
+                        FacetKind.COUNTRY -> "Find a country"
+                        FacetKind.GENRE -> "Find a genre"
+                        FacetKind.COLLECTION -> "Find a collection or label"
+                    },
+                )
+            },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+            trailingIcon = if (filter.isNotEmpty()) {
+                { IconButton(onClick = { viewModel.setFilter("") }) { Icon(Icons.Filled.Clear, contentDescription = "Clear") } }
+            } else {
+                null
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 8.dp),
+        )
         when (val s = state) {
             FacetsUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
             is FacetsUiState.Failed -> SectionError(s.message, viewModel::load)
-            is FacetsUiState.Loaded -> LazyColumn {
+            is FacetsUiState.Loaded -> if (s.facets.isEmpty() && filter.isNotBlank()) {
+                Text(
+                    "Nothing matches \u201c${filter.trim()}\u201d.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp),
+                )
+            } else LazyColumn {
                 items(s.facets, key = { it.label + it.node }) { facet ->
                     val node = facet.node
                     ListItem(

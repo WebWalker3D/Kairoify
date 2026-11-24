@@ -120,6 +120,9 @@ built into the app.
 | Europeana | European cultural recordings | Off until its API key is entered in Settings |
 | ccMixter | Creative Commons remixes and originals | Off by default (its files block plays from outside its site; switching it on sends its page as the Referer) |
 
+Explore's Countries, Genres and Concerts & archives lists each have a filter box: type
+part of a name (accents and case don't matter; a country's two-letter code works too).
+
 Every source has a switch in **Home → ⚙ Settings**, with a key field for the ones that
 need a registered key.
 
