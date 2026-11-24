@@ -81,4 +81,7 @@ class LocSourceTest {
 
     @Test
     fun `names are title-cased`() = assertTrue(titleCase("joseph c. smith's orchestra") == "Joseph C. Smith's Orchestra")
+
+    @Test
+    fun `search waits long enough for loc_gov`() = assertTrue(source.searchTimeoutMillis >= 20_000L)
 }

@@ -70,7 +70,8 @@ class LocSource(
     override val info = SourceInfo(ID, "Library of Congress")
     override val capabilities = setOf(Capability.SEARCH)
     override val searchKind = ItemKind.SONG
-    override val searchTimeoutMillis = 12_000L
+    // loc.gov often takes 3–8 s to answer a search, longer on a phone.
+    override val searchTimeoutMillis = 20_000L
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 

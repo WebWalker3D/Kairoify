@@ -135,6 +135,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Library of Congress | **Fixed**: search now waits up to 20 s; loc.gov often takes 3–8 s and timed out on the phone. Checked on a Samsung S22+ along with SomaFM, Openverse, LibriVox, Podcasts, netlabels and ccMixter. |
 | 2026-11-24 | Unreleased | All sources | **Added**: Settings (Home → ⚙) to switch any source on or off and enter API keys. Keyed sources stay off until they have a key. |
 | 2026-11-24 | Unreleased | SomaFM, Openverse, Library of Congress (with the National Jukebox), LibriVox, Podcasts | **Added**, on by default. |
 | 2026-11-24 | Unreleased | Internet Archive | **Added**: 16 netlabels as their own browse entries. |
