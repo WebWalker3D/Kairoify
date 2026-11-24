@@ -45,6 +45,10 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import icu.kairo.kairoify.core.model.MediaRef
+import icu.kairo.kairoify.core.model.Track
+import icu.kairo.kairoify.core.source.findSameSong
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.withTimeoutOrNull
 import icu.kairo.kairoify.core.source.SourceException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +71,7 @@ class PlaybackService : MediaLibraryService() {
     private var lastReportedId: String? = null
     private var refreshedMediaId: String? = null
     private var skipsInARow = 0
+    private val triedElsewhere = mutableSetOf<String>()
     private val networkWatcher = NetworkWatcher()
 
     override fun onCreate() {
@@ -217,7 +222,33 @@ class PlaybackService : MediaLibraryService() {
             }
             val refreshed = refreshedMediaId == item.mediaId
             val why = failure?.let { resolveFailureMessage(it, sourceName(ref)) } ?: playbackErrorMessage(error.errorCode, isLive = false)
-            when (trackRecovery(error.errorCode, failure, refreshed, player.hasNextMediaItem(), skipsInARow)) {
+            val recovery = trackRecovery(error.errorCode, failure, refreshed, player.hasNextMediaItem(), skipsInARow)
+            val offline = failure == null && LiveRetryPolicy.isNetworkError(error.errorCode)
+            val wanted = MediaItems.itemOf(item) as? Track
+            // Before skipping or stopping, look for the same song on another service, once per song.
+            if (recovery != Recovery.REFRESH_URL && !offline && wanted != null && triedElsewhere.add(item.mediaId)) {
+                val index = player.currentMediaItemIndex
+                tellControllers("“${wanted.title}” didn't play on ${sourceName(ref)}. Looking for it elsewhere…")
+                scope.launch {
+                    val other = findElsewhere(wanted)
+                    if (player.currentMediaItemIndex != index || player.currentMediaItem?.mediaId != item.mediaId) return@launch
+                    if (other != null) {
+                        player.replaceMediaItem(index, MediaItems.forPlayer(MediaItems.fromItem(other)))
+                        player.prepare()
+                        player.play()
+                        tellControllers("Playing “${wanted.title}” from ${sourceName(other.ref)} instead.")
+                    } else {
+                        recover(item, recovery, why)
+                    }
+                }
+                return
+            }
+            recover(item, recovery, why)
+        }
+
+        private fun recover(item: MediaItem, recovery: Recovery, why: String) {
+            val ref = MediaItems.refOf(item)
+            when (recovery) {
                 Recovery.REFRESH_URL -> {
                     refreshedMediaId = item.mediaId
                     resolver.invalidate(ref)
@@ -265,6 +296,17 @@ class PlaybackService : MediaLibraryService() {
         }
     }
 
+    private suspend fun findElsewhere(wanted: Track): Track? = try {
+        withTimeoutOrNull(FALLBACK_TIMEOUT_MILLIS) { deps.sourceRegistry.findSameSong(wanted) }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (_: Exception) {
+        null
+    }
+
     private fun sourceName(ref: MediaRef): String =
         deps.sourceRegistry.sources.firstOrNull { it.info.id == ref.sourceId }?.info?.displayName ?: "that service"
 }
+
+/** How long to look for a failed song on other services before skipping it. */
+private const val FALLBACK_TIMEOUT_MILLIS = 15_000L
