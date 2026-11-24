@@ -44,6 +44,7 @@ import androidx.navigation.toRoute
 import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.ui.library.LibraryScreen
+import icu.kairo.kairoify.local.LocalMusicSource
 import icu.kairo.kairoify.ui.library.HistoryViewModel
 import icu.kairo.kairoify.ui.library.PlaylistScreen
 import icu.kairo.kairoify.ui.library.PlaylistViewModel
@@ -69,6 +70,7 @@ fun KairoifyNavHost(
     favorites: FavoritesStore,
     history: HistoryStore,
     playlists: PlaylistStore,
+    localMusic: LocalMusicSource,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -126,6 +128,7 @@ fun KairoifyNavHost(
                 viewModel { LibraryViewModel(favorites) },
                 viewModel { PlaylistsViewModel(playlists) },
                 viewModel { HistoryViewModel(history) },
+                localMusic,
                 sourceName = sourceName,
                 onPlayQueue = onPlayQueue,
                 onLongPress = onLongPress,

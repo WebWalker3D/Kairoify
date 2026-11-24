@@ -39,6 +39,8 @@ and one library.
   other music sources and plays that instead.
 - **Save the song on the radio:** when a station names the song it's playing, the
   player's "Save this song" finds it on your music sources and keeps it in Favorites.
+- **Music on your phone:** allow access once and your own music files show up in
+  search, on Home and in Library's "On this phone" tab, alongside everything streamed.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -176,7 +178,6 @@ every current and planned source, with a dated change log.
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
 - **Playlist import** from other music services.
-- **Local music files** alongside everything streamed.
 - **Discovery** shaped by what you listen to, kept on your phone.
 - **Explore:** an interactive world radio globe, and browsing by decade and by
   source.

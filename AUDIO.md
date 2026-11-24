@@ -41,6 +41,7 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | Internet Archive — Old Time Radio | ~57,000 radio dramas, comedies and music shows from the 1930s–50s | Archive APIs | Official | Unreleased |
 | [SomaFM](https://somafm.com) | ~40 ad-free, listener-supported internet radio channels | Public channel list; SomaFM's own public streams | Official | Unreleased |
 | [Nightride FM](https://nightride.fm) | Nine synthwave and electronic radio stations | Fixed station list; Nightride's own public streams | Official | Unreleased |
+| On this phone | Your own music files | Android's media library (with your permission); played from the file | Your own files | Unreleased |
 | [Openverse](https://openverse.org) | Creative Commons audio gathered from many sites, with each work's license | Public REST API | Official | Unreleased |
 | [Library of Congress](https://www.loc.gov/audio/) | Online audio including the National Jukebox (1900–1925); only items it marks unrestricted | Public JSON API; each item's MP3 | Official | Unreleased |
 | Audiobooks & poetry ([LibriVox](https://librivox.org) + Internet Archive) | ~75,000 public-domain audiobooks and poems: LibriVox's volunteer readings and the Archive's Audio Books & Poetry collection, browsable by 17 genres | Archive search and metadata APIs | Official | Unreleased |
@@ -139,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | On this phone (local files) | **Added**, on by default once the person allows access: music files from Android's media library, searched with everything else, with Recently added and Albums shelves and a Library tab. Nothing leaves the phone. |
 | 2026-11-24 | Unreleased | Podcasts, Library of Congress, Wikimedia Commons, Openverse, Freesound, Europeana | **Added**: browse topics and shelves on their sections (e.g. True crime, National Jukebox, Speeches, Rain, Birds), each filled by that source's own search. Library of Congress also gets its real collections (National Jukebox, Songs of America, American Folklife Center, Veterans' stories, Recorded Sound) and a National Jukebox shelf. Checked on the phone. |
 | 2026-11-24 | Unreleased | Nightride FM | **Added**, on by default: nine synthwave stations (Nightride, Chillsynth, Datawave, Spacesynth, Darksynth, Horrorsynth, EBSM, Rekt, Rektory). |
 | 2026-11-24 | Unreleased | All music sources | **Added**: Free radio, a station mixed on the phone from every music source. Similar artists come from MusicBrainz and ListenBrainz (metadata only, no audio; open APIs, no key). |
