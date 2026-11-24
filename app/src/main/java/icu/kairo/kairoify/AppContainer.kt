@@ -26,6 +26,11 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.source.europeana.EuropeanaSource
+import icu.kairo.kairoify.source.freesound.FreesoundSource
+import icu.kairo.kairoify.source.loc.LocSource
+import icu.kairo.kairoify.source.openverse.OpenverseSource
+import icu.kairo.kairoify.source.somafm.SomaFmSource
 import icu.kairo.kairoify.source.ccmixter.CcMixterSource
 import icu.kairo.kairoify.settings.SourceSettings
 import icu.kairo.kairoify.settings.SourceEntry
@@ -118,6 +123,22 @@ class AppContainer(context: Context) : PlayerDependencies {
                     keyName = "jamendo",
                     keyFallback = BuildConfig.JAMENDO_CLIENT_ID,
                     note = "Creative Commons music. Needs a free client ID from developer.jamendo.com.",
+                ),
+                SourceEntry(SomaFmSource(httpClient), true, note = "Ad-free listener-supported radio. Public channel list and streams."),
+                SourceEntry(OpenverseSource(httpClient), true, note = "Creative Commons audio from many sites. Official API."),
+                SourceEntry(LocSource(httpClient), true, note = "Library of Congress recordings, including the National Jukebox. Official API."),
+                SourceEntry(ArchiveSource.librivox(httpClient), true, note = "Public-domain audiobooks read by volunteers, hosted by the Internet Archive."),
+                SourceEntry(
+                    FreesoundSource(httpClient, { sourceCatalog.key("freesound") }),
+                    defaultOn = true,
+                    keyName = "freesound",
+                    note = "Experimental and ambient sounds. Needs a free API key from freesound.org/apiv2/apply.",
+                ),
+                SourceEntry(
+                    EuropeanaSource(httpClient, { sourceCatalog.key("europeana") }),
+                    defaultOn = true,
+                    keyName = "europeana",
+                    note = "European cultural recordings. Needs a free API key from pro.europeana.eu.",
                 ),
                 SourceEntry(
                     CcMixterSource(httpClient),
