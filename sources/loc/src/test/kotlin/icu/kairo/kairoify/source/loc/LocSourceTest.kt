@@ -84,4 +84,20 @@ class LocSourceTest {
 
     @Test
     fun `search waits long enough for loc_gov`() = assertTrue(source.searchTimeoutMillis >= 20_000L)
+
+    @Test
+    fun `browsing a collection filters by what it is part of`() = runTest {
+        server.enqueue(MockResponse.Builder().body(search).build())
+        val labels = source.facets(icu.kairo.kairoify.core.model.FacetKind.COLLECTION).map { it.label }
+        assertEquals("National Jukebox", labels.first())
+        source.browse(icu.kairo.kairoify.core.model.BrowseNode.Collection("national jukebox"))
+        val url = server.takeRequest().url
+        assertEquals("online-format:audio|partof:national jukebox", url.queryParameter("fa"))
+        assertEquals(null, url.queryParameter("q"))
+    }
+
+    @Test
+    fun `unknown collections are empty`() = runTest {
+        assertTrue(source.browse(icu.kairo.kairoify.core.model.BrowseNode.Collection("nope")).items.isEmpty())
+    }
 }

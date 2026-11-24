@@ -19,7 +19,11 @@
  */
 package icu.kairo.kairoify.source.loc
 
+import icu.kairo.kairoify.core.model.BrowseNode
+import icu.kairo.kairoify.core.model.Facet
+import icu.kairo.kairoify.core.model.FacetKind
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.model.Page
@@ -68,21 +72,34 @@ class LocSource(
     private val baseUrl: HttpUrl = "https://www.loc.gov/".toHttpUrl(),
 ) : MusicSource {
     override val info = SourceInfo(ID, "Library of Congress")
-    override val capabilities = setOf(Capability.SEARCH)
+    override val capabilities = setOf(Capability.SEARCH, Capability.BROWSE, Capability.HOME)
     override val searchKind = ItemKind.SONG
     // loc.gov often takes 3–8 s to answer a search, longer on a phone.
     override val searchTimeoutMillis = 20_000L
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
-    override suspend fun search(query: String, page: PageToken?): Page<Item> {
+    override suspend fun search(query: String, page: PageToken?): Page<Item> = Page(find(query = query), next = null)
+
+    override suspend fun facets(kind: FacetKind): List<Facet> =
+        if (kind == FacetKind.COLLECTION) COLLECTIONS.map { (id, label) -> Facet(BrowseNode.Collection(id), label, null) } else emptyList()
+
+    override suspend fun browse(node: BrowseNode, page: PageToken?): Page<Item> {
+        val id = (node as? BrowseNode.Collection)?.id?.takeIf { c -> COLLECTIONS.any { it.first == c } } ?: return Page.empty()
+        return Page(find(partOf = id), next = null)
+    }
+
+    /** The National Jukebox: 78s from 1900–1925, the Library's best-known audio. */
+    override suspend fun home(): List<Shelf> =
+        find(partOf = JUKEBOX).takeIf { it.isNotEmpty() }?.let { listOf(Shelf("loc:jukebox", "National Jukebox", it)) }.orEmpty()
+
+    private suspend fun find(query: String? = null, partOf: String? = null): List<Track> {
         val url = baseUrl.newBuilder().addPathSegment("audio").addPathSegment("")
-            .addQueryParameter("q", query).addQueryParameter("fo", "json").addQueryParameter("c", "25")
-            .addQueryParameter("fa", "online-format:audio").build()
-        val tracks = decode(url, LocSearch.serializer()).results
+            .apply { query?.let { addQueryParameter("q", it) } }.addQueryParameter("fo", "json").addQueryParameter("c", "25")
+            .addQueryParameter("fa", listOfNotNull("online-format:audio", partOf?.let { "partof:$it" }).joinToString("|")).build()
+        return decode(url, LocSearch.serializer()).results
             .filter { it.restricted == false && "audio" in it.formats }
             .mapNotNull(::track)
-        return Page(tracks, next = null)
     }
 
     override suspend fun resolve(ref: MediaRef): ResolvedStream {
@@ -115,6 +132,16 @@ class LocSource(
 
     companion object {
         const val ID = "loc"
+        private const val JUKEBOX = "national jukebox"
+
+        /** Collections from loc.gov's own "part of" list, by how much audio they hold. */
+        internal val COLLECTIONS = listOf(
+            JUKEBOX to "National Jukebox",
+            "the library of congress celebrates the songs of america" to "Songs of America",
+            "american folklife center" to "American Folklife Center",
+            "veterans history project collection" to "Veterans' stories",
+            "recorded sound research center" to "Recorded Sound",
+        )
     }
 }
 
