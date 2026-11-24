@@ -110,6 +110,7 @@ built into the app.
 | Wikimedia Commons | Classical, folk and historical recordings | ✓ Live |
 | Radio Paradise | Ad-free, human-curated radio channels | ✓ Live |
 | SomaFM | Ad-free, listener-supported radio channels | ✓ Live |
+| Nightride FM | Synthwave, darksynth, chillsynth and more | ✓ Live |
 | Openverse | Creative Commons audio from many sites | ✓ Live |
 | Library of Congress | Historical recordings, including the National Jukebox | ✓ Live |
 | Audiobooks & poetry | LibriVox and the Internet Archive's Audio Books & Poetry, by genre | ✓ Live |
