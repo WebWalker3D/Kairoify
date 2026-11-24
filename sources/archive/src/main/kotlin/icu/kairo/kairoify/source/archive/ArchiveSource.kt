@@ -207,12 +207,16 @@ class ArchiveSource(
             "georgeblood" to "collection:georgeblood AND mediatype:audio",
             "netlabels" to "collection:netlabels AND mediatype:audio",
             "classical" to "collection:opensource_audio AND subject:classical",
+            "freemusicarchive" to "collection:freemusicarchive AND mediatype:audio",
+            "oldtimeradio" to "collection:oldtimeradio AND mediatype:audio",
         )
         private val COLLECTION_NAMES = listOf(
             "etree" to "Live Music Archive",
             "georgeblood" to "Great 78 Project",
             "netlabels" to "Netlabels",
             "classical" to "Classical",
+            "freemusicarchive" to "Free Music Archive",
+            "oldtimeradio" to "Old Time Radio",
         )
 
         /** Netlabels whose catalogs the Archive mirrors, browsable by name (collection id → label). */

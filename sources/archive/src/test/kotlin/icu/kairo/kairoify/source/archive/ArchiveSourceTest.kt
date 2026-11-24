@@ -187,4 +187,15 @@ class ArchiveSourceTest {
         assertTrue(query().startsWith("(collection:librivoxaudio) AND ("), query())
         assertEquals(emptyList(), librivox.home())
     }
+
+    @Test
+    fun `old time radio and the free music archive are browsable and searched`() = runTest {
+        val labels = source.facets(FacetKind.COLLECTION).map { it.label }
+        assertTrue("Old Time Radio" in labels && "Free Music Archive" in labels, labels.toString())
+        searchFixture = "browse_78s.json"
+        source.browse(BrowseNode.Collection("freemusicarchive"))
+        assertEquals("collection:freemusicarchive AND mediatype:audio", query())
+        source.search("shadow")
+        assertTrue("collection:oldtimeradio" in query() && "collection:freemusicarchive" in query(), query())
+    }
 }

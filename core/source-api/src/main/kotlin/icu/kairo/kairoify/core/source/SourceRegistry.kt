@@ -46,6 +46,8 @@ class SourceRegistry(
     private val homeTimeoutMillis: Long = 10_000,
     /** Settings: whether a source is switched on (and, for keyed sources, has its key). Asked on every call. */
     private val isEnabled: (MusicSource) -> Boolean = { true },
+    /** Recent search results and album details. Only successful answers are kept. */
+    private val cache: SearchCache = SearchCache(),
 ) {
     /** Every source Kairoify knows, on or off. Lookups by id use this, so favorites from a switched-off source still play. */
     val sources: List<MusicSource> = sources.toList()
@@ -63,13 +65,18 @@ class SourceRegistry(
     }
 
     /** Searches one source again, e.g. when the person taps Retry on its section. */
-    suspend fun searchSource(sourceId: String, query: String): SourceResult<Page<Item>> = searchOne(get(sourceId), query)
+    suspend fun searchSource(sourceId: String, query: String): SourceResult<Page<Item>> =
+        searchOne(get(sourceId), query, fresh = true)
 
     /** What to play after [ref] ("Start radio"). Throws [SourceException] when the source fails. */
     suspend fun related(ref: MediaRef): List<Item> = get(ref.sourceId).related(ref)
 
     /** An album's tracks. Throws [SourceException] when the source fails. */
-    suspend fun details(ref: MediaRef): AlbumDetails = get(ref.sourceId).details(ref)
+    suspend fun details(ref: MediaRef): AlbumDetails {
+        val key = "details|${ref.sourceId}|${ref.itemId}"
+        cache.get<AlbumDetails>(key)?.let { return it }
+        return get(ref.sourceId).details(ref).also { cache.put(key, it) }
+    }
 
     fun home(): Flow<SourceResult<List<Shelf>>> =
         fanOut(Capability.HOME, homeTimeoutMillis) { it.home() }
@@ -86,8 +93,14 @@ class SourceRegistry(
         }
     }
 
-    private suspend fun searchOne(source: MusicSource, query: String): SourceResult<Page<Item>> =
-        attempt(source, source.searchTimeoutMillis ?: searchTimeoutMillis) { it.search(query) }
+    /** One source's answer, from the cache unless [fresh] (Retry always asks again). */
+    private suspend fun searchOne(source: MusicSource, query: String, fresh: Boolean = false): SourceResult<Page<Item>> {
+        val key = "search|${source.info.id}|${SearchCache.normalize(query)}"
+        if (!fresh) cache.get<Page<Item>>(key)?.let { return SourceResult.Ok(source.info, it) }
+        val result = attempt(source, source.searchTimeoutMillis ?: searchTimeoutMillis) { it.search(query) }
+        if (result is SourceResult.Ok) cache.put(key, result.value)
+        return result
+    }
 
     private fun <T> fanOut(
         capability: Capability,

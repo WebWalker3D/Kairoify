@@ -120,6 +120,7 @@ dependencies {
     implementation(project(":sources:europeana"))
     implementation(project(":sources:podcasts"))
     implementation(project(":sources:wavlake"))
+    implementation(project(":sources:radioparadise"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
