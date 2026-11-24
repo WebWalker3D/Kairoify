@@ -138,7 +138,7 @@ class AppContainer(context: Context) : PlayerDependencies {
                 SourceEntry(SomaFmSource(httpClient), true, note = "Ad-free listener-supported radio. Public channel list and streams.", category = SourceCategory.RADIO),
                 SourceEntry(NightrideSource(), true, note = "Free listener-supported synthwave radio: nine stations. Public streams.", category = SourceCategory.RADIO),
                 SourceEntry(OpenverseSource(httpClient).withTopics(BrowseTopics.sounds), true, note = "Creative Commons audio from many sites. Official API.", category = SourceCategory.SOUNDS),
-                SourceEntry(LocSource(httpClient).withTopics(BrowseTopics.libraryOfCongress, shelves = 2), true, note = "Library of Congress recordings, including the National Jukebox. Official API.", category = SourceCategory.HISTORY),
+                SourceEntry(LocSource(httpClient).withTopics(BrowseTopics.libraryOfCongress, shelves = 0), true, note = "Library of Congress recordings, including the National Jukebox. Official API.", category = SourceCategory.HISTORY),
                 SourceEntry(PodcastSource(httpClient).withTopics(BrowseTopics.podcasts), true, note = "Shows from Apple's public podcast directory; episodes play from each show's own feed.", category = SourceCategory.PODCASTS),
                 SourceEntry(WavlakeSource(httpClient), true, note = "Independent artists who publish free to stream, with optional tips. Public API.", category = SourceCategory.MUSIC),
                 SourceEntry(ArchiveSource.audiobooks(httpClient), true, note = "LibriVox and the Internet Archive's Audio Books & Poetry collection, browsable by genre.", category = SourceCategory.AUDIOBOOKS),

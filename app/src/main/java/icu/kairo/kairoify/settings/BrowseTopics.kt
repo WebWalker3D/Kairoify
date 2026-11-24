@@ -30,7 +30,7 @@ object BrowseTopics {
     )
 
     val libraryOfCongress = listOf(
-        Topic("National Jukebox", "victor talking machine"), Topic("Speeches", "speech"), Topic("Folk songs", "folk song"),
+        Topic("Speeches", "speech"), Topic("Folk songs", "folk song"),
         Topic("Oral histories", "oral history"), Topic("Blues"), Topic("Jazz"), Topic("Opera"), Topic("Poetry readings", "poetry reading"),
         Topic("Cowboy songs", "cowboy songs"), Topic("Fiddle tunes", "fiddle"), Topic("Spirituals", "spiritual"), Topic("World War I", "world war"),
     )

@@ -41,8 +41,10 @@ data class Topic(val label: String, val query: String = label.lowercase())
 class WithTopics(private val inner: MusicSource, private val topics: List<Topic>, private val shelves: Int = 3) : MusicSource by inner {
     override val capabilities: Set<Capability> = inner.capabilities + Capability.BROWSE + Capability.HOME
 
+    private val ownFacets = Capability.BROWSE in inner.capabilities
+
     override suspend fun facets(kind: FacetKind): List<Facet> =
-        if (kind == FacetKind.COLLECTION) topics.map { Facet(BrowseNode.Collection(it.label), it.label, null) } else inner.facets(kind)
+        if (kind == FacetKind.COLLECTION) (if (ownFacets) inner.facets(kind) else emptyList()) + topics.map { Facet(BrowseNode.Collection(it.label), it.label, null) } else inner.facets(kind)
 
     override suspend fun browse(node: BrowseNode, page: PageToken?): Page<Item> {
         val topic = (node as? BrowseNode.Collection)?.let { c -> topics.firstOrNull { it.label == c.id } } ?: return inner.browse(node, page)
@@ -50,7 +52,7 @@ class WithTopics(private val inner: MusicSource, private val topics: List<Topic>
     }
 
     override suspend fun home(): List<Shelf> = coroutineScope {
-        val own = async { runCatchingSource { inner.home() }.orEmpty() }
+        val own = async { if (Capability.HOME in inner.capabilities) runCatchingSource { inner.home() }.orEmpty() else emptyList() }
         val picks = topics.take(shelves).map { topic ->
             async {
                 runCatchingSource { inner.search(topic.query).items }?.takeIf { it.isNotEmpty() }
