@@ -171,4 +171,15 @@ class SourceRegistryTest {
         assertEquals("Album x", details.album.title)
         assertEquals("x/1", details.tracks.single().ref.itemId)
     }
+
+    @Test
+    fun `switched-off sources are left out of search and home`() = runTest {
+        val on = FakeSource("on", capabilities = setOf(Capability.SEARCH, Capability.HOME))
+        val off = FakeSource("off", capabilities = setOf(Capability.SEARCH, Capability.HOME))
+        val registry = SourceRegistry(listOf(on, off), isEnabled = { it.info.id != "off" })
+        assertEquals(listOf("on"), registry.search("jazz").toList().map { it.source.id })
+        assertEquals(listOf("on"), registry.home().toList().map { it.source.id })
+        assertEquals(listOf("on"), registry.enabledSources().map { it.info.id })
+        assertEquals("off", registry.get("off").info.id)
+    }
 }

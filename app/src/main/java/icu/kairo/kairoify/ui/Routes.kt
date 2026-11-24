@@ -33,6 +33,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object LibraryRoute
 
+@Serializable data object SettingsRoute
+
 @Serializable data class AlbumRoute(val sourceId: String, val itemId: String, val title: String)
 
 @Serializable data class FacetsRoute(val kind: FacetKind, val sourceId: String = "radiobrowser")

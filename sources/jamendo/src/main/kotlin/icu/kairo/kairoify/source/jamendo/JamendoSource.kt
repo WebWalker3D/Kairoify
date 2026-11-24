@@ -65,7 +65,8 @@ internal data class JamendoReply(val headers: JamendoHeaders = JamendoHeaders(),
  */
 class JamendoSource(
     private val client: OkHttpClient,
-    private val clientId: String,
+    /** Read on every request, so a key entered in Settings works at once. */
+    private val clientId: () -> String,
     private val baseUrl: HttpUrl = "https://api.jamendo.com/v3.0/".toHttpUrl(),
 ) : MusicSource {
     override val info = SourceInfo(ID, "Jamendo")
@@ -90,7 +91,7 @@ class JamendoSource(
 
     private suspend fun fetch(params: Map<String, String>): List<JamendoTrack> {
         val url = baseUrl.newBuilder().addPathSegment("tracks").addPathSegment("")
-            .addQueryParameter("client_id", clientId)
+            .addQueryParameter("client_id", clientId())
             .addQueryParameter("format", "json")
             .apply { params.forEach { (k, v) -> addQueryParameter(k, v) } }
             .build()

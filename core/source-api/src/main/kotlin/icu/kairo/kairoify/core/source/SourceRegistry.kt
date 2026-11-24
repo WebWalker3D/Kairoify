@@ -44,14 +44,20 @@ class SourceRegistry(
     sources: List<MusicSource>,
     private val searchTimeoutMillis: Long = 8_000,
     private val homeTimeoutMillis: Long = 10_000,
+    /** Settings: whether a source is switched on (and, for keyed sources, has its key). Asked on every call. */
+    private val isEnabled: (MusicSource) -> Boolean = { true },
 ) {
+    /** Every source Kairoify knows, on or off. Lookups by id use this, so favorites from a switched-off source still play. */
     val sources: List<MusicSource> = sources.toList()
+
+    /** The sources switched on right now: the ones Search and Home ask. */
+    fun enabledSources(): List<MusicSource> = sources.filter(isEnabled)
 
     fun get(sourceId: String): MusicSource =
         sources.firstOrNull { it.info.id == sourceId } ?: throw SourceException.NotFound("Unknown source '$sourceId'")
 
     fun search(query: String): Flow<SourceResult<Page<Item>>> = channelFlow {
-        sources.filter { Capability.SEARCH in it.capabilities }.forEach { source ->
+        enabledSources().filter { Capability.SEARCH in it.capabilities }.forEach { source ->
             launch { send(searchOne(source, query)) }
         }
     }
@@ -88,7 +94,7 @@ class SourceRegistry(
         timeoutMillis: Long,
         call: suspend (MusicSource) -> T,
     ): Flow<SourceResult<T>> = channelFlow {
-        sources.filter { capability in it.capabilities }.forEach { source ->
+        enabledSources().filter { capability in it.capabilities }.forEach { source ->
             launch { send(attempt(source, timeoutMillis, call)) }
         }
     }

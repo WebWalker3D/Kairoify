@@ -76,5 +76,6 @@ class CcMixterSourceTest {
         assertEquals("71499", server.takeRequest().url.queryParameter("ids"))
         assertTrue(stream.url.endsWith(".mp3"), stream.url)
         assertEquals("CC BY-NC 3.0", stream.license?.name)
+        assertEquals("https://ccmixter.org/files/rewob/71499", stream.headers["Referer"])
     }
 }
