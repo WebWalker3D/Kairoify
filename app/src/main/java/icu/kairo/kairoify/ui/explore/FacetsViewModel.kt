@@ -29,6 +29,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import icu.kairo.kairoify.core.model.BrowseNode
+import java.text.Normalizer
 
 sealed interface FacetsUiState {
     data object Loading : FacetsUiState
@@ -43,17 +48,29 @@ class FacetsViewModel(
     private val sourceId: String,
     private val kind: FacetKind,
 ) : ViewModel() {
-    private val _state = MutableStateFlow<FacetsUiState>(FacetsUiState.Loading)
-    val state: StateFlow<FacetsUiState> = _state.asStateFlow()
+    private val loaded = MutableStateFlow<FacetsUiState>(FacetsUiState.Loading)
+    private val _filter = MutableStateFlow("")
+
+    /** What the person typed in the filter box above the list. */
+    val filter: StateFlow<String> = _filter.asStateFlow()
+
+    /** The list, narrowed to the facets that match [filter]. */
+    val state: StateFlow<FacetsUiState> = combine(loaded, _filter) { s, f ->
+        if (s is FacetsUiState.Loaded) FacetsUiState.Loaded(s.facets.filter { matches(it, f) }) else s
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, FacetsUiState.Loading)
+
+    fun setFilter(value: String) {
+        _filter.value = value
+    }
 
     init {
         load()
     }
 
     fun load() {
-        _state.value = FacetsUiState.Loading
+        loaded.value = FacetsUiState.Loading
         viewModelScope.launch {
-            _state.value = try {
+            loaded.value = try {
                 FacetsUiState.Loaded(registry.get(sourceId).facets(kind))
             } catch (e: CancellationException) {
                 throw e
@@ -62,4 +79,17 @@ class FacetsViewModel(
             }
         }
     }
+}
+
+/** Lower case with accents removed: "Côte" → "cote". */
+private fun fold(text: String): String =
+    Normalizer.normalize(text, Normalizer.Form.NFD).replace(Regex("\\p{Mn}+"), "").lowercase()
+
+/** Every word typed must appear in the label; a country also matches its two-letter code ("de" → Germany). */
+internal fun matches(facet: Facet, filter: String): Boolean {
+    val words = fold(filter).split(Regex("\\s+")).filter(String::isNotBlank)
+    if (words.isEmpty()) return true
+    val label = fold(facet.label)
+    val code = (facet.node as? BrowseNode.Country)?.code?.lowercase()
+    return words.all { it in label } || (words.size == 1 && words[0] == code)
 }

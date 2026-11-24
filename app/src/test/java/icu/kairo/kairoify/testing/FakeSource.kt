@@ -65,9 +65,12 @@ class FakeSource(
     var relatedError: Throwable? = null,
     var albumTracks: List<Track> = emptyList(),
     var detailsError: Throwable? = null,
+    var facetList: List<icu.kairo.kairoify.core.model.Facet> = emptyList(),
 ) : MusicSource {
     override val info = SourceInfo(id, id.uppercase())
     var homeCalls = 0
+
+    override suspend fun facets(kind: icu.kairo.kairoify.core.model.FacetKind) = facetList
     val searchQueries = mutableListOf<String>()
     var browseCalls = 0
 
