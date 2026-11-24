@@ -30,6 +30,7 @@ import icu.kairo.kairoify.player.FreeRadio
 import icu.kairo.kairoify.source.listenbrainz.SimilarArtists
 import icu.kairo.kairoify.player.ResumePositions
 import icu.kairo.kairoify.source.radioparadise.RadioParadiseSource
+import icu.kairo.kairoify.source.nightride.NightrideSource
 import icu.kairo.kairoify.source.wavlake.WavlakeSource
 import icu.kairo.kairoify.source.podcasts.PodcastSource
 import icu.kairo.kairoify.source.europeana.EuropeanaSource
@@ -133,6 +134,7 @@ class AppContainer(context: Context) : PlayerDependencies {
                 category = SourceCategory.MUSIC),
                 SourceEntry(RadioParadiseSource(httpClient), true, note = "Listener-supported, ad-free, human-curated radio. Public channel list and streams.", category = SourceCategory.RADIO),
                 SourceEntry(SomaFmSource(httpClient), true, note = "Ad-free listener-supported radio. Public channel list and streams.", category = SourceCategory.RADIO),
+                SourceEntry(NightrideSource(), true, note = "Free listener-supported synthwave radio: nine stations. Public streams.", category = SourceCategory.RADIO),
                 SourceEntry(OpenverseSource(httpClient), true, note = "Creative Commons audio from many sites. Official API.", category = SourceCategory.SOUNDS),
                 SourceEntry(LocSource(httpClient), true, note = "Library of Congress recordings, including the National Jukebox. Official API.", category = SourceCategory.HISTORY),
                 SourceEntry(PodcastSource(httpClient), true, note = "Shows from Apple's public podcast directory; episodes play from each show's own feed.", category = SourceCategory.PODCASTS),
