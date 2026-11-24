@@ -42,7 +42,8 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [SomaFM](https://somafm.com) | ~40 ad-free, listener-supported internet radio channels | Public channel list; SomaFM's own public streams | Official | Unreleased |
 | [Openverse](https://openverse.org) | Creative Commons audio gathered from many sites, with each work's license | Public REST API | Official | Unreleased |
 | [Library of Congress](https://www.loc.gov/audio/) | Online audio including the National Jukebox (1900–1925); only items it marks unrestricted | Public JSON API; each item's MP3 | Official | Unreleased |
-| [LibriVox](https://librivox.org) audiobooks | ~22,000 volunteer-read public-domain audiobooks | The Internet Archive's `librivoxaudio` collection (LibriVox's own API was down) | Official | Unreleased |
+| Audiobooks & poetry ([LibriVox](https://librivox.org) + Internet Archive) | ~75,000 public-domain audiobooks and poems: LibriVox's volunteer readings and the Archive's Audio Books & Poetry collection, browsable by 17 genres | Archive search and metadata APIs | Official | Unreleased |
+| Internet Archive — Hip-hop mixtapes | ~8,300 hip-hop mixtapes | Archive APIs | Official (hosted by the Internet Archive) | Unreleased |
 | Internet Archive — netlabels by name | Monotonik, Thinner, Kahvi Collective, blocSonic, 8bitpeoples, Dusted Wax Kingdom, Phonocake, Petroglyph Music, Mahorka, Comfort Stand, Textone, Webbed Hand, Test Tube, Zeromoon, Ektoplazm, Peppermill Records | One browse entry per label, from the Archive's mirror of its catalog | Official | Unreleased |
 | Podcasts | Any show in Apple's public podcast directory | iTunes Search API to find shows; episodes from each show's own RSS feed | Official (public directory and the shows' own feeds) | Unreleased |
 | [Wavlake](https://wavlake.com) | Independent artists who publish free to stream, with optional listener tips | Public search API; the track's own MP3 | Official | Unreleased |
@@ -137,6 +138,9 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Audiobooks & poetry | **Changed**: LibriVox grew into Audiobooks & poetry, adding the Internet Archive's Audio Books & Poetry collection and 17 genres to browse. Favorites saved from LibriVox still play. |
+| 2026-11-24 | Unreleased | Internet Archive | **Added**: Hip-hop mixtapes, searched and browsable. |
+| 2026-11-24 | Unreleased | All sources | **Changed**: sources are grouped into six sections (Music, Radio, Audiobooks & poetry, Podcasts, Historical recordings, Sounds), each with its own page, search and browse in Explore. |
 | 2026-11-24 | Unreleased | Radio Paradise | **Added**, on by default. |
 | 2026-11-24 | Unreleased | Internet Archive | **Added**: Free Music Archive and Old Time Radio collections, searched and browsable. |
 | 2026-11-24 | Unreleased | All sources | **Changed**: search results and album details are cached for 10 minutes, so repeating a search or reopening an album doesn't ask every service again. Retry always asks again. |

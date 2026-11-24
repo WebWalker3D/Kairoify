@@ -19,6 +19,16 @@
  */
 package icu.kairo.kairoify.ui.explore
 
+import icu.kairo.kairoify.settings.SourceCategory
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -37,9 +47,17 @@ import icu.kairo.kairoify.core.model.FacetKind
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
 
 @Composable
-fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit) {
-    Column(Modifier.fillMaxSize()) {
+fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit, onOpenCategory: (SourceCategory) -> Unit) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Text("Explore", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
+        SourceCategory.entries.forEach { category ->
+            ListItem(
+                supportingContent = { Text(category.description) },
+                leadingContent = { Icon(categoryIcon(category), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                modifier = Modifier.clickable { onOpenCategory(category) },
+            ) { Text(category.label) }
+        }
+        HorizontalDivider(Modifier.padding(vertical = 8.dp))
         ListItem(
             supportingContent = { Text("Live radio from every country on Earth") },
             leadingContent = { Icon(Icons.Filled.Place, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
@@ -56,4 +74,14 @@ fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit)
             modifier = Modifier.clickable(onClick = onOpenArchives),
         ) { Text("Concerts & archives") }
     }
+}
+
+/** The icon each section is shown with. */
+fun categoryIcon(category: SourceCategory): ImageVector = when (category) {
+    SourceCategory.MUSIC -> Icons.Filled.PlayArrow
+    SourceCategory.RADIO -> KairoifyIcons.Radio
+    SourceCategory.AUDIOBOOKS -> Icons.Filled.Create
+    SourceCategory.PODCASTS -> Icons.Filled.Person
+    SourceCategory.HISTORY -> Icons.Filled.DateRange
+    SourceCategory.SOUNDS -> Icons.Filled.Notifications
 }

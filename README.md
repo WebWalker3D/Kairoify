@@ -102,7 +102,7 @@ built into the app.
 | YouTube Music | The mainstream catalog | ✓ Live |
 | SoundCloud | Indie, DJ sets, remixes | ✓ Live |
 | Bandcamp | Independent artists | ✓ Live |
-| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, Free Music Archive, Old Time Radio, public-domain classical | ✓ Live |
+| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, Free Music Archive, Old Time Radio, hip-hop mixtapes, public-domain classical | ✓ Live |
 | Audius | Independent artists | ✓ Live |
 | Mixcloud | DJ mixes and radio shows | ✓ Live |
 | NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live |
@@ -112,7 +112,7 @@ built into the app.
 | SomaFM | Ad-free, listener-supported radio channels | ✓ Live |
 | Openverse | Creative Commons audio from many sites | ✓ Live |
 | Library of Congress | Historical recordings, including the National Jukebox | ✓ Live |
-| LibriVox | Public-domain audiobooks | ✓ Live |
+| Audiobooks & poetry | LibriVox and the Internet Archive's Audio Books & Poetry, by genre | ✓ Live |
 | Podcasts | Any show in Apple's public directory, played from its own feed | ✓ Live |
 | Wavlake | Independent artists, free to stream | ✓ Live |
 | Jamendo | Creative Commons music | Off until its client ID is entered in Settings |
@@ -123,6 +123,11 @@ built into the app.
 Songs, episodes, mixes and audiobook chapters pick up where you left them when you play
 them again (live radio doesn't). A **Start track over?** button shows for five seconds
 whenever that happens.
+
+Explore groups every source into six sections: Music, Radio, Audiobooks & poetry,
+Podcasts, Historical recordings and Sounds. Each has its own page with its own search,
+results as rows of cover art, and its genres or collections to browse. Search's All view
+uses the same rows: sources with nothing are hidden, and slow or failed ones share one line.
 
 Explore's Countries, Genres and Concerts & archives lists each have a filter box: type
 part of a name (accents and case don't matter; a country's two-letter code works too).

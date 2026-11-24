@@ -245,4 +245,13 @@ class SourceRegistryTest {
         assertEquals(null, cache.get<Int>("k2"))
         assertEquals(3, cache.get<Int>("k3"))
     }
+
+    @Test
+    fun `search can be limited to some sources`() = runTest {
+        val a = FakeSource("a")
+        val b = FakeSource("b")
+        val results = SourceRegistry(listOf(a, b)).search("q", only = { it.info.id == "b" }).toList()
+        assertEquals(listOf("b"), results.map { it.source.id })
+        assertTrue(a.queries.isEmpty())
+    }
 }

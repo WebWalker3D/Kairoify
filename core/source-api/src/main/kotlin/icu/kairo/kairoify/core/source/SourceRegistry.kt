@@ -58,8 +58,9 @@ class SourceRegistry(
     fun get(sourceId: String): MusicSource =
         sources.firstOrNull { it.info.id == sourceId } ?: throw SourceException.NotFound("Unknown source '$sourceId'")
 
-    fun search(query: String): Flow<SourceResult<Page<Item>>> = channelFlow {
-        enabledSources().filter { Capability.SEARCH in it.capabilities }.forEach { source ->
+    /** Searches every switched-on source, or only those [only] picks (a category's own search). */
+    fun search(query: String, only: (MusicSource) -> Boolean = { true }): Flow<SourceResult<Page<Item>>> = channelFlow {
+        enabledSources().filter { Capability.SEARCH in it.capabilities && only(it) }.forEach { source ->
             launch { send(searchOne(source, query)) }
         }
     }
@@ -78,8 +79,8 @@ class SourceRegistry(
         return get(ref.sourceId).details(ref).also { cache.put(key, it) }
     }
 
-    fun home(): Flow<SourceResult<List<Shelf>>> =
-        fanOut(Capability.HOME, homeTimeoutMillis) { it.home() }
+    fun home(only: (MusicSource) -> Boolean = { true }): Flow<SourceResult<List<Shelf>>> =
+        fanOut(Capability.HOME, homeTimeoutMillis, only) { it.home() }
 
     suspend fun resolve(ref: MediaRef): ResolvedStream = get(ref.sourceId).resolve(ref)
 
@@ -105,9 +106,10 @@ class SourceRegistry(
     private fun <T> fanOut(
         capability: Capability,
         timeoutMillis: Long,
+        only: (MusicSource) -> Boolean = { true },
         call: suspend (MusicSource) -> T,
     ): Flow<SourceResult<T>> = channelFlow {
-        enabledSources().filter { capability in it.capabilities }.forEach { source ->
+        enabledSources().filter { capability in it.capabilities && only(it) }.forEach { source ->
             launch { send(attempt(source, timeoutMillis, call)) }
         }
     }

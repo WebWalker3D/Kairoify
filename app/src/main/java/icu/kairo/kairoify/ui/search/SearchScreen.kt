@@ -81,7 +81,12 @@ fun SearchScreen(viewModel: SearchViewModel, onPlay: (Item) -> Unit, onLongPress
                         )
                     }
                 }
-                Results(s, onPlay, onLongPress, onRetry = viewModel::retry, onShowAll = viewModel::setFilter)
+                if (s.filter == null) {
+                    // "All": one row of cover art per source, swiped sideways, so the page stays short.
+                    LazyColumn(Modifier.fillMaxSize()) { sourceRows(s, onPlay, onLongPress, onRetry = viewModel::retry) }
+                } else {
+                    Results(s, onPlay, onLongPress, onRetry = viewModel::retry, onShowAll = viewModel::setFilter)
+                }
             }
         }
     }
