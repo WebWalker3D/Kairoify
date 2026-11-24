@@ -118,7 +118,7 @@ class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
     }
 
     private fun initialSections(): List<SearchSection> =
-        registry.sources
+        registry.enabledSources()
             .filter { Capability.SEARCH in it.capabilities }
             .map { SearchSection(it.info, it.searchKind, SearchSectionState.Loading) }
             .sortedBy { KIND_ORDER.indexOf(it.kind) }

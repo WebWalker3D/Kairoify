@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,12 +45,15 @@ import icu.kairo.kairoify.ui.components.ShelfRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit, onAbout: () -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onPlay: (Item) -> Unit, onLongPress: (Item) -> Unit, onAbout: () -> Unit, onSettings: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Kairoify") },
-            actions = { IconButton(onClick = onAbout) { Icon(Icons.Filled.Info, contentDescription = "About Kairoify") } },
+            actions = {
+                IconButton(onClick = onSettings) { Icon(Icons.Filled.Settings, contentDescription = "Settings") }
+                IconButton(onClick = onAbout) { Icon(Icons.Filled.Info, contentDescription = "About Kairoify") }
+            },
         )
         PullToRefreshBox(
             isRefreshing = state.loading && state.sections.isNotEmpty(),

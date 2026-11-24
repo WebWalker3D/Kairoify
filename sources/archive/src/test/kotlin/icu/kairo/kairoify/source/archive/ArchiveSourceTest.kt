@@ -165,7 +165,26 @@ class ArchiveSourceTest {
     @Test
     fun `collections to browse`() = runTest {
         val facets = source.facets(FacetKind.COLLECTION)
-        assertEquals(listOf("Live Music Archive", "Great 78 Project", "Netlabels", "Classical"), facets.map { it.label })
+        assertEquals(listOf("Live Music Archive", "Great 78 Project", "Netlabels", "Classical"), facets.map { it.label }.take(4))
         assertEquals(emptyList(), source.facets(FacetKind.COUNTRY))
+    }
+
+    @Test
+    fun `netlabels are browsable by name`() = runTest {
+        val labels = source.facets(FacetKind.COLLECTION).map { it.label }
+        assertTrue("Monotonik" in labels && "Thinner" in labels && "Kahvi Collective" in labels, labels.toString())
+        searchFixture = "browse_78s.json"
+        source.browse(BrowseNode.Collection("monotonik"))
+        assertEquals("collection:monotonik", query())
+    }
+
+    @Test
+    fun `librivox is its own source over its own collection`() = runTest {
+        val librivox = ArchiveSource.librivox(OkHttpClient(), server.url("/"))
+        assertEquals("librivox", librivox.info.id)
+        val albums = librivox.search("sherlock holmes").items
+        assertTrue(albums.all { it.ref.sourceId == "librivox" })
+        assertTrue(query().startsWith("(collection:librivoxaudio) AND ("), query())
+        assertEquals(emptyList(), librivox.home())
     }
 }

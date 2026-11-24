@@ -8,10 +8,13 @@ Every change to a source (added, changed, switched on or off, removed) gets a da
 line in the [change log](#change-log) at the bottom, and its row moves to the right
 table.
 
+In the app, **Home → ⚙ Settings** lists every source with a switch, and a key field for the
+ones that need a registered key. Keyed sources stay off until a key is entered.
+
 **Two separate questions for every source**
 - **Status** (is it built?):
   - **Live:** in the app.
-  - **Built (off):** finished and tested, but not switched on.
+  - **Off by default:** in the app but switched off until the person switches it on, or adds its key, in Settings.
   - **Planned:** not built yet.
 - **Authorization** (does the provider allow it?):
   - **Official:** played through the provider's own public API or public streams, as they intend.
@@ -33,37 +36,40 @@ table.
 | [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings, each with its license | MediaWiki API | Official | 0.4 |
 | [NTS Radio](https://www.nts.live) — live | NTS 1 and NTS 2, live from London | NTS's public API and public stream relay | Official | 0.4 |
 | [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | 0.4 |
+| [SomaFM](https://somafm.com) | ~40 ad-free, listener-supported internet radio channels | Public channel list; SomaFM's own public streams | Official | Unreleased |
+| [Openverse](https://openverse.org) | Creative Commons audio gathered from many sites, with each work's license | Public REST API | Official | Unreleased |
+| [Library of Congress](https://www.loc.gov/audio/) | Online audio including the National Jukebox (1900–1925); only items it marks unrestricted | Public JSON API; each item's MP3 | Official | Unreleased |
+| [LibriVox](https://librivox.org) audiobooks | ~22,000 volunteer-read public-domain audiobooks | The Internet Archive's `librivoxaudio` collection (LibriVox's own API was down) | Official | Unreleased |
+| Internet Archive — netlabels by name | Monotonik, Thinner, Kahvi Collective, blocSonic, 8bitpeoples, Dusted Wax Kingdom, Phonocake, Petroglyph Music, Mahorka, Comfort Stand, Textone, Webbed Hand, Test Tube, Zeromoon, Ektoplazm, Peppermill Records | One browse entry per label, from the Archive's mirror of its catalog | Official | Unreleased |
+| Podcasts | Any show in Apple's public podcast directory | iTunes Search API to find shows; episodes from each show's own RSS feed | Official (public directory and the shows' own feeds) | Unreleased |
+| [Wavlake](https://wavlake.com) | Independent artists who publish free to stream, with optional listener tips | Public search API; the track's own MP3 | Official | Unreleased |
 | [YouTube Music](https://music.youtube.com) | The mainstream catalog, plus "Start radio" from any song | ytmusicapi for search, yt-dlp for streams, on the phone | **Not authorized** (owner's choice to include) | 0.2 |
 | [SoundCloud](https://soundcloud.com) | Indie tracks, DJ sets, remixes | yt-dlp search and streams | **Not authorized** (owner's choice to include) | 0.2 |
 | NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | 0.4 |
 | [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | **Not authorized**: its API excludes audio streams (royalty reporting and licensing) and its terms restrict extraction. Included by the owner's choice. | 0.4 |
 | [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search endpoint (unofficial), yt-dlp for streams | **Not authorized** (owner's choice to include) | 0.2 |
 
-## Built (off)
+## Off by default
 
 | Source | What it brings | Authorization | What it would take |
 |---|---|---|---|
-| [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Official, key | Register a client ID at developer.jamendo.com, then build with `-Pkairoify.jamendo.clientId=…` (see the README) |
-| [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Blocked (hotlink protection) | Its MP3s answer 403 unless the request carries ccMixter's own page as the Referer. Owner decision: send that header, or ask ccMixter. |
+| [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Official, key | Register a free client ID at developer.jamendo.com and enter it in Settings (or build one in with `-Pkairoify.jamendo.clientId=…`) |
+| [Freesound](https://freesound.org) | Experimental, ambient and musical recordings, with their license | Official, key | A free API key from freesound.org/apiv2/apply, entered in Settings |
+| [Europeana](https://www.europeana.eu) | Openly reusable European cultural recordings | Official, key | A free API key from pro.europeana.eu, entered in Settings |
+| [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Blocked (hotlink protection) | Switch it on in Settings. Its MP3s answer 403 unless the request carries ccMixter's own page as the Referer, so when switched on Kairoify sends that header. |
 
 ## Planned
 
 | Source | What it brings | How Kairoify will reach it | Key? |
 |---|---|---|---|
-| [Openverse](https://openverse.org) | Creative Commons audio gathered from many sites | Public REST API (rate-limited); each upstream's rights need checking | No |
-| [Library of Congress](https://www.loc.gov/audio/) | Historical American music: jazz, blues, opera | Public JSON API, filtered to recordings with clear rights | No |
-| [National Jukebox](https://www.loc.gov/collections/national-jukebox/) | 5,882 recordings from 1900–1922, public domain in the US | Library of Congress open dataset (JSON metadata and MP3s) | No |
 | [Citizen DJ](https://citizen-dj.labs.loc.gov) | Public-domain historical music and recordings | Downloadable datasets; some overlap with the Library of Congress | No |
-| [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | No (public instances) |
+| [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | Checked 2026-11-24: the open instance found (tanukitunes.com) has unlicensed commercial uploads, so it doesn't meet the free-and-legal rule. Needs an instance that only hosts licensed music. |
 | [Open Audio](https://open.audio) | Creative Commons music, including a Free Music Archive mirror | Funkwhale API; each track's license needs checking | No |
 | [Dogmazic](https://play.dogmazic.net) | Tens of thousands of freely licensed independent tracks (since 2004) | Ampache/Subsonic API, which supports third-party apps | To check (may need an account) |
 | [Free Music Archive](https://freemusicarchive.org) | Creative Commons independent music | Through Open Audio's mirror or Internet Archive copies; FMA has no public API | No |
-| [Europeana](https://www.europeana.eu) | European historical and cultural recordings | Search API, filtered by rights and media availability | **Needs key** (built off) |
-| [Freesound](https://freesound.org) | Experimental, ambient and musical recordings | Official REST API, free for noncommercial use | **Needs key** (built off) |
 | [Mirlo](https://mirlo.space) | Independent artists and albums | Canimus API, authorized HLS streaming | Check terms |
 | [Faircamp](https://simonrepp.com/faircamp/) | Artist-hosted music catalogs | Catalog discovery and federation | No |
 | Fairplayer | Federated independent music | Canimus-compatible catalogs | No |
-| [Wavlake](https://wavlake.com) | Independent music with optional artist tipping | Public RSS feeds | No |
 | Bandwagon | Federated independent artists | ActivityPub | Needs permission (playback) |
 | [The Indie Beat Radio](https://theindiebeat.fm) | 5,000+ opted-in independent tracks | Radio streams | Needs permission (third-party terms) |
 | The Indie Beat Live | Live independent concerts | HLS stream published for external players | No |
@@ -84,13 +90,11 @@ table.
 | [Virtual Gramophone](https://www.bac-lac.gc.ca) | ~7,300 digitized Canadian recordings | — | To check (rights by country) |
 | [Gallica](https://gallica.bnf.fr) | Historical French and European music | — | Noncommercial reuse with attribution |
 | Yale Berliner Gramophone Collection | Early gramophone recordings | Rights-filtered digital collections | To check |
-| [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API (CC0 audio where available) | To check (API key) |
+| [Smithsonian Open Access](https://www.si.edu/openaccess) | American cultural and historical recordings | Open Access API | Checked 2026-11-24: its open-access data has no sound recordings to play. Revisit if it adds some. |
 | Ohio State Public Domain Day Project | Newly recorded public-domain compositions | CC0 recordings | No |
 | [Public Domain Review](https://publicdomainreview.org) | Curated historical audio | Plays from the original archives it links to | No |
-| Netlabels by name, through the Internet Archive | Ektoplazm (psytrance), Kahvi Collective (ambient/IDM), blocSonic (hip-hop/electronic), 8Bitpeoples (chiptune), Dusted Wax Kingdom (downtempo), Phonocake, Petroglyph Music, Mahorka, insectorama, weareallghosts, ODrex Music, S27, Comfort Stand, Monotonik, Thinner (minimal techno), Textone, Webbed Hand Records, Test Tube, Peppermill Records, Zeromoon | The existing Internet Archive source, as one browse entry per label wherever the Archive mirrors its catalog; labels it doesn't mirror get checked one by one | No |
+| More netlabels | insectorama, weareallghosts, ODrex Music, S27 | The Archive doesn't mirror these catalogs; each needs checking for another free, legal way in | No |
 | [KEXP](https://www.kexp.org) | Seattle's listener-supported station | The live stream is already in Radio Browser; the archive has no public audio | — |
-| Podcasts | Shows, via open RSS feeds and podcast directories | RSS | No |
-| Public-domain audiobooks ([LibriVox](https://librivox.org)) | Volunteer-read public-domain books | LibriVox API and Internet Archive | No |
 | Your own music files | Music already on your phone, alongside everything streamed | Android's media library | — |
 
 ## Planned protocols
@@ -131,6 +135,15 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Wavlake | **Added**, on by default; checked on the phone. |
+| 2026-11-24 | Unreleased | All sources | **Changed**: Home reloads as soon as a source is switched on or off in Settings. |
+| 2026-11-24 | Unreleased | Library of Congress | **Fixed**: search now waits up to 20 s; loc.gov often takes 3–8 s and timed out on the phone. Checked on a Samsung S22+ along with SomaFM, Openverse, LibriVox, Podcasts, netlabels and ccMixter. |
+| 2026-11-24 | Unreleased | All sources | **Added**: Settings (Home → ⚙) to switch any source on or off and enter API keys. Keyed sources stay off until they have a key. |
+| 2026-11-24 | Unreleased | SomaFM, Openverse, Library of Congress (with the National Jukebox), LibriVox, Podcasts | **Added**, on by default. |
+| 2026-11-24 | Unreleased | Internet Archive | **Added**: 16 netlabels as their own browse entries. |
+| 2026-11-24 | Unreleased | Freesound, Europeana | **Added**, off until a key is entered in Settings. |
+| 2026-11-24 | Unreleased | Jamendo | **Changed**: its client ID can now be entered in Settings. |
+| 2026-11-24 | Unreleased | ccMixter | **Changed**: in the app and switchable in Settings (off by default). When switched on it sends ccMixter's page as the Referer so its files play. |
 | 2026-11-23 | 0.4.0 | Wikimedia Commons | **Fixed**: search failed on the phone because some metadata values aren't text; checked on a Samsung S22+ along with NTS, Mixcloud and hearthis.at. |
 | 2026-11-23 | 0.4.0 | Mixcloud | **Switched back on** by the owner's choice, marked Not authorized like YouTube Music, SoundCloud and Bandcamp. NTS shows recorded on Mixcloud are back. |
 | 2026-11-23 | 0.4.0 | NTS Radio, hearthis.at, Wikimedia Commons | **Switched on** in the app. **Fixed**: NTS search now filters by your words; a hearthis.at search with no matches shows no results instead of an outage; Wikimedia MIDI files (which can't play) are left out. |

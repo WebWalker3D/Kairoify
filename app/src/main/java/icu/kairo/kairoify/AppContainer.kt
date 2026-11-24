@@ -26,6 +26,17 @@ import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
 import android.content.Context
+import icu.kairo.kairoify.source.wavlake.WavlakeSource
+import icu.kairo.kairoify.source.podcasts.PodcastSource
+import icu.kairo.kairoify.source.europeana.EuropeanaSource
+import icu.kairo.kairoify.source.freesound.FreesoundSource
+import icu.kairo.kairoify.source.loc.LocSource
+import icu.kairo.kairoify.source.openverse.OpenverseSource
+import icu.kairo.kairoify.source.somafm.SomaFmSource
+import icu.kairo.kairoify.source.ccmixter.CcMixterSource
+import icu.kairo.kairoify.settings.SourceSettings
+import icu.kairo.kairoify.settings.SourceEntry
+import icu.kairo.kairoify.settings.SourceCatalog
 import icu.kairo.kairoify.core.ytdlp.ChaquopyCall
 import icu.kairo.kairoify.core.ytdlp.EngineUpdater
 import kotlinx.coroutines.launch
@@ -79,30 +90,73 @@ class AppContainer(context: Context) : PlayerDependencies {
         onUpdateFailed = { updater.activeVersion()?.let(updater::markBad) },
     )
 
-    override val sourceRegistry: SourceRegistry = SourceRegistry(
-        listOf(
-            RadioBrowserSource(
-                client = httpClient,
-                baseUrl = RadioBrowserServers(httpClient)::baseUrl,
-                countryCode = { Locale.getDefault().country.takeIf { it.length == 2 } },
+    /** Source switches and API keys the person set in Settings. */
+    val sourceSettings = SourceSettings(context.getSharedPreferences("sources", Context.MODE_PRIVATE))
+
+    /**
+     * Every source, its default switch, and what the person should know about it. Authorization notes match AUDIO.md:
+     * "official" sources play through the provider's own API; "not authorized" ones play by extraction (yt-dlp),
+     * included by the owner's choice; keyed ones stay off until a key is entered.
+     */
+    val sourceCatalog: SourceCatalog by lazy {
+        SourceCatalog(
+            listOf(
+                SourceEntry(
+                    RadioBrowserSource(
+                        client = httpClient,
+                        baseUrl = RadioBrowserServers(httpClient)::baseUrl,
+                        countryCode = { Locale.getDefault().country.takeIf { it.length == 2 } },
+                    ),
+                    defaultOn = true,
+                    note = "Live radio from every country. Official API.",
+                ),
+                SourceEntry(YouTubeMusicSource(engine), true, note = "Plays through yt-dlp, which YouTube's terms don't authorize."),
+                SourceEntry(SoundCloudSource(engine), true, note = "Plays through yt-dlp, which SoundCloud's terms don't authorize."),
+                SourceEntry(BandcampSource(BandcampSearchApi(httpClient), engine), true, note = "Plays through yt-dlp, which Bandcamp's terms don't authorize."),
+                SourceEntry(MixcloudSource(MixcloudSearchApi(httpClient), engine), true, note = "Plays through yt-dlp; Mixcloud excludes audio from its API."),
+                SourceEntry(NtsSource(NtsApi(httpClient), engine), true, note = "Live channels are official; archived shows play from SoundCloud or Mixcloud."),
+                SourceEntry(ArchiveSource(httpClient), true, note = "Concerts, 78s, netlabels, classical. Official API."),
+                SourceEntry(AudiusSource(httpClient), true, note = "Independent artists. Official API."),
+                SourceEntry(HearthisSource(httpClient), true, note = "DJ sets. Public API; developer terms not yet confirmed."),
+                SourceEntry(WikimediaSource(httpClient), true, note = "Freely licensed recordings. Official API."),
+                SourceEntry(
+                    JamendoSource(httpClient, { sourceCatalog.key("jamendo") }),
+                    defaultOn = true,
+                    keyName = "jamendo",
+                    keyFallback = BuildConfig.JAMENDO_CLIENT_ID,
+                    note = "Creative Commons music. Needs a free client ID from developer.jamendo.com.",
+                ),
+                SourceEntry(SomaFmSource(httpClient), true, note = "Ad-free listener-supported radio. Public channel list and streams."),
+                SourceEntry(OpenverseSource(httpClient), true, note = "Creative Commons audio from many sites. Official API."),
+                SourceEntry(LocSource(httpClient), true, note = "Library of Congress recordings, including the National Jukebox. Official API."),
+                SourceEntry(PodcastSource(httpClient), true, note = "Shows from Apple's public podcast directory; episodes play from each show's own feed."),
+                SourceEntry(WavlakeSource(httpClient), true, note = "Independent artists who publish free to stream, with optional tips. Public API."),
+                SourceEntry(ArchiveSource.librivox(httpClient), true, note = "Public-domain audiobooks read by volunteers, hosted by the Internet Archive."),
+                SourceEntry(
+                    FreesoundSource(httpClient, { sourceCatalog.key("freesound") }),
+                    defaultOn = true,
+                    keyName = "freesound",
+                    note = "Experimental and ambient sounds. Needs a free API key from freesound.org/apiv2/apply.",
+                ),
+                SourceEntry(
+                    EuropeanaSource(httpClient, { sourceCatalog.key("europeana") }),
+                    defaultOn = true,
+                    keyName = "europeana",
+                    note = "European cultural recordings. Needs a free API key from pro.europeana.eu.",
+                ),
+                SourceEntry(
+                    CcMixterSource(httpClient),
+                    defaultOn = false,
+                    note = "Creative Commons remixes. Its files only play for requests that say they come from ccMixter's own pages (hotlink protection); switching this on sends that header.",
+                ),
             ),
-            YouTubeMusicSource(engine),
-            SoundCloudSource(engine),
-            BandcampSource(BandcampSearchApi(httpClient), engine),
-            ArchiveSource(httpClient),
-            AudiusSource(httpClient),
-            // Not authorized by Mixcloud (extraction), included by the owner's choice like YouTube/SoundCloud/Bandcamp.
-            MixcloudSource(MixcloudSearchApi(httpClient), engine),
-            NtsSource(NtsApi(httpClient), engine),
-            HearthisSource(httpClient),
-            // ccMixter is built but off: its MP3s answer 403 unless the request claims to come from ccMixter's own
-            // page (hotlink protection). Whether to send that Referer is the owner's call.
-            WikimediaSource(httpClient),
-        ) + listOfNotNull(
-            // Switched off until a registered client ID is built in.
-            BuildConfig.JAMENDO_CLIENT_ID.takeIf { it.isNotBlank() }?.let { JamendoSource(httpClient, it) },
-        ),
-    )
+            sourceSettings,
+        )
+    }
+
+    override val sourceRegistry: SourceRegistry by lazy {
+        SourceRegistry(sourceCatalog.entries.map { it.source }, isEnabled = sourceCatalog::isEnabled)
+    }
 
     val playerConnection: PlayerConnection = PlayerConnection(context.applicationContext)
 

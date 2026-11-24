@@ -79,7 +79,10 @@ class CcMixterSource(
     override suspend fun resolve(ref: MediaRef): ResolvedStream {
         val upload = query(mapOf("ids" to ref.itemId)).firstOrNull { it.uploadId?.toString() == ref.itemId }
         val mp3 = upload?.let(::mp3)?.downloadUrl ?: throw SourceException.NotFound("That track is no longer on ccMixter.")
-        return ResolvedStream(url = mp3, isLive = false, license = licenseFromUrl(upload.licenseUrl))
+        // ccMixter's files only play for requests from its own pages (hotlink protection). Off by default; the person
+        // switches it on in Settings knowing that.
+        val referer = upload.filePageUrl ?: "https://ccmixter.org/"
+        return ResolvedStream(url = mp3, headers = mapOf("Referer" to referer), isLive = false, license = licenseFromUrl(upload.licenseUrl))
     }
 
     private suspend fun query(params: Map<String, String>): List<CcUpload> {

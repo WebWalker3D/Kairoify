@@ -62,8 +62,15 @@ class ArchiveSource(
     private val client: OkHttpClient,
     private val baseUrl: HttpUrl = "https://archive.org/".toHttpUrl(),
     private val today: () -> LocalDate = LocalDate::now,
+    private val sourceId: String = ID,
+    name: String = "Internet Archive",
+    /** What search looks through. */
+    private val searchScope: String = COLLECTIONS.values.joinToString(" OR ") { "($it)" },
+    /** Browsable collections: id → (label, query). Empty for none. */
+    private val browsable: List<Triple<String, String, String>> = BROWSABLE,
+    private val onThisDay: Boolean = true,
 ) : MusicSource {
-    override val info = SourceInfo(ID, "Internet Archive")
+    override val info = SourceInfo(sourceId, name)
     override val capabilities = setOf(Capability.HOME, Capability.SEARCH, Capability.BROWSE, Capability.DETAILS)
     override val searchKind = ItemKind.ALBUM
 
@@ -72,10 +79,11 @@ class ArchiveSource(
         val words = query.trim().split(Regex("\\s+")).filter(String::isNotBlank)
             .joinToString(" AND ") { "\"" + it.replace("\\", "\\\\").replace("\"", "\\\"") + "\"" }
         if (words.isEmpty()) return Page.empty()
-        return albums("(${COLLECTIONS.values.joinToString(" OR ") { "($it)" }}) AND ($words)", page, SEARCH_ROWS)
+        return albums("($searchScope) AND ($words)", page, SEARCH_ROWS)
     }
 
     override suspend fun home(): List<Shelf> {
+        if (!onThisDay) return emptyList()
         val day = today()
         // Only dates that exist: on 29 February, skip the years that had none.
         val dates = (FIRST_YEAR until day.year)
@@ -88,10 +96,10 @@ class ArchiveSource(
     }
 
     override suspend fun facets(kind: FacetKind): List<Facet> =
-        if (kind == FacetKind.COLLECTION) COLLECTION_NAMES.map { (id, label) -> Facet(BrowseNode.Collection(id), label, null) } else emptyList()
+        if (kind == FacetKind.COLLECTION) browsable.map { (id, label, _) -> Facet(BrowseNode.Collection(id), label, null) } else emptyList()
 
     override suspend fun browse(node: BrowseNode, page: PageToken?): Page<Item> {
-        val scope = (node as? BrowseNode.Collection)?.let { COLLECTIONS[it.id] } ?: return Page.empty()
+        val scope = (node as? BrowseNode.Collection)?.let { c -> browsable.firstOrNull { it.first == c.id }?.third } ?: return Page.empty()
         return albums(scope, page, SEARCH_ROWS)
     }
 
@@ -107,7 +115,7 @@ class ArchiveSource(
             .map { file ->
                 val name = file.string("name")!!
                 Track(
-                    ref = MediaRef(ID, "${ref.itemId}/$name"),
+                    ref = MediaRef(sourceId, "${ref.itemId}/$name"),
                     title = file.string("title")?.takeIf(String::isNotBlank) ?: name.substringAfterLast('/').removeSuffix(".mp3"),
                     subtitle = file.creators().ifEmpty { album.artists }.joinToString(", ").ifBlank { null },
                     artworkUrl = album.artworkUrl,
@@ -154,7 +162,7 @@ class ArchiveSource(
         val year = doc.string("year") ?: doc.string("date")?.take(4)?.takeIf { it.all(Char::isDigit) }
         val venue = doc.string("venue")?.takeIf(String::isNotBlank)
         return Album(
-            ref = MediaRef(ID, id),
+            ref = MediaRef(sourceId, id),
             title = doc.string("title")?.takeIf(String::isNotBlank) ?: id,
             subtitle = listOfNotNull(artists.joinToString(", ").ifBlank { null }, venue, year).joinToString(" · ").ifBlank { null },
             artworkUrl = baseUrl.newBuilder().addPathSegments("services/img").addPathSegment(id).build().toString(),
@@ -205,6 +213,30 @@ class ArchiveSource(
             "georgeblood" to "Great 78 Project",
             "netlabels" to "Netlabels",
             "classical" to "Classical",
+        )
+
+        /** Netlabels whose catalogs the Archive mirrors, browsable by name (collection id → label). */
+        private val NETLABELS = listOf(
+            "monotonik" to "Monotonik", "thinner" to "Thinner", "kahvi" to "Kahvi Collective", "blocsonic" to "blocSonic",
+            "8bitpeoples" to "8bitpeoples", "dustedwaxkingdom" to "Dusted Wax Kingdom", "phonocake" to "Phonocake",
+            "petroglyph-music" to "Petroglyph Music", "mahorka" to "Mahorka", "comfort_stand" to "Comfort Stand",
+            "textone" to "Textone", "webbed_hand" to "Webbed Hand", "test_tube" to "Test Tube", "zeromoon" to "Zeromoon",
+            "ektoplazm" to "Ektoplazm", "peppermill" to "Peppermill Records",
+        )
+
+        private val BROWSABLE: List<Triple<String, String, String>> =
+            COLLECTION_NAMES.map { (id, label) -> Triple(id, label, COLLECTIONS.getValue(id)) } +
+                NETLABELS.map { (id, label) -> Triple(id, label, "collection:$id") }
+
+        /** LibriVox's free public-domain audiobooks, which the Archive hosts: a source of its own. */
+        fun librivox(client: OkHttpClient, baseUrl: HttpUrl = "https://archive.org/".toHttpUrl()) = ArchiveSource(
+            client = client,
+            baseUrl = baseUrl,
+            sourceId = "librivox",
+            name = "LibriVox audiobooks",
+            searchScope = "collection:librivoxaudio",
+            browsable = emptyList(),
+            onThisDay = false,
         )
     }
 }

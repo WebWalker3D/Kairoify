@@ -107,31 +107,43 @@ built into the app.
 | Mixcloud | DJ mixes and radio shows | ✓ Live |
 | NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live |
 | hearthis.at | DJ sets, live recordings, tracks | ✓ Live |
-| ccMixter | Creative Commons remixes and originals | Built, off (its files block plays from outside its site) |
 | Wikimedia Commons | Classical, folk and historical recordings | ✓ Live |
-| Jamendo | Creative Commons music | Built, off until a client ID is added |
+| SomaFM | Ad-free, listener-supported radio channels | ✓ Live |
+| Openverse | Creative Commons audio from many sites | ✓ Live |
+| Library of Congress | Historical recordings, including the National Jukebox | ✓ Live |
+| LibriVox | Public-domain audiobooks | ✓ Live |
+| Podcasts | Any show in Apple's public directory, played from its own feed | ✓ Live |
+| Wavlake | Independent artists, free to stream | ✓ Live |
+| Jamendo | Creative Commons music | Off until its client ID is entered in Settings |
+| Freesound | Experimental, ambient and musical recordings | Off until its API key is entered in Settings |
+| Europeana | European cultural recordings | Off until its API key is entered in Settings |
+| ccMixter | Creative Commons remixes and originals | Off by default (its files block plays from outside its site; switching it on sends its page as the Referer) |
+
+Every source has a switch in **Home → ⚙ Settings**, with a key field for the ones that
+need a registered key.
 
 ### Jamendo
 
 Jamendo's API needs a free client ID. Register an app at
-[developer.jamendo.com](https://developer.jamendo.com), then build with:
+[developer.jamendo.com](https://developer.jamendo.com) and enter it in Settings. Or
+build one in with:
 
 ```bash
 ./gradlew assembleDebug -Pkairoify.jamendo.clientId=YOUR_CLIENT_ID
 # or: KAIROIFY_JAMENDO_CLIENT_ID=YOUR_CLIENT_ID ./gradlew assembleDebug
 ```
 
-The ID is never stored in the repo. Without one, Jamendo stays out of the app, and
-About says it's off.
+The ID is never stored in the repo. Without one, Jamendo stays off. Freesound and
+Europeana work the same way, with keys entered in Settings.
 
 More to follow — the goal is every free source there is. [`AUDIO.md`](AUDIO.md) lists
 every current and planned source, with a dated change log.
 
 ## What's next
 
-- **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from Openverse
-  and the Library of Congress to netlabels and federated catalogs. Jamendo switches on
-  once it has a client ID.
+- **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
+  catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
+  and more public-domain collections.
 - **Songs that never dead-end:** when a song fails on one service, find the same
   song on another and play that instead.
 - **Save the song on the radio:** turn what a station is playing into a song you can

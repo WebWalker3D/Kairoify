@@ -20,6 +20,9 @@
 package icu.kairo.kairoify.ui
 
 import androidx.compose.runtime.Composable
+import icu.kairo.kairoify.ui.settings.SettingsScreen
+import icu.kairo.kairoify.ui.settings.SettingsViewModel
+import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.ui.album.opensDetails
 import icu.kairo.kairoify.ui.album.AlbumViewModel
 import icu.kairo.kairoify.ui.album.AlbumScreen
@@ -55,6 +58,8 @@ fun KairoifyNavHost(
     registry: SourceRegistry,
     favorites: FavoritesStore,
     about: () -> AboutViewModel,
+    settings: () -> SettingsViewModel,
+    sourceChanges: Flow<Int>,
     onPlay: (Item) -> Unit,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
@@ -68,7 +73,7 @@ fun KairoifyNavHost(
     }
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute> {
-            HomeScreen(viewModel { HomeViewModel(registry) }, open, onLongPress, onAbout = { navController.navigate(AboutRoute) })
+            HomeScreen(viewModel { HomeViewModel(registry, sourceChanges) }, open, onLongPress, onAbout = { navController.navigate(AboutRoute) }, onSettings = { navController.navigate(SettingsRoute) })
         }
         composable<SearchRoute> { SearchScreen(viewModel { SearchViewModel(registry) }, open, onLongPress) }
         composable<ExploreRoute> {
@@ -110,5 +115,6 @@ fun KairoifyNavHost(
             )
         }
         composable<AboutRoute> { AboutScreen(viewModel { about() }) }
+        composable<SettingsRoute> { SettingsScreen(viewModel { settings() }) }
     }
 }

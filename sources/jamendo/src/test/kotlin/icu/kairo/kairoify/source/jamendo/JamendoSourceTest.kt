@@ -56,7 +56,7 @@ class JamendoSourceTest {
             }
         }
         server.start()
-        source = JamendoSource(OkHttpClient(), "test-client", server.url("/v3.0/"))
+        source = JamendoSource(OkHttpClient(), { "test-client" }, server.url("/v3.0/"))
     }
 
     @AfterTest fun stop() = server.close()

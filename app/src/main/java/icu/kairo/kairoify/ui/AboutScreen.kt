@@ -67,7 +67,8 @@ fun AboutScreen(viewModel: AboutViewModel, modifier: Modifier = Modifier) {
         Text("Independent artists on Audius — audius.co")
         Text("DJ mixes from Mixcloud — mixcloud.com; NTS Radio — nts.live; DJ sets from hearthis.at")
         Text("Recordings from Wikimedia Commons — commons.wikimedia.org")
-        Text(if (BuildConfig.JAMENDO_CLIENT_ID.isBlank()) "Jamendo: off (needs a client ID)" else "Creative Commons music from Jamendo — jamendo.com")
+        Text("Creative Commons music from Jamendo — jamendo.com (add its client ID in Settings)")
+        Text("Every source and its switch: Home → ⚙ Settings. The full list is in AUDIO.md.")
         HorizontalDivider()
         Text(engine.summary)
         engine.message?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant) }

@@ -77,4 +77,22 @@ class HomeViewModelTest {
             assertEquals(2, a.homeCalls)
         }
     }
+
+    @Test
+    fun `switching a source on or off reloads home without it`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            var bOn = true
+            val a = FakeSource("a", homeShelves = listOf(Shelf("a1", "A one", listOf(station("1")))))
+            val b = FakeSource("b", homeShelves = listOf(Shelf("b1", "B one", listOf(station("2")))))
+            val changes = kotlinx.coroutines.flow.MutableStateFlow(0)
+            val vm = HomeViewModel(SourceRegistry(listOf(a, b), isEnabled = { it !== b || bOn }), changes)
+            advanceUntilIdle()
+            assertEquals(2, vm.state.value.sections.size)
+            bOn = false
+            changes.value++
+            advanceUntilIdle()
+            assertEquals(listOf("a1"), vm.state.value.sections.map { (it as HomeSection.Loaded).shelf.id })
+            assertEquals(2, a.homeCalls)
+        }
+    }
 }
