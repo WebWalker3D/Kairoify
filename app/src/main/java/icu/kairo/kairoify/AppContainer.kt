@@ -22,6 +22,10 @@ package icu.kairo.kairoify
 import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.data.KairoifyDatabase
 import icu.kairo.kairoify.core.data.RoomFavoritesStore
+import icu.kairo.kairoify.core.data.HistoryStore
+import icu.kairo.kairoify.core.data.PlaylistStore
+import icu.kairo.kairoify.core.data.RoomHistoryStore
+import icu.kairo.kairoify.core.data.RoomPlaylistStore
 import icu.kairo.kairoify.core.data.createDatabase
 import icu.kairo.kairoify.core.model.Item
 import kotlinx.coroutines.flow.first
@@ -185,6 +189,10 @@ class AppContainer(context: Context) : PlayerDependencies {
     val database: KairoifyDatabase = createDatabase(context)
 
     val favorites: FavoritesStore = RoomFavoritesStore(database)
+
+    val history: HistoryStore = RoomHistoryStore(database)
+
+    val playlists: PlaylistStore = RoomPlaylistStore(database)
 
     override suspend fun favoriteItems(): List<Item> = favorites.favorites.first().map { it.item }
 }

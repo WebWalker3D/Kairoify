@@ -20,14 +20,23 @@
 package icu.kairo.kairoify.core.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /** Everything Kairoify keeps on the phone. */
-@Database(entities = [FavoriteEntity::class], version = 1)
+@Database(
+    entities = [FavoriteEntity::class, HistoryEntity::class, PlaylistEntity::class, PlaylistItemEntity::class],
+    version = 2,
+    autoMigrations = [AutoMigration(from = 1, to = 2)],
+)
 abstract class KairoifyDatabase : RoomDatabase() {
     abstract fun favorites(): FavoritesDao
+
+    abstract fun history(): HistoryDao
+
+    abstract fun playlists(): PlaylistDao
 }
 
 fun createDatabase(context: Context): KairoifyDatabase =
