@@ -209,6 +209,7 @@ class ArchiveSource(
             "classical" to "collection:opensource_audio AND subject:classical",
             "freemusicarchive" to "collection:freemusicarchive AND mediatype:audio",
             "oldtimeradio" to "collection:oldtimeradio AND mediatype:audio",
+            "hiphopmixtapes" to "collection:hiphopmixtapes AND mediatype:audio",
         )
         private val COLLECTION_NAMES = listOf(
             "etree" to "Live Music Archive",
@@ -217,6 +218,7 @@ class ArchiveSource(
             "classical" to "Classical",
             "freemusicarchive" to "Free Music Archive",
             "oldtimeradio" to "Old Time Radio",
+            "hiphopmixtapes" to "Hip-hop mixtapes",
         )
 
         /** Netlabels whose catalogs the Archive mirrors, browsable by name (collection id → label). */
@@ -232,14 +234,43 @@ class ArchiveSource(
             COLLECTION_NAMES.map { (id, label) -> Triple(id, label, COLLECTIONS.getValue(id)) } +
                 NETLABELS.map { (id, label) -> Triple(id, label, "collection:$id") }
 
-        /** LibriVox's free public-domain audiobooks, which the Archive hosts: a source of its own. */
-        fun librivox(client: OkHttpClient, baseUrl: HttpUrl = "https://archive.org/".toHttpUrl()) = ArchiveSource(
+        /** LibriVox and the Archive's own Audio Books & Poetry collection. */
+        private const val BOOKS = "collection:librivoxaudio OR (collection:audio_bookspoetry AND mediatype:audio)"
+
+        /** Audiobook genres: id → (label, the subjects that find them). */
+        private val BOOK_GENRES = listOf(
+            Triple("poetry", "Poetry", listOf("poetry", "poems")),
+            Triple("fiction", "Fiction", listOf("fiction")),
+            Triple("mystery", "Mystery & detective", listOf("mystery", "detective")),
+            Triple("scifi", "Science fiction & fantasy", listOf("science fiction", "fantasy")),
+            Triple("children", "Children's", listOf("children", "fairy tales")),
+            Triple("adventure", "Adventure", listOf("adventure")),
+            Triple("romance", "Romance", listOf("romance")),
+            Triple("horror", "Horror & ghost stories", listOf("horror", "ghost")),
+            Triple("short", "Short stories", listOf("short stories")),
+            Triple("humor", "Humor", listOf("humor")),
+            Triple("drama", "Plays & drama", listOf("drama", "plays")),
+            Triple("history", "History", listOf("history")),
+            Triple("war", "War", listOf("war")),
+            Triple("biography", "Biography & letters", listOf("biography", "letters")),
+            Triple("philosophy", "Philosophy", listOf("philosophy")),
+            Triple("religion", "Religion", listOf("religion")),
+            Triple("nature", "Nature", listOf("nature")),
+        )
+
+        /**
+         * Audiobooks & poetry: LibriVox's volunteer-read public-domain books and the Archive's Audio Books & Poetry
+         * collection, browsable by genre. Keeps the id "librivox" so earlier favorites still play.
+         */
+        fun audiobooks(client: OkHttpClient, baseUrl: HttpUrl = "https://archive.org/".toHttpUrl()) = ArchiveSource(
             client = client,
             baseUrl = baseUrl,
             sourceId = "librivox",
-            name = "LibriVox audiobooks",
-            searchScope = "collection:librivoxaudio",
-            browsable = emptyList(),
+            name = "Audiobooks & poetry",
+            searchScope = BOOKS,
+            browsable = BOOK_GENRES.map { (id, label, subjects) ->
+                Triple(id, label, "($BOOKS) AND subject:(${subjects.joinToString(" OR ") { "\"$it\"" }})")
+            },
             onThisDay = false,
         )
     }

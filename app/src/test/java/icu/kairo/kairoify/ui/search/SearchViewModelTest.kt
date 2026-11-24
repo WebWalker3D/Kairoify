@@ -178,4 +178,18 @@ class SearchViewModelTest {
             assertEquals(listOf("songs", "archive", "radio"), assertIs<SearchUiState.Results>(vm.state.value).sections.map { it.source.id })
         }
     }
+
+    @Test
+    fun `a category's search asks only its own sources`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val books = FakeSource("books")
+            val radio = FakeSource("radio")
+            val vm = SearchViewModel(SourceRegistry(listOf(books, radio)), only = { it.info.id == "books" })
+            vm.onQueryChange("poe")
+            advanceTimeBy(1_000)
+            assertEquals(listOf("poe"), books.searchQueries)
+            assertEquals(emptyList(), radio.searchQueries)
+            assertEquals(listOf("books"), (vm.state.value as SearchUiState.Results).sections.map { it.source.id })
+        }
+    }
 }

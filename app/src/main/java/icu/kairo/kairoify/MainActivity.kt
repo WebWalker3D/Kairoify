@@ -66,6 +66,8 @@ import icu.kairo.kairoify.ui.AboutViewModel
 import icu.kairo.kairoify.ui.components.StartOverPill
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
+import icu.kairo.kairoify.core.source.MusicSource
+import icu.kairo.kairoify.settings.SourceCategory
 import icu.kairo.kairoify.ui.AttributionSplash
 import icu.kairo.kairoify.ui.ExploreRoute
 import icu.kairo.kairoify.ui.HomeRoute
@@ -103,6 +105,7 @@ class MainActivity : ComponentActivity() {
                         about = { AboutViewModel(container.engine, container.updater) },
                         settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
                         sourceChanges = container.sourceSettings.changes,
+                        inCategory = container.sourceCatalog::inCategory,
                     )
                 }
             }
@@ -127,6 +130,7 @@ private fun KairoifyScaffold(
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
+    inCategory: (MusicSource, SourceCategory) -> Boolean,
 ) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
@@ -194,6 +198,7 @@ private fun KairoifyScaffold(
             about = about,
             settings = settings,
             sourceChanges = sourceChanges,
+            inCategory = inCategory,
             onPlay = player::play,
             onPlayQueue = { items, start, shuffle -> player.playAll(items, start, shuffle) },
             onLongPress = { actionsFor = it },

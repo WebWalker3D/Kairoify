@@ -60,10 +60,15 @@ data class SourceEntry(
     val keyName: String? = null,
     val keyFallback: String = "",
     val note: String,
+    val category: SourceCategory = SourceCategory.MUSIC,
 )
 
 /** Every source with its switch and key: the one place that decides what's on. */
 class SourceCatalog(val entries: List<SourceEntry>, private val settings: SourceSettings) {
+    /** Whether [source] belongs to [category]. */
+    fun inCategory(source: icu.kairo.kairoify.core.source.MusicSource, category: SourceCategory): Boolean =
+        entries.firstOrNull { it.source === source }?.category == category
+
     fun entry(id: String): SourceEntry? = entries.firstOrNull { it.source.info.id == id }
 
     fun key(name: String): String =

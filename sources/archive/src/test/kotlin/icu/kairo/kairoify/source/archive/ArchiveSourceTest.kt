@@ -179,13 +179,32 @@ class ArchiveSourceTest {
     }
 
     @Test
-    fun `librivox is its own source over its own collection`() = runTest {
-        val librivox = ArchiveSource.librivox(OkHttpClient(), server.url("/"))
-        assertEquals("librivox", librivox.info.id)
-        val albums = librivox.search("sherlock holmes").items
+    fun `audiobooks and poetry is its own source over librivox and the archive's collection`() = runTest {
+        val books = ArchiveSource.audiobooks(OkHttpClient(), server.url("/"))
+        assertEquals("librivox", books.info.id)
+        assertEquals("Audiobooks & poetry", books.info.displayName)
+        val albums = books.search("sherlock holmes").items
         assertTrue(albums.all { it.ref.sourceId == "librivox" })
-        assertTrue(query().startsWith("(collection:librivoxaudio) AND ("), query())
-        assertEquals(emptyList(), librivox.home())
+        assertTrue(query().startsWith("(collection:librivoxaudio OR (collection:audio_bookspoetry AND mediatype:audio)) AND ("), query())
+        assertEquals(emptyList(), books.home())
+    }
+
+    @Test
+    fun `audiobooks browse by genre`() = runTest {
+        val books = ArchiveSource.audiobooks(OkHttpClient(), server.url("/"))
+        val genres = books.facets(FacetKind.COLLECTION).map { it.label }
+        assertTrue("Poetry" in genres && "Mystery & detective" in genres && "Children's" in genres, genres.toString())
+        searchFixture = "browse_78s.json"
+        books.browse(BrowseNode.Collection("poetry"))
+        assertEquals("(collection:librivoxaudio OR (collection:audio_bookspoetry AND mediatype:audio)) AND subject:(\"poetry\" OR \"poems\")", query())
+    }
+
+    @Test
+    fun `hip-hop mixtapes are browsable and searched`() = runTest {
+        assertTrue("Hip-hop mixtapes" in source.facets(FacetKind.COLLECTION).map { it.label })
+        searchFixture = "browse_78s.json"
+        source.browse(BrowseNode.Collection("hiphopmixtapes"))
+        assertEquals("collection:hiphopmixtapes AND mediatype:audio", query())
     }
 
     @Test

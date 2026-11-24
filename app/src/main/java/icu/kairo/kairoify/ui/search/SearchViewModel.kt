@@ -26,6 +26,7 @@ import icu.kairo.kairoify.core.model.ItemKind
 import icu.kairo.kairoify.core.model.Page
 import icu.kairo.kairoify.core.source.Capability
 import icu.kairo.kairoify.core.source.SourceInfo
+import icu.kairo.kairoify.core.source.MusicSource
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.core.source.SourceResult
 import kotlinx.coroutines.FlowPreview
@@ -68,7 +69,11 @@ fun visibleItems(items: List<Item>, filter: ItemKind?): List<Item> = if (filter 
 
 /** Searches every source at once; each source's section fills in as it answers and can be retried on its own. */
 @OptIn(FlowPreview::class)
-class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
+/** @param only limits the search to some sources: a category's own search. */
+class SearchViewModel(
+    private val registry: SourceRegistry,
+    private val only: (MusicSource) -> Boolean = { true },
+) : ViewModel() {
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
@@ -96,7 +101,7 @@ class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
                     return@collectLatest
                 }
                 results.value = q to initialSections()
-                registry.search(q).collect { record(q, it) }
+                registry.search(q, only).collect { record(q, it) }
             }
         }
     }
@@ -119,7 +124,7 @@ class SearchViewModel(private val registry: SourceRegistry) : ViewModel() {
 
     private fun initialSections(): List<SearchSection> =
         registry.enabledSources()
-            .filter { Capability.SEARCH in it.capabilities }
+            .filter { Capability.SEARCH in it.capabilities && only(it) }
             .map { SearchSection(it.info, it.searchKind, SearchSectionState.Loading) }
             .sortedBy { KIND_ORDER.indexOf(it.kind) }
 

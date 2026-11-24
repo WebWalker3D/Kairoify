@@ -21,6 +21,10 @@ package icu.kairo.kairoify.ui
 
 import androidx.compose.runtime.Composable
 import icu.kairo.kairoify.ui.settings.SettingsScreen
+import icu.kairo.kairoify.core.source.MusicSource
+import icu.kairo.kairoify.settings.SourceCategory
+import icu.kairo.kairoify.ui.category.CategoryHomeViewModel
+import icu.kairo.kairoify.ui.category.CategoryScreen
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.ui.album.opensDetails
@@ -60,6 +64,8 @@ fun KairoifyNavHost(
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
+    /** Whether a source belongs to a section (Music, Radio, Audiobooks…). */
+    inCategory: (MusicSource, SourceCategory) -> Boolean,
     onPlay: (Item) -> Unit,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
@@ -80,6 +86,20 @@ fun KairoifyNavHost(
             ExploreScreen(
                 onOpenFacets = { navController.navigate(FacetsRoute(it)) },
                 onOpenArchives = { navController.navigate(FacetsRoute(FacetKind.COLLECTION, sourceId = "archive")) },
+                onOpenCategory = { navController.navigate(CategoryRoute(it)) },
+            )
+        }
+        composable<CategoryRoute> { entry ->
+            val category = entry.toRoute<CategoryRoute>().category
+            val only = { source: MusicSource -> inCategory(source, category) }
+            CategoryScreen(
+                category,
+                search = viewModel { SearchViewModel(registry, only) },
+                home = viewModel { CategoryHomeViewModel(registry, only) },
+                onPlay = open,
+                onLongPress = onLongPress,
+                onBrowse = { navController.navigate(BrowseRoute.of(it.sourceId, it.facet.node, it.facet.label)) },
+                onOpenFacets = { navController.navigate(FacetsRoute(it)) },
             )
         }
         composable<FacetsRoute> { entry ->

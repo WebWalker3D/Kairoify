@@ -35,6 +35,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object SettingsRoute
 
+@Serializable data class CategoryRoute(val category: icu.kairo.kairoify.settings.SourceCategory)
+
 @Serializable data class AlbumRoute(val sourceId: String, val itemId: String, val title: String)
 
 @Serializable data class FacetsRoute(val kind: FacetKind, val sourceId: String = "radiobrowser")
