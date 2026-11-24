@@ -44,6 +44,12 @@ import kotlinx.coroutines.flow.asStateFlow
 /** Offered after a track picks up where it was left: "Start track over?" for a few seconds. */
 data class ResumeOffer(val ref: MediaRef, val positionMs: Long, val id: Long)
 
+/** One upcoming song in the queue, for the player's "Up next" list. */
+data class UpNextEntry(val index: Int, val title: String, val subtitle: String?, val artworkUrl: String?)
+
+/** A queue that is a station, e.g. "Free radio · Etta James"; [building] while songs are still being added. */
+data class StationLabel(val title: String, val building: Boolean)
+
 /** The app's handle on the playback service. Everything the UI shows about playback comes from [nowPlaying]. */
 @OptIn(UnstableApi::class)
 class PlayerConnection(private val context: Context, private val positions: ResumePositions? = null) {
@@ -62,11 +68,46 @@ class PlayerConnection(private val context: Context, private val positions: Resu
     /** Attach to the service so a session already playing (e.g. started from Android Auto) shows up. */
     fun connect() = withController { }
 
+    private val _upNext = MutableStateFlow<List<UpNextEntry>>(emptyList())
+
+    /** The next songs in the queue, in play order (shuffle included), up to [UP_NEXT_LIMIT]. */
+    val upNext: StateFlow<List<UpNextEntry>> = _upNext.asStateFlow()
+
+    private val _station = MutableStateFlow<StationLabel?>(null)
+
+    /** Set while the queue is a station; cleared when anything else starts. */
+    val station: StateFlow<StationLabel?> = _station.asStateFlow()
+
+    /** Labels the queue started at [generation] as a station, unless something else has started since. */
+    fun markStation(generation: Int, title: String, building: Boolean) {
+        if (generation == queueGeneration) _station.value = StationLabel(title, building)
+    }
+
+    /** Jumps to a song in the queue (from "Up next"). */
+    fun skipTo(index: Int) = withController {
+        saveCurrent(it)
+        it.seekToDefaultPosition(index)
+    }
+
+    /** Goes up every time a new queue starts (or playback stops), so late additions to an old queue are dropped. */
+    var queueGeneration = 0
+        private set
+
     fun play(item: Item) = playAll(listOf(item))
+
+    /** Adds [items] to the end of the queue, unless another queue has started since [generation]. */
+    fun append(generation: Int, items: List<Item>) = withController {
+        if (generation == queueGeneration && items.isNotEmpty()) {
+            it.addMediaItems(items.map(MediaItems::fromItem))
+            publish(it)
+        }
+    }
 
     /** Plays [items] as the queue, from [startIndex] (or a random item when shuffling). */
     fun playAll(items: List<Item>, startIndex: Int = 0, shuffle: Boolean = false) {
         if (items.isEmpty()) return
+        queueGeneration++
+        _station.value = null
         val request = queueRequest(items, startIndex, shuffle)
         withController {
             saveCurrent(it)
@@ -141,7 +182,13 @@ class PlayerConnection(private val context: Context, private val positions: Resu
         }
     }
 
-    fun stop() = withController {
+    fun stop() {
+        queueGeneration++
+        _station.value = null
+        stopNow()
+    }
+
+    private fun stopNow() = withController {
         requested = null
         sessionError = null
         it.stop()
@@ -189,7 +236,22 @@ class PlayerConnection(private val context: Context, private val positions: Resu
         return future
     }
 
+    private fun upNextOf(controller: MediaController): List<UpNextEntry> {
+        val timeline = controller.currentTimeline
+        if (timeline.isEmpty) return emptyList()
+        val out = mutableListOf<UpNextEntry>()
+        var index = controller.currentMediaItemIndex
+        while (out.size < UP_NEXT_LIMIT) {
+            index = timeline.getNextWindowIndex(index, Player.REPEAT_MODE_OFF, controller.shuffleModeEnabled)
+            if (index == C.INDEX_UNSET) break
+            val meta = controller.getMediaItemAt(index).mediaMetadata
+            out += UpNextEntry(index, meta.title?.toString().orEmpty(), meta.artist?.toString(), meta.artworkUri?.toString())
+        }
+        return out
+    }
+
     private fun publish(controller: MediaController) {
+        _upNext.value = upNextOf(controller)
         val current = nowPlayingOf(
             controller.currentMediaItem,
             controller.mediaMetadata,
@@ -218,3 +280,5 @@ class PlayerConnection(private val context: Context, private val positions: Resu
         }
     }
 }
+
+private const val UP_NEXT_LIMIT = 50
