@@ -41,6 +41,8 @@ and one library.
   player's "Save this song" finds it on your music sources and keeps it in Favorites.
 - **Music on your phone:** allow access once and your own music files show up in
   search, on Home and in Library's "On this phone" tab, alongside everything streamed.
+- **Sound:** Settings has Even out volume, the phone's equalizer presets, and a link
+  to the phone's own sound panel.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -181,7 +183,7 @@ every current and planned source, with a dated change log.
 - **Discovery** shaped by what you listen to, kept on your phone.
 - **Explore:** an interactive world radio globe, and browsing by decade and by
   source.
-- **Listening:** synchronized lyrics, an equalizer and volume normalization.
+- **Listening:** synchronized lyrics.
 - **Android TV.**
 - **Library:** saved albums and concerts, plus export and import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.
