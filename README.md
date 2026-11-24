@@ -102,12 +102,13 @@ built into the app.
 | YouTube Music | The mainstream catalog | ✓ Live |
 | SoundCloud | Indie, DJ sets, remixes | ✓ Live |
 | Bandcamp | Independent artists | ✓ Live |
-| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, public-domain classical | ✓ Live |
+| Internet Archive | Live Music Archive concerts, Great 78 Project, netlabels, Free Music Archive, Old Time Radio, public-domain classical | ✓ Live |
 | Audius | Independent artists | ✓ Live |
 | Mixcloud | DJ mixes and radio shows | ✓ Live |
 | NTS Radio | Two live channels and ~90,000 archived shows | ✓ Live |
 | hearthis.at | DJ sets, live recordings, tracks | ✓ Live |
 | Wikimedia Commons | Classical, folk and historical recordings | ✓ Live |
+| Radio Paradise | Ad-free, human-curated radio channels | ✓ Live |
 | SomaFM | Ad-free, listener-supported radio channels | ✓ Live |
 | Openverse | Creative Commons audio from many sites | ✓ Live |
 | Library of Congress | Historical recordings, including the National Jukebox | ✓ Live |

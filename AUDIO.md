@@ -36,6 +36,9 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [Wikimedia Commons](https://commons.wikimedia.org) | Classical, folk, historical and international recordings, each with its license | MediaWiki API | Official | 0.4 |
 | [NTS Radio](https://www.nts.live) — live | NTS 1 and NTS 2, live from London | NTS's public API and public stream relay | Official | 0.4 |
 | [hearthis.at](https://hearthis.at) | DJ sets, live recordings and tracks | Public read API and its stream URLs | To confirm (developer terms) | 0.4 |
+| [Radio Paradise](https://radioparadise.com) | 8 listener-supported, ad-free, human-curated channels (Main Mix, Mellow, Rock, Global, Beyond, Serenity, Velvet, KFAT) | Public channel list; its own AAC 320 streams | Official | Unreleased |
+| Internet Archive — Free Music Archive | ~17,000 Creative Commons releases mirrored from FMA | Archive APIs | Official | Unreleased |
+| Internet Archive — Old Time Radio | ~57,000 radio dramas, comedies and music shows from the 1930s–50s | Archive APIs | Official | Unreleased |
 | [SomaFM](https://somafm.com) | ~40 ad-free, listener-supported internet radio channels | Public channel list; SomaFM's own public streams | Official | Unreleased |
 | [Openverse](https://openverse.org) | Creative Commons audio gathered from many sites, with each work's license | Public REST API | Official | Unreleased |
 | [Library of Congress](https://www.loc.gov/audio/) | Online audio including the National Jukebox (1900–1925); only items it marks unrestricted | Public JSON API; each item's MP3 | Official | Unreleased |
@@ -66,7 +69,6 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | Checked 2026-11-24: the open instance found (tanukitunes.com) has unlicensed commercial uploads, so it doesn't meet the free-and-legal rule. Needs an instance that only hosts licensed music. |
 | [Open Audio](https://open.audio) | Creative Commons music, including a Free Music Archive mirror | Funkwhale API; each track's license needs checking | No |
 | [Dogmazic](https://play.dogmazic.net) | Tens of thousands of freely licensed independent tracks (since 2004) | Ampache/Subsonic API, which supports third-party apps | To check (may need an account) |
-| [Free Music Archive](https://freemusicarchive.org) | Creative Commons independent music | Through Open Audio's mirror or Internet Archive copies; FMA has no public API | No |
 | [Mirlo](https://mirlo.space) | Independent artists and albums | Canimus API, authorized HLS streaming | Check terms |
 | [Faircamp](https://simonrepp.com/faircamp/) | Artist-hosted music catalogs | Catalog discovery and federation | No |
 | Fairplayer | Federated independent music | Canimus-compatible catalogs | No |
@@ -135,6 +137,10 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Radio Paradise | **Added**, on by default. |
+| 2026-11-24 | Unreleased | Internet Archive | **Added**: Free Music Archive and Old Time Radio collections, searched and browsable. |
+| 2026-11-24 | Unreleased | All sources | **Changed**: search results and album details are cached for 10 minutes, so repeating a search or reopening an album doesn't ask every service again. Retry always asks again. |
+| 2026-11-24 | Unreleased | Finna (Finnish archives) | **Checked, not added**: its API sits behind a Cloudflare browser challenge that apps can't pass. |
 | 2026-11-24 | Unreleased | Wavlake | **Added**, on by default; checked on the phone. |
 | 2026-11-24 | Unreleased | All sources | **Changed**: Home reloads as soon as a source is switched on or off in Settings. |
 | 2026-11-24 | Unreleased | Library of Congress | **Fixed**: search now waits up to 20 s; loc.gov often takes 3–8 s and timed out on the phone. Checked on a Samsung S22+ along with SomaFM, Openverse, LibriVox, Podcasts, netlabels and ccMixter. |

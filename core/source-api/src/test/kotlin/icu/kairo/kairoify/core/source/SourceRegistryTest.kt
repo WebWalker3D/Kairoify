@@ -52,8 +52,12 @@ private class FakeSource(
 
     override suspend fun related(ref: MediaRef): List<Item> = relatedItems
 
-    override suspend fun details(ref: MediaRef): AlbumDetails =
-        AlbumDetails(Album(ref, "Album ${ref.itemId}"), listOf(Track(MediaRef(ref.sourceId, "${ref.itemId}/1"), "One")))
+    var detailsCalls = 0
+
+    override suspend fun details(ref: MediaRef): AlbumDetails {
+        detailsCalls++
+        return AlbumDetails(Album(ref, "Album ${ref.itemId}"), listOf(Track(MediaRef(ref.sourceId, "${ref.itemId}/1"), "One")))
+    }
 
     override suspend fun search(query: String, page: PageToken?): Page<Item> {
         queries += query
@@ -181,5 +185,64 @@ class SourceRegistryTest {
         assertEquals(listOf("on"), registry.home().toList().map { it.source.id })
         assertEquals(listOf("on"), registry.enabledSources().map { it.info.id })
         assertEquals("off", registry.get("off").info.id)
+    }
+
+    @Test
+    fun `a repeated search is answered from the cache`() = runTest {
+        val a = FakeSource("a")
+        val registry = SourceRegistry(listOf(a))
+        registry.search("Blues").toList()
+        registry.search("  blues ").toList()
+        assertEquals(listOf("Blues"), a.queries)
+    }
+
+    @Test
+    fun `cached searches expire`() = runTest {
+        var now = 0L
+        val a = FakeSource("a")
+        val registry = SourceRegistry(listOf(a), cache = SearchCache(ttlMillis = 1_000, now = { now }))
+        registry.search("blues").toList()
+        now = 1_001
+        registry.search("blues").toList()
+        assertEquals(2, a.queries.size)
+    }
+
+    @Test
+    fun `failures are not cached`() = runTest {
+        val a = FakeSource("a", failWith = IOException("down"))
+        val registry = SourceRegistry(listOf(a))
+        registry.search("blues").toList()
+        registry.search("blues").toList()
+        assertEquals(2, a.queries.size)
+    }
+
+    @Test
+    fun `retry asks the source again`() = runTest {
+        val a = FakeSource("a")
+        val registry = SourceRegistry(listOf(a))
+        registry.search("blues").toList()
+        registry.searchSource("a", "blues")
+        assertEquals(2, a.queries.size)
+    }
+
+    @Test
+    fun `album details are cached`() = runTest {
+        val a = FakeSource("a", capabilities = setOf(Capability.DETAILS))
+        val registry = SourceRegistry(listOf(a))
+        registry.details(MediaRef("a", "x"))
+        registry.details(MediaRef("a", "x"))
+        assertEquals(1, a.detailsCalls)
+    }
+
+    @Test
+    fun `the cache forgets the least recently used entries`() {
+        val cache = SearchCache(maxEntries = 2)
+        cache.put("k1", 1)
+        cache.put("k2", 2)
+        cache.get<Int>("k1")
+        cache.put("k3", 3)
+        assertEquals(1, cache.get<Int>("k1"))
+        assertEquals(null, cache.get<Int>("k2"))
+        assertEquals(3, cache.get<Int>("k3"))
     }
 }
