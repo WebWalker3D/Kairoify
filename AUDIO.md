@@ -139,6 +139,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Podcasts, Library of Congress, Wikimedia Commons, Openverse, Freesound, Europeana | **Added**: browse topics and shelves on their sections (e.g. True crime, National Jukebox, Speeches, Rain, Birds), each filled by that source's own search. |
 | 2026-11-24 | Unreleased | Nightride FM | **Added**, on by default: nine synthwave stations (Nightride, Chillsynth, Datawave, Spacesynth, Darksynth, Horrorsynth, EBSM, Rekt, Rektory). |
 | 2026-11-24 | Unreleased | All music sources | **Added**: Free radio, a station mixed on the phone from every music source. Similar artists come from MusicBrainz and ListenBrainz (metadata only, no audio; open APIs, no key). |
 | 2026-11-24 | Unreleased | Audiobooks & poetry | **Changed**: LibriVox grew into Audiobooks & poetry, adding the Internet Archive's Audio Books & Poetry collection and 17 genres to browse. Favorites saved from LibriVox still play. |

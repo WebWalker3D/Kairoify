@@ -56,7 +56,7 @@ class CategoryHomeViewModel(private val registry: SourceRegistry, private val on
                 if (result is SourceResult.Ok) shelves[result.source.id] = result.value
                 _state.update { it.copy(shelves = inSourceOrder(shelves)) }
             }
-            _state.update { it.copy(loading = false, browse = browse.awaitAll().flatten()) }
+            _state.update { it.copy(loading = false, browse = distinctLabels(browse.awaitAll().flatten())) }
         }
     }
 
@@ -66,6 +66,14 @@ class CategoryHomeViewModel(private val registry: SourceRegistry, private val on
         throw e
     } catch (_: Exception) {
         emptyList()
+    }
+
+    /** Two sources can offer the same topic ("Speeches"); name the source on those so every chip is told apart. */
+    private fun distinctLabels(entries: List<BrowseEntry>): List<BrowseEntry> {
+        val counts = entries.groupingBy { it.facet.label }.eachCount()
+        return entries.map { e ->
+            if (counts.getValue(e.facet.label) < 2) e else e.copy(facet = e.facet.copy(label = "${e.facet.label} · ${registry.get(e.sourceId).info.displayName}"))
+        }
     }
 
     private fun inSourceOrder(bySource: Map<String, List<Shelf>>): List<Shelf> =

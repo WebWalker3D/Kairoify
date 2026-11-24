@@ -135,6 +135,8 @@ whenever that happens.
 Explore groups every source into six sections: Music, Radio, Audiobooks & poetry,
 Podcasts, Historical recordings and Sounds. Each has its own page with its own search,
 results as rows of cover art, and its genres or collections to browse. Search's All view
+Podcasts, Historical recordings and Sounds browse by topic (True crime, National Jukebox,
+Speeches, Birdsong, Rain…), with the first few topics shown as shelves.
 uses the same rows: sources with nothing are hidden, and slow or failed ones share one line.
 
 Explore's Countries, Genres and Concerts & archives lists each have a filter box: type

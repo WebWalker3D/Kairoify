@@ -55,4 +55,15 @@ class CategoryHomeViewModelTest {
             assertEquals(0, radio.homeCalls)
         }
     }
+
+    @Test
+    fun `a topic two sources share names its source`() = withMain(dispatcher) {
+        runTest(dispatcher) {
+            val a = FakeSource("loc", facetList = listOf(Facet(BrowseNode.Collection("s"), "Speeches", null), Facet(BrowseNode.Collection("j"), "Jazz", null)))
+            val b = FakeSource("wiki", facetList = listOf(Facet(BrowseNode.Collection("s"), "Speeches", null)))
+            val vm = CategoryHomeViewModel(SourceRegistry(listOf(a, b)), only = { true })
+            advanceUntilIdle()
+            assertEquals(setOf("Speeches · LOC", "Jazz", "Speeches · WIKI"), vm.state.value.browse.map { it.facet.label }.toSet())
+        }
+    }
 }
