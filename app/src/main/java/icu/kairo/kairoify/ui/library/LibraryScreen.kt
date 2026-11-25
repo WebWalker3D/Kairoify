@@ -26,7 +26,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
+import icu.kairo.kairoify.local.LocalMusicSource
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableIntStateOf
@@ -75,6 +76,7 @@ fun LibraryScreen(
     viewModel: LibraryViewModel,
     playlists: PlaylistsViewModel,
     history: HistoryViewModel,
+    localMusic: LocalMusicSource,
     sourceName: (String) -> String,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
@@ -84,8 +86,8 @@ fun LibraryScreen(
     var tab by rememberSaveable { mutableIntStateOf(0) }
     Column(Modifier.fillMaxSize()) {
         Text("Library", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
-        PrimaryTabRow(selectedTabIndex = tab) {
-            listOf("Favorites", "Playlists", "History").forEachIndexed { i, label ->
+        PrimaryScrollableTabRow(selectedTabIndex = tab, edgePadding = 16.dp) {
+            listOf("Favorites", "Playlists", "History", "On this phone").forEachIndexed { i, label ->
                 Tab(selected = tab == i, onClick = { tab = i }, text = { Text(label) })
             }
         }
@@ -93,7 +95,8 @@ fun LibraryScreen(
         when (tab) {
             0 -> FavoritesTab(viewModel, sourceName, onPlayQueue, onLongPress, onOpen)
             1 -> PlaylistsTab(playlists, onOpenPlaylist)
-            else -> HistoryTab(history, sourceName, onPlayQueue, onLongPress, onOpen)
+            2 -> HistoryTab(history, sourceName, onPlayQueue, onLongPress, onOpen)
+            else -> OnThisPhoneTab(localMusic, onPlayQueue, onLongPress)
         }
     }
 }

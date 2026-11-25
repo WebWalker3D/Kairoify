@@ -57,6 +57,7 @@ import androidx.navigation.compose.rememberNavController
 import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.data.HistoryStore
 import icu.kairo.kairoify.core.data.PlaylistStore
+import icu.kairo.kairoify.local.LocalMusicSource
 import icu.kairo.kairoify.core.model.isPlayable
 import icu.kairo.kairoify.ui.components.AddToPlaylistSheet
 import icu.kairo.kairoify.core.model.Item
@@ -116,6 +117,7 @@ class MainActivity : ComponentActivity() {
                         container.favorites,
                         container.history,
                         container.playlists,
+                        container.localMusic,
                         about = { AboutViewModel(container.engine, container.updater) },
                         settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
                         sourceChanges = container.sourceSettings.changes,
@@ -144,6 +146,7 @@ private fun KairoifyScaffold(
     favorites: FavoritesStore,
     history: HistoryStore,
     playlists: PlaylistStore,
+    localMusic: LocalMusicSource,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -265,6 +268,7 @@ private fun KairoifyScaffold(
             favorites,
             history,
             playlists,
+            localMusic,
             about = about,
             settings = settings,
             sourceChanges = sourceChanges,

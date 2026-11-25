@@ -33,6 +33,7 @@ import android.content.Context
 import icu.kairo.kairoify.player.FreeRadio
 import icu.kairo.kairoify.core.source.withTopics
 import icu.kairo.kairoify.settings.BrowseTopics
+import icu.kairo.kairoify.local.LocalMusicSource
 import icu.kairo.kairoify.source.listenbrainz.SimilarArtists
 import icu.kairo.kairoify.player.ResumePositions
 import icu.kairo.kairoify.source.radioparadise.RadioParadiseSource
@@ -110,6 +111,9 @@ class AppContainer(context: Context) : PlayerDependencies {
      * "official" sources play through the provider's own API; "not authorized" ones play by extraction (yt-dlp),
      * included by the owner's choice; keyed ones stay off until a key is entered.
      */
+    /** Music files on the phone, shown with everything streamed. */
+    val localMusic = LocalMusicSource(context)
+
     val sourceCatalog: SourceCatalog by lazy {
         SourceCatalog(
             listOf(
@@ -140,6 +144,7 @@ class AppContainer(context: Context) : PlayerDependencies {
                 category = SourceCategory.MUSIC),
                 SourceEntry(RadioParadiseSource(httpClient), true, note = "Listener-supported, ad-free, human-curated radio. Public channel list and streams.", category = SourceCategory.RADIO),
                 SourceEntry(SomaFmSource(httpClient), true, note = "Ad-free listener-supported radio. Public channel list and streams.", category = SourceCategory.RADIO),
+                SourceEntry(localMusic, true, note = "Music files on this phone. Asks once for permission to read audio.", category = SourceCategory.MUSIC),
                 SourceEntry(NightrideSource(), true, note = "Free listener-supported synthwave radio: nine stations. Public streams.", category = SourceCategory.RADIO),
                 SourceEntry(OpenverseSource(httpClient).withTopics(BrowseTopics.sounds), true, note = "Creative Commons audio from many sites. Official API.", category = SourceCategory.SOUNDS),
                 SourceEntry(LocSource(httpClient).withTopics(BrowseTopics.libraryOfCongress, shelves = 0), true, note = "Library of Congress recordings, including the National Jukebox. Official API.", category = SourceCategory.HISTORY),
