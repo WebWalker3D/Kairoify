@@ -24,6 +24,9 @@ import androidx.lifecycle.viewModelScope
 import icu.kairo.kairoify.core.data.Playlist
 import icu.kairo.kairoify.core.data.PlaylistStore
 import icu.kairo.kairoify.core.data.PlaylistSummary
+import icu.kairo.kairoify.importing.PlaylistImporter
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -32,8 +35,41 @@ import kotlinx.coroutines.launch
 
 data class PlaylistsUiState(val loading: Boolean = true, val playlists: List<PlaylistSummary> = emptyList())
 
+/** Where an import stands. */
+sealed interface ImportState {
+    data object Idle : ImportState
+    data class Working(val done: Int, val total: Int) : ImportState
+    data class Done(val playlistId: Long?, val added: Int, val missed: List<String>) : ImportState
+    data class Failed(val message: String) : ImportState
+}
+
 /** The list of the person's playlists. */
-class PlaylistsViewModel(private val store: PlaylistStore) : ViewModel() {
+class PlaylistsViewModel(private val store: PlaylistStore, private val importer: PlaylistImporter? = null) : ViewModel() {
+    private val _import = MutableStateFlow<ImportState>(ImportState.Idle)
+    val importState: StateFlow<ImportState> = _import.asStateFlow()
+    val canImport: Boolean get() = importer != null
+
+    /** Reads [input] (a link or a pasted list), finds each song, and saves what was found as playlist [name]. */
+    fun import(name: String, input: String) {
+        val importer = importer ?: return
+        _import.value = ImportState.Working(0, 0)
+        viewModelScope.launch {
+            _import.value = try {
+                val result = importer.import(input) { done, total -> _import.value = ImportState.Working(done, total) }
+                val id = if (result.found.isEmpty()) null else store.create(name).also { store.add(it, result.found) }
+                ImportState.Done(id, result.found.size, result.missed.map { "${it.artist} - ${it.title}" })
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                ImportState.Failed(e.message ?: "Couldn't read that playlist.")
+            }
+        }
+    }
+
+    fun clearImport() {
+        _import.value = ImportState.Idle
+    }
+
     val state: StateFlow<PlaylistsUiState> = store.playlists.map { PlaylistsUiState(false, it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, PlaylistsUiState())
 

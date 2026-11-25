@@ -47,6 +47,9 @@ and one library.
   open database); tap a line to jump there.
 - **For you:** Home opens with Recently played and "Because you play …", built on
   the phone from your History.
+- **Import playlists:** paste a YouTube, YouTube Music, SoundCloud or Bandcamp link, or
+  any "Artist - Title" list (e.g. copied from Spotify), and each song is found on the
+  free sources.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -183,7 +186,6 @@ every current and planned source, with a dated change log.
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
-- **Playlist import** from other music services.
 - **Explore:** an interactive world radio globe, and browsing by decade and by
   source.
 - **Android TV.**
