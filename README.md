@@ -31,6 +31,9 @@ and one library.
 - **Favorites:** tap ♡ on anything playing, or long-press any station, song or
   concert. The Library tab keeps one list with Play all and Shuffle. A queue of stations skips
   like the preset buttons on a car radio.
+- **Playlists and history:** make your own playlists (long-press anything, or the
+  player's Add to playlist), reorder and rename them. Library's History tab lists
+  everything you've played, with play counts. Both stay on your phone.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -178,9 +181,7 @@ every current and planned source, with a dated change log.
   source.
 - **Listening:** synchronized lyrics, an equalizer and volume normalization.
 - **Android TV.**
-- **Podcasts and public-domain audiobooks.**
-- **Library:** playlists, history, and saved albums and concerts, plus export and
-  import of the whole library.
+- **Library:** saved albums and concerts, plus export and import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.
 - **Settings:** switch sources on or off, audio quality for Wi-Fi and mobile data,
   a sleep timer, and an in-app check for new Kairoify releases.

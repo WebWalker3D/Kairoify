@@ -55,6 +55,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import icu.kairo.kairoify.core.data.FavoritesStore
+import icu.kairo.kairoify.core.data.HistoryStore
+import icu.kairo.kairoify.core.data.PlaylistStore
+import icu.kairo.kairoify.core.model.isPlayable
+import icu.kairo.kairoify.ui.components.AddToPlaylistSheet
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.MediaRef
 import icu.kairo.kairoify.core.source.SourceRegistry
@@ -105,6 +109,8 @@ class MainActivity : ComponentActivity() {
                         container.sourceRegistry,
                         container.playerConnection,
                         container.favorites,
+                        container.history,
+                        container.playlists,
                         about = { AboutViewModel(container.engine, container.updater) },
                         settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
                         sourceChanges = container.sourceSettings.changes,
@@ -131,6 +137,8 @@ private fun KairoifyScaffold(
     registry: SourceRegistry,
     player: PlayerConnection,
     favorites: FavoritesStore,
+    history: HistoryStore,
+    playlists: PlaylistStore,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -144,6 +152,8 @@ private fun KairoifyScaffold(
     val snackbar = remember { SnackbarHostState() }
     var showSheet by remember { mutableStateOf(false) }
     var actionsFor by remember { mutableStateOf<Item?>(null) }
+    var addingToPlaylist by remember { mutableStateOf<List<Item>?>(null) }
+    val playlistList by playlists.playlists.collectAsStateWithLifecycle(emptyList())
     val openLink = rememberLinkOpener { scope.launch { snackbar.showSnackbar("No app on this phone can open that link.") } }
     val toggleFavorite: (Item) -> Unit = { item -> scope.launch { favorites.toggle(item) } }
     // Free radio plays the chosen song at once and adds similar music from every source as it's found.
@@ -181,6 +191,8 @@ private fun KairoifyScaffold(
     val upNext by player.upNext.collectAsStateWithLifecycle()
     val npFavorite by rememberIsFavorite(favorites, npItem?.ref)
     LaunchedEffect(Unit) { player.connect() }
+    // Every item that starts playing goes into History (on this phone only).
+    LaunchedEffect(npItem?.ref) { npItem?.let { history.record(it) } }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
@@ -221,6 +233,8 @@ private fun KairoifyScaffold(
             navController,
             registry,
             favorites,
+            history,
+            playlists,
             about = about,
             settings = settings,
             sourceChanges = sourceChanges,
@@ -252,6 +266,9 @@ private fun KairoifyScaffold(
                 if (npItem != null && seedArtist(npItem) != null) {
                     TextButton(onClick = { startFreeRadio(npItem) }) { Text("Free radio") }
                 }
+                if (npItem != null && npItem.isPlayable) {
+                    TextButton(onClick = { addingToPlaylist = listOf(npItem) }) { Text("Add to playlist") }
+                }
             },
         )
     }
@@ -273,6 +290,15 @@ private fun KairoifyScaffold(
                         },
                     ) { Text("Start radio") }
                 }
+                if (item.isPlayable) {
+                    ListItem(
+                        leadingContent = { Icon(KairoifyIcons.PlaylistAdd, contentDescription = null) },
+                        modifier = Modifier.clickable {
+                            addingToPlaylist = listOf(item)
+                            actionsFor = null
+                        },
+                    ) { Text("Add to playlist") }
+                }
                 if (seedArtist(item) != null) {
                     ListItem(
                         supportingContent = { Text("A station from every free music source") },
@@ -284,6 +310,25 @@ private fun KairoifyScaffold(
                     ) { Text("Free radio") }
                 }
             },
+        )
+    }
+    addingToPlaylist?.let { items ->
+        val done: (String) -> Unit = { name ->
+            addingToPlaylist = null
+            scope.launch { snackbar.showSnackbar("Added to $name") }
+        }
+        AddToPlaylistSheet(
+            items = items,
+            playlists = playlistList,
+            onAdd = { id ->
+                scope.launch { playlists.add(id, items) }
+                done(playlistList.firstOrNull { it.id == id }?.name ?: "playlist")
+            },
+            onCreateAndAdd = { name ->
+                scope.launch { playlists.add(playlists.create(name), items) }
+                done(name.trim().ifEmpty { "New playlist" })
+            },
+            onDismiss = { addingToPlaylist = null },
         )
     }
 }

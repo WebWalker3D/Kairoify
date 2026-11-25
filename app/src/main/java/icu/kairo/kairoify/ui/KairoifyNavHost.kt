@@ -44,6 +44,12 @@ import androidx.navigation.toRoute
 import icu.kairo.kairoify.core.data.FavoritesStore
 import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.ui.library.LibraryScreen
+import icu.kairo.kairoify.ui.library.HistoryViewModel
+import icu.kairo.kairoify.ui.library.PlaylistScreen
+import icu.kairo.kairoify.ui.library.PlaylistViewModel
+import icu.kairo.kairoify.ui.library.PlaylistsViewModel
+import icu.kairo.kairoify.core.data.HistoryStore
+import icu.kairo.kairoify.core.data.PlaylistStore
 import icu.kairo.kairoify.ui.library.LibraryViewModel
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.ui.explore.BrowseScreen
@@ -61,6 +67,8 @@ fun KairoifyNavHost(
     navController: NavHostController,
     registry: SourceRegistry,
     favorites: FavoritesStore,
+    history: HistoryStore,
+    playlists: PlaylistStore,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -77,6 +85,7 @@ fun KairoifyNavHost(
     val open: (Item) -> Unit = { item ->
         if (opensDetails(item)) navController.navigate(AlbumRoute(item.ref.sourceId, item.ref.itemId, item.title)) else onPlay(item)
     }
+    val sourceName = { id: String -> registry.sources.firstOrNull { it.info.id == id }?.info?.displayName ?: id }
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute> {
             HomeScreen(viewModel { HomeViewModel(registry, sourceChanges) }, open, onLongPress, onAbout = { navController.navigate(AboutRoute) }, onSettings = { navController.navigate(SettingsRoute) })
@@ -115,10 +124,24 @@ fun KairoifyNavHost(
         composable<LibraryRoute> {
             LibraryScreen(
                 viewModel { LibraryViewModel(favorites) },
-                sourceName = { id -> registry.sources.firstOrNull { it.info.id == id }?.info?.displayName ?: id },
+                viewModel { PlaylistsViewModel(playlists) },
+                viewModel { HistoryViewModel(history) },
+                sourceName = sourceName,
                 onPlayQueue = onPlayQueue,
                 onLongPress = onLongPress,
                 onOpen = open,
+                onOpenPlaylist = { navController.navigate(PlaylistRoute(it)) },
+            )
+        }
+        composable<PlaylistRoute> { entry ->
+            val id = entry.toRoute<PlaylistRoute>().id
+            PlaylistScreen(
+                viewModel { PlaylistViewModel(playlists, id) },
+                sourceName = sourceName,
+                onPlayQueue = onPlayQueue,
+                onLongPress = onLongPress,
+                onOpen = open,
+                onGone = { navController.popBackStack() },
             )
         }
         composable<AlbumRoute> { entry ->

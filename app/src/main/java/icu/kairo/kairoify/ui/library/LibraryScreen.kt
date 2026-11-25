@@ -19,6 +19,23 @@
  */
 package icu.kairo.kairoify.ui.library
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import icu.kairo.kairoify.core.model.isPlayable
+import icu.kairo.kairoify.ui.components.Artwork
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.horizontalScroll
@@ -52,9 +69,37 @@ import icu.kairo.kairoify.ui.components.ItemRow
 import icu.kairo.kairoify.ui.components.label
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
 
-/** The Library tab: every favorite in one list, with Play all and Shuffle. */
+/** The Library tab: Favorites, Playlists and History. */
 @Composable
 fun LibraryScreen(
+    viewModel: LibraryViewModel,
+    playlists: PlaylistsViewModel,
+    history: HistoryViewModel,
+    sourceName: (String) -> String,
+    onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
+    onLongPress: (Item) -> Unit,
+    onOpen: (Item) -> Unit,
+    onOpenPlaylist: (Long) -> Unit,
+) {
+    var tab by rememberSaveable { mutableIntStateOf(0) }
+    Column(Modifier.fillMaxSize()) {
+        Text("Library", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
+        PrimaryTabRow(selectedTabIndex = tab) {
+            listOf("Favorites", "Playlists", "History").forEachIndexed { i, label ->
+                Tab(selected = tab == i, onClick = { tab = i }, text = { Text(label) })
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        when (tab) {
+            0 -> FavoritesTab(viewModel, sourceName, onPlayQueue, onLongPress, onOpen)
+            1 -> PlaylistsTab(playlists, onOpenPlaylist)
+            else -> HistoryTab(history, sourceName, onPlayQueue, onLongPress, onOpen)
+        }
+    }
+}
+
+@Composable
+private fun FavoritesTab(
     viewModel: LibraryViewModel,
     sourceName: (String) -> String,
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
@@ -63,7 +108,6 @@ fun LibraryScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
-        Text("Favorites", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         when {
             state.loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
             state.kinds.isEmpty() -> Text(
@@ -79,18 +123,7 @@ fun LibraryScreen(
                         FilterChip(selected = state.filter == kind, onClick = { viewModel.setFilter(kind) }, label = { Text(kind.label) })
                     }
                 }
-                Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Button(onClick = { onPlayQueue(state.playable, 0, false) }, enabled = state.playable.isNotEmpty()) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text("Play all")
-                    }
-                    OutlinedButton(onClick = { onPlayQueue(state.playable, 0, true) }, enabled = state.playable.isNotEmpty()) {
-                        Icon(KairoifyIcons.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text("Shuffle")
-                    }
-                }
+                PlayButtons(state.playable, onPlayQueue)
                 LazyColumn(Modifier.fillMaxSize()) {
                     itemsIndexed(state.items, key = { _, item -> item.ref.encode() }) { _, item ->
                         ItemRow(
@@ -107,4 +140,131 @@ fun LibraryScreen(
             }
         }
     }
+}
+
+/** Play all and Shuffle for a list. */
+@Composable
+internal fun PlayButtons(
+    playable: List<Item>,
+    onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
+    trailing: @Composable () -> Unit = {},
+) {
+    Row(
+        Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Button(onClick = { onPlayQueue(playable, 0, false) }, enabled = playable.isNotEmpty()) {
+            Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text("Play all")
+        }
+        OutlinedButton(onClick = { onPlayQueue(playable, 0, true) }, enabled = playable.isNotEmpty()) {
+            Icon(KairoifyIcons.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text("Shuffle")
+        }
+        trailing()
+    }
+}
+
+@Composable
+private fun PlaylistsTab(viewModel: PlaylistsViewModel, onOpenPlaylist: (Long) -> Unit) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var naming by rememberSaveable { mutableStateOf(false) }
+    LazyColumn(Modifier.fillMaxSize()) {
+        item(key = "new") {
+            ListItem(
+                leadingContent = { Icon(Icons.Filled.Add, contentDescription = null) },
+                modifier = Modifier.clickable { naming = true },
+                headlineContent = { Text("New playlist") },
+            )
+        }
+        if (!state.loading && state.playlists.isEmpty()) {
+            item(key = "empty") {
+                Text(
+                    "Make a playlist here, or long-press any song and choose Add to playlist.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+        }
+        items(state.playlists, key = { it.id }) { p ->
+            ListItem(
+                leadingContent = { Artwork(p.cover?.artworkUrl, p.name, 48.dp) },
+                headlineContent = { Text(p.name) },
+                supportingContent = { Text(if (p.size == 1) "1 song" else "${p.size} songs") },
+                modifier = Modifier.clickable { onOpenPlaylist(p.id) },
+            )
+        }
+    }
+    if (naming) {
+        NameDialog(title = "New playlist", initial = "", onDismiss = { naming = false }) { name ->
+            naming = false
+            viewModel.create(name, onOpenPlaylist)
+        }
+    }
+}
+
+@Composable
+private fun HistoryTab(
+    viewModel: HistoryViewModel,
+    sourceName: (String) -> String,
+    onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
+    onLongPress: (Item) -> Unit,
+    onOpen: (Item) -> Unit,
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val items = state.played.map { it.item }
+    val playable = items.filter { it.isPlayable }
+    var confirm by remember { mutableStateOf(false) }
+    Column(Modifier.fillMaxSize()) {
+        when {
+            state.loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+            items.isEmpty() -> Text(
+                "Nothing played yet. Everything you play is listed here, newest first. It stays on this phone.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            else -> {
+                PlayButtons(playable, onPlayQueue) { TextButton(onClick = { confirm = true }) { Text("Clear") } }
+                LazyColumn(Modifier.fillMaxSize()) {
+                    items(state.played, key = { it.item.ref.encode() }) { played ->
+                        val item = played.item
+                        ItemRow(
+                            item,
+                            onClick = {
+                                val start = playable.indexOf(item)
+                                if (start < 0) onOpen(item) else onPlayQueue(playable, start, false)
+                            },
+                            onLongClick = onLongPress,
+                            badge = sourceName(item.ref.sourceId) + if (played.playCount > 1) " · ${played.playCount} plays" else "",
+                        )
+                    }
+                }
+            }
+        }
+    }
+    if (confirm) {
+        AlertDialog(
+            onDismissRequest = { confirm = false },
+            title = { Text("Clear history?") },
+            text = { Text("This forgets everything you've played. Favorites and playlists stay.") },
+            confirmButton = { TextButton(onClick = { confirm = false; viewModel.clear() }) { Text("Clear") } },
+            dismissButton = { TextButton(onClick = { confirm = false }) { Text("Cancel") } },
+        )
+    }
+}
+
+/** Asks for a playlist name. */
+@Composable
+internal fun NameDialog(title: String, initial: String, onDismiss: () -> Unit, onDone: (String) -> Unit) {
+    var name by rememberSaveable { mutableStateOf(initial) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { OutlinedTextField(name, { name = it }, singleLine = true, placeholder = { Text("Name") }) },
+        confirmButton = { TextButton(onClick = { onDone(name) }) { Text("Save") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+    )
 }
