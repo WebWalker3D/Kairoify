@@ -36,6 +36,8 @@ data class StationDto(
     val codec: String = "",
     val bitrate: Int = 0,
     val hls: Int = 0,
+    @SerialName("geo_lat") val geoLat: Double? = null,
+    @SerialName("geo_long") val geoLong: Double? = null,
 )
 
 @Serializable

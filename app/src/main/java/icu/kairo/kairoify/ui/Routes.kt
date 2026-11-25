@@ -35,6 +35,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object SettingsRoute
 
+@Serializable data object GlobeRoute
+
 @Serializable data class PlaylistRoute(val id: Long)
 
 @Serializable data class CategoryRoute(val category: icu.kairo.kairoify.settings.SourceCategory)

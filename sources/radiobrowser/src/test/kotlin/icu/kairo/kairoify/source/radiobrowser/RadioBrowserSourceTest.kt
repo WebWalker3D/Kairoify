@@ -181,4 +181,18 @@ class RadioBrowserSourceTest {
         source().reportPlay(MediaRef("radiobrowser", "abc-123"))
         assertEquals("/json/url/abc-123", server.takeRequest().url.encodedPath)
     }
+
+    @Test
+    fun `the globe gets only stations that say where they are`() = runTest {
+        routes("/json/stations/search" to {
+            json("""[
+              {"stationuuid":"a","name":"Here","url":"http://a","geo_lat":52.5,"geo_long":13.4},
+              {"stationuuid":"b","name":"Nowhere","url":"http://b"},
+              {"stationuuid":"c","name":"Null island","url":"http://c","geo_lat":0.0,"geo_long":0.0}]""")
+        })
+        val placed = source().placedStations()
+        assertEquals(listOf("Here"), placed.map { it.station.title })
+        assertEquals(52.5, placed.single().lat)
+        assertEquals("true", server.takeRequest().url.queryParameter("has_geo_info"))
+    }
 }

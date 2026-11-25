@@ -140,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Radio Browser | **Added**: the radio globe, using the station locations Radio Browser already publishes. |
 | 2026-11-24 | Unreleased | LRCLIB (lyrics) | **Added**: synced lyrics in the player, from LRCLIB's open database (text only, no audio; no key). Looked up only for the song playing, only when Lyrics is tapped. |
 | 2026-11-24 | Unreleased | On this phone (local files) | **Added**, on by default once the person allows access: music files from Android's media library, searched with everything else, with Recently added and Albums shelves and a Library tab. Nothing leaves the phone. |
 | 2026-11-24 | Unreleased | Podcasts, Library of Congress, Wikimedia Commons, Openverse, Freesound, Europeana | **Added**: browse topics and shelves on their sections (e.g. True crime, National Jukebox, Speeches, Rain, Birds), each filled by that source's own search. Library of Congress also gets its real collections (National Jukebox, Songs of America, American Folklife Center, Veterans' stories, Recorded Sound) and a National Jukebox shelf. Checked on the phone. |
