@@ -56,6 +56,7 @@ class ArchiveSourceTest {
                     "/advancedsearch.php" -> fixture(searchFixture)
                     "/metadata/gd77-05-08.sbd.hicks.4982.sbeok.shnf" -> fixture("metadata_gd77.json")
                     "/metadata/flac-only-show" -> fixture("metadata_flac_only.json")
+                    "/metadata/Yelawolf_-_Stereo" -> fixture("metadata_tagged_only.json")
                     else -> return MockResponse.Builder().code(404).build()
                 }
                 return MockResponse.Builder().body(body).build()
@@ -131,6 +132,24 @@ class ArchiveSourceTest {
         assertEquals(details.album.artworkUrl, first.artworkUrl)
         assertEquals("Grateful Dead", first.subtitle)
         assertTrue(details.tracks.zipWithNext().all { (a, b) -> a.ref.itemId < b.ref.itemId || a.title != b.title })
+    }
+
+    @Test
+    fun `tracks without a creator take the artist from the file's tags`() = runTest {
+        val first = source.details(MediaRef("archive", "Yelawolf_-_Stereo")).tracks.first()
+        assertEquals(listOf("Yelawolf"), first.artists)
+        assertEquals("Yelawolf", first.subtitle)
+    }
+
+    @Test
+    fun `search results without a creator take the artist from an "Artist - Album" title`() = runTest {
+        searchFixture = "search_untagged.json"
+        val albums = source.search("yelawolf", null).items.map { it as Album }
+        assertEquals(listOf("Yelawolf"), albums[0].artists)
+        assertEquals("Yelawolf", albums[0].subtitle)
+        assertEquals(listOf("Monsieur.Connard"), albums[1].artists)
+        assertEquals(emptyList(), albums[2].artists)
+        assertEquals(emptyList(), albums[3].artists)
     }
 
     @Test
