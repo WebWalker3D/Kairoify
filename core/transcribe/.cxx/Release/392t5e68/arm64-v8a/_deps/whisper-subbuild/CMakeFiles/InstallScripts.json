@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-subbuild/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
