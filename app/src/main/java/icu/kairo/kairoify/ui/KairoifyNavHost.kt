@@ -61,6 +61,7 @@ import icu.kairo.kairoify.ui.explore.FacetsViewModel
 import icu.kairo.kairoify.ui.home.HomeScreen
 import icu.kairo.kairoify.ui.home.HomeViewModel
 import icu.kairo.kairoify.ui.home.PersonalShelves
+import icu.kairo.kairoify.importing.PlaylistImporter
 import icu.kairo.kairoify.ui.search.SearchScreen
 import icu.kairo.kairoify.ui.search.SearchViewModel
 
@@ -73,6 +74,7 @@ fun KairoifyNavHost(
     playlists: PlaylistStore,
     localMusic: LocalMusicSource,
     personal: PersonalShelves,
+    importer: PlaylistImporter,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -128,7 +130,7 @@ fun KairoifyNavHost(
         composable<LibraryRoute> {
             LibraryScreen(
                 viewModel { LibraryViewModel(favorites) },
-                viewModel { PlaylistsViewModel(playlists) },
+                viewModel { PlaylistsViewModel(playlists, importer) },
                 viewModel { HistoryViewModel(history) },
                 localMusic,
                 sourceName = sourceName,

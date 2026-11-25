@@ -73,6 +73,7 @@ import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.player.FreeRadio
 import icu.kairo.kairoify.ui.home.PersonalShelves
+import icu.kairo.kairoify.importing.PlaylistImporter
 import icu.kairo.kairoify.source.lyrics.LrcLib
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.source.mainArtist
@@ -128,6 +129,7 @@ class MainActivity : ComponentActivity() {
                         inCategory = container.sourceCatalog::inCategory,
                         freeRadio = container.freeRadio,
                         lyrics = container.lyrics,
+                        importer = container.importer,
                     )
                 }
             }
@@ -158,6 +160,7 @@ private fun KairoifyScaffold(
     inCategory: (MusicSource, SourceCategory) -> Boolean,
     freeRadio: FreeRadio,
     lyrics: LrcLib,
+    importer: PlaylistImporter,
 ) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
@@ -276,6 +279,7 @@ private fun KairoifyScaffold(
             playlists,
             localMusic,
             personal = remember { PersonalShelves(history, freeRadio::build) },
+            importer = importer,
             about = about,
             settings = settings,
             sourceChanges = sourceChanges,

@@ -175,6 +175,7 @@ internal fun PlayButtons(
 private fun PlaylistsTab(viewModel: PlaylistsViewModel, onOpenPlaylist: (Long) -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var naming by rememberSaveable { mutableStateOf(false) }
+    var importing by rememberSaveable { mutableStateOf(false) }
     LazyColumn(Modifier.fillMaxSize()) {
         item(key = "new") {
             ListItem(
@@ -182,6 +183,16 @@ private fun PlaylistsTab(viewModel: PlaylistsViewModel, onOpenPlaylist: (Long) -
                 modifier = Modifier.clickable { naming = true },
                 headlineContent = { Text("New playlist") },
             )
+        }
+        if (viewModel.canImport) {
+            item(key = "import") {
+                ListItem(
+                    leadingContent = { Icon(KairoifyIcons.PlaylistAdd, contentDescription = null) },
+                    modifier = Modifier.clickable { importing = true },
+                    headlineContent = { Text("Import a playlist") },
+                    supportingContent = { Text("From a YouTube, YouTube Music, SoundCloud or Bandcamp link, or a pasted song list") },
+                )
+            }
         }
         if (!state.loading && state.playlists.isEmpty()) {
             item(key = "empty") {
@@ -206,6 +217,13 @@ private fun PlaylistsTab(viewModel: PlaylistsViewModel, onOpenPlaylist: (Long) -
             naming = false
             viewModel.create(name, onOpenPlaylist)
         }
+    }
+    if (importing) {
+        ImportDialog(viewModel, onClose = { importing = false; viewModel.clearImport() }, onOpenPlaylist = { id ->
+            importing = false
+            viewModel.clearImport()
+            onOpenPlaylist(id)
+        })
     }
 }
 
