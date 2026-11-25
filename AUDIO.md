@@ -140,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-25 | Unreleased | Internet Archive | **Fixed**: uploads with no "creator" (many mixtapes and albums) now get an artist. Their songs take it from the MP3's own tags, which the Archive lists per file. Search and browse results take it from an "Artist - Album" title. Without an artist, Free radio and lyrics weren't offered for them. |
 | 2026-11-24 | Unreleased | whisper.cpp (on-phone captions) | **Added**: captions written on the phone for recordings with none published, with whisper.cpp v1.9.5 (MIT, built from a hash-checked release). Its multilingual base model (ggml-base-q5_1, 60 MB, MIT) downloads from Hugging Face once, only when Transcribe is first tapped, and is checked against its pinned SHA-256. Audio never leaves the phone. Direct files only (not HLS). |
 | 2026-11-24 | Unreleased | Wikimedia Commons, Internet Archive (captions) | **Added**: captions in the player for speeches, talks and books, from the subtitles these archives publish themselves (Commons' TimedText; the Archive's .srt/.vtt files, including its automatic ones, labelled as such). Text only; looked up only for the recording playing, only when Captions is tapped. |
 | 2026-11-24 | Unreleased | Radio Browser | **Added**: the radio globe, using the station locations Radio Browser already publishes. |

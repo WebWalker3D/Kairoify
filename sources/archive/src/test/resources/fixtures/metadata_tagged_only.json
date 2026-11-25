@@ -1,0 +1,39 @@
+{
+ "metadata": {
+  "identifier": "Yelawolf_-_Stereo",
+  "title": " Yelawolf - Stereo",
+  "mediatype": "audio"
+ },
+ "files": [
+  {
+   "name": "01) Stereo   Intro.mp3",
+   "source": "original",
+   "format": "VBR MP3",
+   "title": "Stereo Intro",
+   "artist": "Yelawolf",
+   "album": "Stereo",
+   "track": "1",
+   "length": "92.11"
+  },
+  {
+   "name": "02) Brick In The Wall.mp3",
+   "source": "original",
+   "format": "VBR MP3",
+   "title": "Brick In The Wall",
+   "artist": "Yelawolf",
+   "album": "Stereo",
+   "track": "2",
+   "length": "242.81"
+  },
+  {
+   "name": "03) Stereo.mp3",
+   "source": "original",
+   "format": "VBR MP3",
+   "title": "Stereo",
+   "artist": "Yelawolf",
+   "album": "Stereo",
+   "track": "3",
+   "length": "229.54"
+  }
+ ]
+}

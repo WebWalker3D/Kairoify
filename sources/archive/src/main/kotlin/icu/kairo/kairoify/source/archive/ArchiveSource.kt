@@ -114,12 +114,14 @@ class ArchiveSource(
             .sortedWith(compareBy({ trackNumber(it.string("track")) }, { it.string("name") }))
             .map { file ->
                 val name = file.string("name")!!
+                // Many uploads have no "creator"; the artist is then only in the MP3's own tags.
+                val artists = file.creators().ifEmpty { file.names("artist") }.ifEmpty { album.artists }
                 Track(
                     ref = MediaRef(sourceId, "${ref.itemId}/$name"),
                     title = file.string("title")?.takeIf(String::isNotBlank) ?: name.substringAfterLast('/').removeSuffix(".mp3"),
-                    subtitle = file.creators().ifEmpty { album.artists }.joinToString(", ").ifBlank { null },
+                    subtitle = artists.joinToString(", ").ifBlank { null },
                     artworkUrl = album.artworkUrl,
-                    artists = file.creators().ifEmpty { album.artists },
+                    artists = artists,
                     album = album.title,
                     durationMillis = parseArchiveLength(file.string("length")),
                     pageUrl = album.pageUrl,
@@ -158,7 +160,7 @@ class ArchiveSource(
     }
 
     private fun album(doc: JsonObject, id: String): Album {
-        val artists = doc.creators()
+        val artists = doc.creators().ifEmpty { listOfNotNull(artistInTitle(doc.string("title"))) }
         val year = doc.string("year") ?: doc.string("date")?.take(4)?.takeIf { it.all(Char::isDigit) }
         val venue = doc.string("venue")?.takeIf(String::isNotBlank)
         return Album(
@@ -185,8 +187,21 @@ class ArchiveSource(
         else -> null
     }
 
+    /**
+     * Many uploads have no "creator" but are titled "Artist - Album" (" Yelawolf - Stereo"). Only one such dash, and an
+     * artist with a letter in it, so "1 - Intro" or "Live - Part 1 - Encore" don't invent an artist.
+     */
+    private fun artistInTitle(title: String?): String? {
+        val parts = title?.trim()?.split(" - ") ?: return null
+        val artist = parts.first().trim().takeIf { parts.size == 2 && parts[1].isNotBlank() } ?: return null
+        return artist.takeIf { it.any(Char::isLetter) }
+    }
+
     /** "creator" is a string, a list of strings, or missing. */
-    private fun JsonObject.creators(): List<String> = when (val v: JsonElement? = this["creator"]) {
+    private fun JsonObject.creators(): List<String> = names("creator")
+
+    /** A field that is a string, a list of strings, or missing. */
+    private fun JsonObject.names(field: String): List<String> = when (val v: JsonElement? = this[field]) {
         is JsonPrimitive -> listOfNotNull(v.contentOrNull?.takeIf(String::isNotBlank))
         is JsonArray -> v.mapNotNull { (it as? JsonPrimitive)?.contentOrNull?.takeIf(String::isNotBlank) }
         else -> emptyList()
