@@ -32,8 +32,13 @@ import kotlin.math.abs
 /** One timed line of a song's lyrics. */
 data class LyricLine(val atMillis: Long, val text: String)
 
-/** A song's lyrics: timed lines when known, else plain text. */
-data class Lyrics(val lines: List<LyricLine>, val plain: String?, val instrumental: Boolean = false) {
+/** A song's lyrics or a recording's captions: timed lines when known, else plain text, and where they came from. */
+data class Lyrics(
+    val lines: List<LyricLine>,
+    val plain: String?,
+    val instrumental: Boolean = false,
+    val credit: String = "Lyrics from LRCLIB",
+) {
     val isSynced: Boolean get() = lines.isNotEmpty()
 
     /** The index of the line being sung at [positionMillis], or -1 before the first. */

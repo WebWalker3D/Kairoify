@@ -45,6 +45,9 @@ and one library.
   to the phone's own sound panel.
 - **Lyrics:** tap Lyrics in the player for words that follow the song (from LRCLIB's
   open database); tap a line to jump there.
+- **Captions:** speeches, talks and audiobooks get a Captions button that follows along the same
+  way, from the subtitles Wikimedia Commons and the Internet Archive publish (the Archive's
+  automatic ones are marked as automatic).
 - **For you:** Home opens with Recently played and "Because you play …", built on
   the phone from your History.
 - **Import playlists:** paste a YouTube, YouTube Music, SoundCloud or Bandcamp link, or

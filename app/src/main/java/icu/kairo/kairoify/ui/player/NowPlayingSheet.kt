@@ -87,6 +87,8 @@ fun NowPlayingSheet(
     upNext: List<UpNextEntry> = emptyList(),
     /** Looks up the song's lyrics; null when this item can't have any (live radio). */
     findLyrics: (suspend () -> Lyrics?)? = null,
+    /** "Lyrics" for songs, "Captions" for speeches, talk and books. */
+    wordsLabel: String = "Lyrics",
 ) {
     var showLyrics by rememberSaveable { mutableStateOf(false) }
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
@@ -155,8 +157,8 @@ fun NowPlayingSheet(
             }
             extraActions()
             findLyrics?.let { load ->
-                TextButton(onClick = { showLyrics = !showLyrics }) { Text(if (showLyrics) "Hide lyrics" else "Lyrics") }
-                if (showLyrics) LyricsPanel(nowPlaying.ref, player, load)
+                TextButton(onClick = { showLyrics = !showLyrics }) { Text(if (showLyrics) "Hide ${wordsLabel.lowercase()}" else wordsLabel) }
+                if (showLyrics) LyricsPanel(nowPlaying.ref, player, load, wordsLabel)
             }
             val link = (nowPlaying.item as? Track)?.pageUrl?.let { "Open original" to it }
                 ?: nowPlaying.homepage?.let { "Open station website" to it }

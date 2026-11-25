@@ -44,7 +44,7 @@ import kotlinx.coroutines.delay
 
 /** Looks up lyrics once per song; the line being sung is highlighted and nearby lines shown. Tap a line to jump there. */
 @Composable
-internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () -> Lyrics?) {
+internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () -> Lyrics?, label: String = "Lyrics") {
     var state by remember(key) { mutableStateOf<LyricsState>(LyricsState.Loading) }
     var position by remember(key) { mutableLongStateOf(0L) }
     LaunchedEffect(key) { state = load()?.let { LyricsState.Found(it) } ?: LyricsState.None }
@@ -61,7 +61,7 @@ internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () ->
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when {
             state is LyricsState.Loading -> CircularProgressIndicator()
-            lyrics == null -> Text("No lyrics found for this song.", color = muted)
+            lyrics == null -> Text("No ${label.lowercase()} found for this recording.", color = muted)
             lyrics.instrumental -> Text("Instrumental", color = muted)
             lyrics.isSynced -> {
                 val now = lyrics.lineAt(position)
@@ -80,7 +80,7 @@ internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () ->
             }
             else -> Text(lyrics.plain.orEmpty(), textAlign = TextAlign.Center, color = muted)
         }
-        Text("Lyrics from LRCLIB", style = MaterialTheme.typography.labelSmall, color = muted)
+        lyrics?.let { Text(it.credit, style = MaterialTheme.typography.labelSmall, color = muted) }
     }
 }
 

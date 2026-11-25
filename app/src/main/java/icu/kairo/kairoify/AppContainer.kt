@@ -35,6 +35,7 @@ import icu.kairo.kairoify.core.source.withTopics
 import icu.kairo.kairoify.settings.BrowseTopics
 import icu.kairo.kairoify.local.LocalMusicSource
 import icu.kairo.kairoify.source.lyrics.LrcLib
+import icu.kairo.kairoify.source.lyrics.CaptionFinder
 import icu.kairo.kairoify.importing.PlaylistImporter
 import icu.kairo.kairoify.core.source.findSameSong
 import icu.kairo.kairoify.source.listenbrainz.SimilarArtists
@@ -119,6 +120,9 @@ class AppContainer(context: Context) : PlayerDependencies {
 
     /** Synced lyrics, looked up only for the song playing when the person opens them. */
     val lyrics = LrcLib(httpClient)
+
+    /** Captions Wikimedia Commons and the Internet Archive publish for their recordings. */
+    val captions = CaptionFinder(httpClient)
 
     /** Playlists from elsewhere: yt-dlp lists the link, each song is found on the free sources. */
     val importer by lazy { PlaylistImporter(listLink = engine::flatSearch, findSong = { sourceRegistry.findSameSong(it, skipSource = "") }) }
