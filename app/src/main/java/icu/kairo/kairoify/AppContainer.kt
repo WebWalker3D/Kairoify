@@ -124,7 +124,7 @@ class AppContainer(context: Context) : PlayerDependencies {
     val lyrics = LrcLib(httpClient)
 
     /** Captions Wikimedia Commons and the Internet Archive publish for their recordings. */
-    val captions = CaptionFinder(httpClient)
+    val captions = CaptionFinder(httpClient, onError = { android.util.Log.w("Kairoify", "Captions lookup failed", it) })
 
     /** Captions written on the phone by whisper.cpp; its model downloads the first time it's used. */
     val transcriber = Transcriber(context, SpeechModel(httpClient, context.filesDir.resolve("whisper")))
