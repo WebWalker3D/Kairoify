@@ -29,6 +29,7 @@ import java.security.MessageDigest
 enum class ServerKind(val label: String) {
     SUBSONIC("Subsonic / OpenSubsonic / Ampache"),
     WEBDAV("WebDAV folder"),
+    FUNKWHALE("Funkwhale pod"),
 }
 
 /**

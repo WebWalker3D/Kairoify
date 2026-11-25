@@ -74,6 +74,10 @@ Kairoify plays audio: music, radio, podcasts, audiobooks. It doesn't play video.
   with everything else, folders open like albums, and new albums show on Home.
 - **Your home network:** UPnP/DLNA media servers on your Wi-Fi (Plex, Jellyfin, MiniDLNA,
   many NAS boxes) are found automatically and browsed folder by folder.
+- **Funkwhale:** the Creative Commons tracks on Tanuki Tunes, the open Funkwhale pod, each
+  shown with its license, plus any Funkwhale pod you add under Your servers.
+- **Dogmazic:** tens of thousands of freely licensed tracks; make a free account at
+  play.dogmazic.net, then Settings › Your servers › Use Dogmazic.
 - **Icecast directory:** every station listed at dir.xiph.org, searchable from Radio
   (off by default: its list is a 9 MB download, fetched at most once a week).
 - **Internet Archive:** uploads without a "creator" now get their artist from the MP3 tags or an
@@ -169,6 +173,8 @@ built into the app.
 | Your music servers | Subsonic, OpenSubsonic and Ampache servers you add | ✓ On `main` |
 | Your WebDAV folders | Nextcloud, ownCloud, NAS or any WebDAV share you add | ✓ On `main` |
 | Media servers on your network | UPnP/DLNA servers on your Wi-Fi, found automatically | ✓ On `main` |
+| Funkwhale | Tanuki Tunes's Creative Commons tracks, plus pods you add | ✓ On `main` |
+| Dogmazic | Freely licensed independent music (free account) | ✓ On `main`, under Your servers |
 | Icecast directory | ~13,000 stations listed at dir.xiph.org | On `main`, off by default (9 MB weekly download) |
 
 **Free radio** (on any song or album with an artist) builds a station on the phone from
@@ -217,6 +223,9 @@ The phone connects to each one directly; nothing passes through a Kairoify serve
 - **Subsonic / OpenSubsonic / Ampache:** Settings › Your servers › Add a server. Use the
   address you open the server at. Kairoify signs in with the Subsonic API's salted token, so
   the password itself is never sent. Ampache works through its Subsonic-compatible API.
+  **Use Dogmazic** fills in Dogmazic's address; sign in with your free Dogmazic account.
+- **Funkwhale:** the pod's address. A public pod needs nothing else; for a private one, make
+  an application token in the pod's Settings › Applications and put it in the password field.
 - **WebDAV:** the folder's WebDAV address, e.g.
   `https://cloud.example.com/remote.php/dav/files/you/Music` for Nextcloud. Folders laid out
   as `Artist/Album/03 Song.mp3` give songs their artist. Search looks through up to 400
@@ -235,7 +244,7 @@ every current and planned source, with a dated change log.
 ## What's next
 
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
-  catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
+  catalogs (Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
 - **Explore:** browsing by decade and by source.
 - **Android TV:** a layout made for the remote (the app installs and opens on TV now,

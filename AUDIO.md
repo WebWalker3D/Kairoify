@@ -58,6 +58,9 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | Your music servers | The person's own Subsonic, OpenSubsonic (Navidrome, Gonic, LMS, Airsonic…) or Ampache server | Subsonic API with its salted-token sign-in; Ampache through its Subsonic-compatible API | The person's own server and account | Unreleased |
 | Your WebDAV folders | Music folders on the person's Nextcloud, ownCloud, NAS or any WebDAV share | WebDAV PROPFIND listings, files streamed with the person's sign-in | The person's own server and account | Unreleased |
 | Media servers on your network | UPnP/DLNA servers on the same Wi-Fi (Plex, Jellyfin, MiniDLNA, many NAS boxes) | SSDP discovery, then the ContentDirectory service's Browse and Search; never leaves the local network | The person's own network | Unreleased |
+| [Funkwhale](https://www.funkwhale.audio) — Tanuki Tunes | The Creative Commons and Free Art License tracks on [tanukitunes.com](https://tanukitunes.com), the open Funkwhale pod (about 1,000 of its ~52,000 playable tracks), each shown with its license | Funkwhale REST API, no account; tracks without a license are never shown | Official (public API); only tracks their uploaders licensed | Unreleased |
+| Your Funkwhale pods | Any Funkwhale pod the person adds under Your servers, shown whole | Funkwhale REST API; a private pod's application token sent as a Bearer token | The person's own pod and account | Unreleased |
+| [Dogmazic](https://play.dogmazic.net) | Tens of thousands of freely licensed independent tracks (since 2004) | Ampache's Subsonic API, through Your servers (one-tap "Use Dogmazic" fills in the address) | Official; needs the person's free Dogmazic account (checked 2026-11-25: no guest access) | Unreleased |
 
 ## Off by default
 
@@ -74,15 +77,12 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | Source | What it brings | How Kairoify will reach it | Key? |
 |---|---|---|---|
 | [Citizen DJ](https://citizen-dj.labs.loc.gov) | Public-domain historical music and recordings | Downloadable datasets; some overlap with the Library of Congress | No |
-| [Funkwhale](https://www.funkwhale.audio) | Federated music libraries and artist releases | Funkwhale REST API on public instances | Checked 2026-11-24: the open instance found (tanukitunes.com) has unlicensed commercial uploads, so it doesn't meet the free-and-legal rule. Needs an instance that only hosts licensed music. |
-| [Open Audio](https://open.audio) | Creative Commons music, including a Free Music Archive mirror | Funkwhale API; each track's license needs checking | No |
-| [Dogmazic](https://play.dogmazic.net) | Tens of thousands of freely licensed independent tracks (since 2004) | Ampache/Subsonic API, which supports third-party apps | To check (may need an account) |
+| [Open Audio](https://open.audio) | Creative Commons music, including a Free Music Archive mirror | Funkwhale API (built: add it under Your servers if it returns) | Checked 2026-11-25: open.audio's API answers 404 |
 | [Mirlo](https://mirlo.space) | Independent artists and albums | Canimus API, authorized HLS streaming | Check terms |
 | [Faircamp](https://simonrepp.com/faircamp/) | Artist-hosted music catalogs | Catalog discovery and federation | No |
 | Fairplayer | Federated independent music | Canimus-compatible catalogs | No |
 | Bandwagon | Federated independent artists | ActivityPub | Needs permission (playback) |
 | [The Indie Beat Radio](https://theindiebeat.fm) | 5,000+ opted-in independent tracks | Radio streams | Needs permission (third-party terms) |
-| The Indie Beat Live | Live independent concerts | HLS stream published for external players | No |
 | Tunestr | Independent live performances | Nostr-based discovery | Needs permission |
 | [Newgrounds Audio Portal](https://www.newgrounds.com/audio) | Electronic, gaming and independent music | License-filtered catalog | Needs permission (automated access) |
 | [Ampwall](https://ampwall.com) | Independent bands and artists | Official playback integration | Needs permission |
@@ -118,7 +118,7 @@ WebDAV and UPnP/DLNA. All of them run on the phone.
 | Protocol | What it would unlock | Why it waits |
 |---|---|---|
 | Canimus | Artist-owned music catalogs | Checked 2026-11-25: no published spec found (canimus.org and canimus.dev didn't answer) |
-| ActivityPub | Federated music distribution | The audio services on it (Funkwhale) are covered under Planned sources; checked 2026-11-24, the open instances found host unlicensed uploads |
+| ActivityPub | Federated music distribution | Funkwhale is built through its REST API (see Live); ActivityPub itself would only add following accounts |
 | Ampache's own API | Ampache features beyond Subsonic (smart lists, ratings) | Ampache's Subsonic-compatible API already plays and searches everything |
 
 ## Ideas the design rules out or leaves to the owner
@@ -127,6 +127,7 @@ These came up on the wishlist but conflict with decisions already in the design,
 they wait for an owner decision:
 - **Music and concert video** (including PeerTube and Owncast, which are video
   platforms): the app plays audio only. Dropped from the protocol list 2026-11-25.
+  The Indie Beat Live is an Owncast video stream, so it went the same way (2026-11-25).
 - **Movies and TV:** outside a music app.
 - **Chromecast:** needs Google Play Services, which the app avoids.
 - **Spotify/Apple Music playback:** not free sources. Playlist *import*, matching
@@ -139,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-25 | Unreleased | Funkwhale, Dogmazic, Open Audio, The Indie Beat Live | **Added** Funkwhale: Tanuki Tunes's licensed tracks only (its unlicensed uploads, the reason it was held back on 2026-11-24, are filtered out on the phone), with search, albums, Free radio (same artist, then same tag) and a Home shelf; plus any pod added under Your servers. **Added** Dogmazic as a one-tap preset in Your servers (needs a free account; no guest access). **Changed** Open Audio's note: its API is gone (404). **Ruled out** The Indie Beat Live: it's video (Owncast). |
 | 2026-11-25 | Unreleased | Links, your servers, your network, Icecast | **Added**, all on the phone: Links (direct HTTP audio, live streams, M3U/M3U8, PLS, XSPF, RSS/Atom feeds with Podcasting 2.0 tags, pages that advertise a feed); Subsonic/OpenSubsonic/Ampache servers and WebDAV folders the person adds in Settings (checked before saving; passwords kept out of backups); UPnP/DLNA media servers found on the Wi-Fi; the Icecast directory (off by default, 9 MB list fetched at most weekly). PeerTube and Owncast dropped as video; Canimus and ActivityPub wait. Checked against SomaFM, an NPR feed, dir.xiph.org and Navidrome's public demo. |
 | 2026-11-25 | Unreleased | Internet Archive | **Fixed**: uploads with no "creator" (many mixtapes and albums) now get an artist. Their songs take it from the MP3's own tags, which the Archive lists per file. Search and browse results take it from an "Artist - Album" title. Without an artist, Free radio and lyrics weren't offered for them. |
 | 2026-11-24 | Unreleased | whisper.cpp (on-phone captions) | **Added**: captions written on the phone for recordings with none published, with whisper.cpp v1.9.5 (MIT, built from a hash-checked release). Its multilingual base model (ggml-base-q5_1, 60 MB, MIT) downloads from Hugging Face once, only when Transcribe is first tapped, and is checked against its pinned SHA-256. Audio never leaves the phone. Direct files only (not HLS). |

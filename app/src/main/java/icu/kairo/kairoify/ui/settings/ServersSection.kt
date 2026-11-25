@@ -119,15 +119,22 @@ fun ServersSection(
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ServerKind.entries.forEach { k ->
-                    FilterChip(selected = kind == k, onClick = { kind = k; onEdit() }, label = { Text(if (k == ServerKind.SUBSONIC) "Subsonic / Ampache" else "WebDAV") })
+                    FilterChip(selected = kind == k, onClick = { kind = k; onEdit() }, label = { Text(when (k) { ServerKind.SUBSONIC -> "Subsonic / Ampache"; ServerKind.WEBDAV -> "WebDAV"; ServerKind.FUNKWHALE -> "Funkwhale" }) })
                 }
             }
             Text(
-                if (kind == ServerKind.SUBSONIC) "Navidrome, Gonic, Airsonic, LMS, Ampache… Use the address you open it at, e.g. https://music.example.com"
-                else "A folder's WebDAV address, e.g. https://cloud.example.com/remote.php/dav/files/you/Music",
+                when (kind) {
+                    ServerKind.SUBSONIC -> "Navidrome, Gonic, Airsonic, LMS, Ampache… Use the address you open it at, e.g. https://music.example.com"
+                    ServerKind.WEBDAV -> "A folder's WebDAV address, e.g. https://cloud.example.com/remote.php/dav/files/you/Music"
+                    ServerKind.FUNKWHALE -> "The pod's address, e.g. https://pod.example.com. Leave the user name empty; for a private pod, put an application token " +
+                        "(the pod's Settings → Applications) in the password field."
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            if (kind == ServerKind.SUBSONIC) {
+                TextButton(onClick = { name = "Dogmazic"; url = DOGMAZIC_URL; onEdit() }) { Text("Use Dogmazic (free account at play.dogmazic.net)") }
+            }
             val field = Modifier.fillMaxWidth()
             OutlinedTextField(name, { name = it; onEdit() }, label = { Text("Name") }, singleLine = true, modifier = field)
             OutlinedTextField(url, { url = it; onEdit() }, label = { Text("Address") }, singleLine = true,
@@ -153,3 +160,6 @@ fun ServersSection(
         }
     }
 }
+
+/** Dogmazic: tens of thousands of freely licensed tracks on Ampache; free sign-up, then it works like any Ampache server. */
+private const val DOGMAZIC_URL = "https://play.dogmazic.net"
