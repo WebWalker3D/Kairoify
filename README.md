@@ -89,7 +89,7 @@ Kairoify doesn't check for its own updates yet, so watch the
 adb install app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
 ```
 
-Needs JDK 21, the Android SDK (with NDK 27.0.12077973 and CMake 4.1.2, for whisper.cpp) and Python 3.14 on the `PATH` (for the embedded
+Needs JDK 21, the Android SDK (with the NDK and CMake 4.1.2, for whisper.cpp) and Python 3.14 on the `PATH` (for the embedded
 Python's packages). The build makes one APK per CPU type: `arm64-v8a` for phones,
 `x86_64` for emulators. Every push also builds debug APKs in GitHub Actions.
 
