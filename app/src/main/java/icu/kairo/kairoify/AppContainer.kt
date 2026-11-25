@@ -87,6 +87,7 @@ import icu.kairo.kairoify.source.radiobrowser.RadioBrowserSource
 import okhttp3.OkHttpClient
 import icu.kairo.kairoify.source.protocols.IcecastSource
 import icu.kairo.kairoify.source.protocols.LinkSource
+import icu.kairo.kairoify.source.protocols.FunkwhaleSource
 import icu.kairo.kairoify.source.protocols.SubsonicSource
 import icu.kairo.kairoify.source.protocols.UpnpSource
 import icu.kairo.kairoify.source.protocols.WebDavSource
@@ -128,12 +129,14 @@ class AppContainer(context: Context) : PlayerDependencies {
     /** The person's own servers, from Settings → Your servers. */
     val subsonic = SubsonicSource(httpClient, sourceSettings::servers)
     val webDav = WebDavSource(httpClient, sourceSettings::servers)
+    val funkwhale = FunkwhaleSource(httpClient, sourceSettings::servers)
 
     /** Tries a server before it's saved: null when it answered, else why not. */
     suspend fun checkServer(server: icu.kairo.kairoify.source.protocols.Server): String? = try {
         when (server.kind) {
             icu.kairo.kairoify.source.protocols.ServerKind.SUBSONIC -> subsonic.check(server)
             icu.kairo.kairoify.source.protocols.ServerKind.WEBDAV -> webDav.check(server)
+            icu.kairo.kairoify.source.protocols.ServerKind.FUNKWHALE -> funkwhale.check(server)
         }
         null
     } catch (e: kotlinx.coroutines.CancellationException) {
@@ -209,6 +212,7 @@ class AppContainer(context: Context) : PlayerDependencies {
                 SourceEntry(links, true, note = "Paste any web address into search: an audio file, a live stream, an M3U/PLS/XSPF playlist, or a podcast or artist feed. Saved links show on Home.", category = SourceCategory.MUSIC),
                 SourceEntry(subsonic, true, note = "Your own Subsonic, OpenSubsonic (Navidrome, Gonic…) or Ampache server. Add it under Your servers.", category = SourceCategory.MUSIC),
                 SourceEntry(webDav, true, note = "Music folders on your Nextcloud, ownCloud, NAS or any WebDAV share. Add it under Your servers.", category = SourceCategory.MUSIC),
+                SourceEntry(funkwhale, true, note = "Federated Funkwhale libraries: Tanuki Tunes's public music, plus any pod you add under Your servers.", category = SourceCategory.MUSIC),
                 SourceEntry(
                     UpnpSource(httpClient, multicast = { search -> withMulticastLock(context) { search() } }),
                     defaultOn = true,
