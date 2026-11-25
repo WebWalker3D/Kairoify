@@ -13,12 +13,12 @@ browse the world by country, genre and era, and play it all through one queue
 and one library.
 
 - No accounts, no ads, no tracking.
-- Every source can be switched on or off (coming with Settings).
+- Every source can be switched on or off in Settings.
 - Everything runs on your device — no Kairoify server in between.
 
 ## Status
 
-**Version 0.4.0 — DJ mixes, NTS Radio and Wikimedia Commons.**
+**Version 0.5.0 — playlists, lyrics, captions and the radio globe.**
 
 - **Live radio:** browse and search ~50,000 stations from every country, and see
   what song is playing.
@@ -199,7 +199,7 @@ every current and planned source, with a dated change log.
   but screens are still the phone's).
 - **Library:** saved albums and concerts, plus export and import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.
-- **Settings:** switch sources on or off, audio quality for Wi-Fi and mobile data,
+- **Settings:** audio quality for Wi-Fi and mobile data,
   a sleep timer, and an in-app check for new Kairoify releases.
 - **Search:** artist, album and playlist results, a "Top results" strip, and source
   filters.

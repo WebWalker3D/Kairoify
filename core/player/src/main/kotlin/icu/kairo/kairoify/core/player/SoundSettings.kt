@@ -84,7 +84,7 @@ class AudioEffects(private val settings: SoundSettings) {
         if (session == 0) return
         val preset = settings.equalizerPreset
         equalizer = equalizer ?: tryOrNull { Equalizer(0, session) }?.also { eq ->
-            settings.presetNames = (0 until eq.numberOfPresets).map { eq.getPresetName(it.toShort()) }
+            settings.presetNames = (0 until eq.numberOfPresets).map { presetName(eq.getPresetName(it.toShort())) }
         }
         equalizer?.let { eq ->
             tryOrNull {
@@ -130,3 +130,6 @@ class AudioEffects(private val settings: SoundSettings) {
         null
     }
 }
+
+/** A preset's name as the phone reports it, without the NUL padding some phones leave in it (it breaks accessibility). */
+fun presetName(raw: String): String = raw.replace("\u0000", "").trim()

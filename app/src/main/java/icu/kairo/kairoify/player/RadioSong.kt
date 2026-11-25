@@ -37,9 +37,22 @@ fun radioSong(nowPlaying: NowPlaying): RadioSong? {
     if (line == nowPlaying.item?.subtitle?.trim()) return null
     val parts = line.split(Regex("\\s+[-–—]\\s+"), limit = 2)
     if (parts.size != 2) return null
-    val (artist, title) = parts.map { it.trim().trim('"', '\'') }
+    var (artist, title) = parts.map { it.trim().trim('"', '\'') }
+    // "Le Mans by Bob Thompson - Classic Vinyl on walmradio.com": title by artist, then the station's own tag.
+    val byForm = Regex("^(.+?)\\s+by\\s+(.+)$", RegexOption.IGNORE_CASE).find(artist)
+    if (byForm != null && isStationTag(title, nowPlaying.title)) {
+        title = byForm.groupValues[1].trim()
+        artist = byForm.groupValues[2].trim()
+    }
     if (artist.isEmpty() || title.isEmpty() || artist.length > 120 || title.length > 160) return null
     return RadioSong(artist, title)
+}
+
+/** Whether [tail] is the station naming itself ("Classic Vinyl on walmradio.com") rather than a song title. */
+private fun isStationTag(tail: String, stationName: String): Boolean {
+    val words = stationName.lowercase().split(Regex("\\W+")).filter { it.length > 2 }
+    return Regex("\\b[\\w-]+\\.(com|net|org|fm|radio|uk|de)\\b", RegexOption.IGNORE_CASE).containsMatchIn(tail) ||
+        words.any { it in tail.lowercase() }
 }
 
 /** The same song, playable on demand, from the switched-on song sources. */

@@ -40,6 +40,12 @@ class RadioSongTest {
     }
 
     @Test
+    fun `reads title by artist when the rest is the station's own tag`() {
+        assertEquals(RadioSong("Bob Thompson", "Le Mans"), radioSong(np("Le Mans by Bob Thompson - Classic Vinyl on walmradio.com")))
+        assertEquals(RadioSong("Stand by Me", "Ben E. King"), radioSong(np("Stand by Me - Ben E. King")))
+    }
+
+    @Test
     fun `ignores the station's own description, jingles and songs on demand`() {
         assertNull(radioSong(np("UK · jazz")))
         assertNull(radioSong(np("Jazz FM - ")))
