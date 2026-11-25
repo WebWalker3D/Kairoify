@@ -52,9 +52,15 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val rows by viewModel.rows.collectAsStateWithLifecycle()
     LazyColumn(Modifier.fillMaxSize()) {
         item(key = "title") {
+            Text("Settings", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
+        }
+        item(key = "sound") {
+            SoundSection()
+            HorizontalDivider()
+        }
+        item(key = "sources") {
             Column(Modifier.padding(16.dp)) {
-                Text("Settings", style = MaterialTheme.typography.headlineMedium)
-                Text("Sources", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 16.dp))
+                Text("Sources", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                 Text(
                     "Switch any source on or off. Search and Home use the ones that are on. Favorites from a switched-off source still play.",
                     style = MaterialTheme.typography.bodySmall,

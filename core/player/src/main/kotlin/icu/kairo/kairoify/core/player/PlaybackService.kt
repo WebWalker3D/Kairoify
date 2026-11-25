@@ -73,6 +73,8 @@ class PlaybackService : MediaLibraryService() {
     private var skipsInARow = 0
     private val triedElsewhere = mutableSetOf<String>()
     private val networkWatcher = NetworkWatcher()
+    private lateinit var effects: AudioEffects
+    private var soundListener: android.content.SharedPreferences.OnSharedPreferenceChangeListener? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -97,6 +99,10 @@ class PlaybackService : MediaLibraryService() {
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
         player.addListener(PlayerEvents())
+        val sound = SoundSettings(this)
+        effects = AudioEffects(sound)
+        effects.attach(player.audioSessionId)
+        soundListener = sound.listen { effects.apply() }
         session = MediaLibrarySession.Builder(this, PresetSkipPlayer(player), SessionCallback()).build()
         getSystemService(ConnectivityManager::class.java).registerDefaultNetworkCallback(networkWatcher)
     }
@@ -106,6 +112,7 @@ class PlaybackService : MediaLibraryService() {
     override fun onDestroy() {
         runCatching { getSystemService(ConnectivityManager::class.java).unregisterNetworkCallback(networkWatcher) }
         scope.cancel()
+        if (::effects.isInitialized) effects.release()
         session?.run {
             player.release()
             release()
@@ -188,6 +195,8 @@ class PlaybackService : MediaLibraryService() {
             lastReportedId = id
             scope.launch { deps.sourceRegistry.reportPlay(MediaRef.decode(id)) }
         }
+
+        override fun onAudioSessionIdChanged(audioSessionId: Int) = effects.attach(audioSessionId)
 
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             if (!playWhenReady) liveRetry.reset()
