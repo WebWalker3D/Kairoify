@@ -34,6 +34,7 @@ import icu.kairo.kairoify.player.FreeRadio
 import icu.kairo.kairoify.core.source.withTopics
 import icu.kairo.kairoify.settings.BrowseTopics
 import icu.kairo.kairoify.local.LocalMusicSource
+import icu.kairo.kairoify.source.lyrics.LrcLib
 import icu.kairo.kairoify.source.listenbrainz.SimilarArtists
 import icu.kairo.kairoify.player.ResumePositions
 import icu.kairo.kairoify.source.radioparadise.RadioParadiseSource
@@ -113,6 +114,9 @@ class AppContainer(context: Context) : PlayerDependencies {
      */
     /** Music files on the phone, shown with everything streamed. */
     val localMusic = LocalMusicSource(context)
+
+    /** Synced lyrics, looked up only for the song playing when the person opens them. */
+    val lyrics = LrcLib(httpClient)
 
     val sourceCatalog: SourceCatalog by lazy {
         SourceCatalog(

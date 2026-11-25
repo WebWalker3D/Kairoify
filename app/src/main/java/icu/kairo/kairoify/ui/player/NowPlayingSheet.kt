@@ -63,6 +63,8 @@ import androidx.media3.common.Player
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.player.NowPlaying
 import icu.kairo.kairoify.player.PlayerConnection
+import icu.kairo.kairoify.source.lyrics.Lyrics
+import androidx.compose.runtime.saveable.rememberSaveable
 import icu.kairo.kairoify.ui.components.Artwork
 import icu.kairo.kairoify.ui.components.formatDuration
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
@@ -83,7 +85,10 @@ fun NowPlayingSheet(
     extraActions: @Composable ColumnScope.() -> Unit = {},
     station: StationLabel? = null,
     upNext: List<UpNextEntry> = emptyList(),
+    /** Looks up the song's lyrics; null when this item can't have any (live radio). */
+    findLyrics: (suspend () -> Lyrics?)? = null,
 ) {
+    var showLyrics by rememberSaveable { mutableStateOf(false) }
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(
             Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp).padding(bottom = 32.dp),
@@ -149,6 +154,10 @@ fun NowPlayingSheet(
                 }) { Icon(KairoifyIcons.Stop, contentDescription = "Stop") }
             }
             extraActions()
+            findLyrics?.let { load ->
+                TextButton(onClick = { showLyrics = !showLyrics }) { Text(if (showLyrics) "Hide lyrics" else "Lyrics") }
+                if (showLyrics) LyricsPanel(nowPlaying.ref, player, load)
+            }
             val link = (nowPlaying.item as? Track)?.pageUrl?.let { "Open original" to it }
                 ?: nowPlaying.homepage?.let { "Open station website" to it }
             link?.let { (label, url) -> TextButton(onClick = { onOpenLink(url) }) { Text(label) } }

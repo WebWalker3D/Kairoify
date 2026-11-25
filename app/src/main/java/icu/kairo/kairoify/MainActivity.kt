@@ -72,6 +72,9 @@ import icu.kairo.kairoify.ui.components.StartOverPill
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.player.FreeRadio
+import icu.kairo.kairoify.source.lyrics.LrcLib
+import icu.kairo.kairoify.core.model.Track
+import icu.kairo.kairoify.core.source.mainArtist
 import icu.kairo.kairoify.player.seedArtist
 import icu.kairo.kairoify.player.RadioSong
 import icu.kairo.kairoify.player.findRadioSong
@@ -123,6 +126,7 @@ class MainActivity : ComponentActivity() {
                         sourceChanges = container.sourceSettings.changes,
                         inCategory = container.sourceCatalog::inCategory,
                         freeRadio = container.freeRadio,
+                        lyrics = container.lyrics,
                     )
                 }
             }
@@ -152,6 +156,7 @@ private fun KairoifyScaffold(
     sourceChanges: Flow<Int>,
     inCategory: (MusicSource, SourceCategory) -> Boolean,
     freeRadio: FreeRadio,
+    lyrics: LrcLib,
 ) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
@@ -293,6 +298,9 @@ private fun KairoifyScaffold(
             onDismiss = { showSheet = false },
             station = station,
             upNext = upNext,
+            findLyrics = (npItem as? Track)?.takeIf { !np.isLive }?.let { track ->
+                mainArtist(track)?.let { artist -> { lyrics.find(artist, track.title.replace(Regex("\\s*[(\\[].*?[)\\]]"), ""), track.durationMillis ?: np.durationMs) } }
+            },
             extraActions = {
                 if (npItem != null && canStartRadio(registry, npItem)) {
                     TextButton(onClick = { startRadio(npItem) }) { Text("Start radio") }
