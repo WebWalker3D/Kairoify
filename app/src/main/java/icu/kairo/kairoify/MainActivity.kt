@@ -32,6 +32,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -202,7 +203,10 @@ private fun KairoifyScaffold(
         }
     }
     // A station's current song, found on demand on the song sources and kept in Favorites.
+    // The player sheet covers the snackbar, so the sheet shows how saving went too.
+    var radioSave by remember { mutableStateOf<String?>(null) }
     val saveRadioSong: (RadioSong) -> Unit = { song ->
+        radioSave = "Looking for “${song.title}” by ${song.artist}…"
         scope.launch {
             snackbar.showSnackbar("Looking for “${song.title}” by ${song.artist}…", duration = SnackbarDuration.Short)
         }
@@ -213,6 +217,11 @@ private fun KairoifyScaffold(
                 null
             }
             snackbar.currentSnackbarData?.dismiss()
+            radioSave = if (found == null) {
+                "Couldn't find “${song.title}” by ${song.artist} on your sources."
+            } else {
+                "Saved “${found.title}” to Favorites (from ${sourceName(registry, found.ref.sourceId)})."
+            }
             if (found == null) {
                 snackbar.showSnackbar("Couldn't find “${song.title}” by ${song.artist} on your sources.")
             } else {
@@ -244,6 +253,7 @@ private fun KairoifyScaffold(
     LaunchedEffect(Unit) { player.connect() }
     // Every item that starts playing goes into History (on this phone only).
     LaunchedEffect(npItem?.ref) { npItem?.let { history.record(it) } }
+    LaunchedEffect(np?.subtitle) { radioSave = null }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
@@ -330,6 +340,7 @@ private fun KairoifyScaffold(
                 }
                 radioSong(np)?.let { song ->
                     TextButton(onClick = { saveRadioSong(song) }) { Text("Save this song") }
+                    radioSave?.let { Text(it, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center) }
                 }
             },
         )

@@ -36,8 +36,8 @@ android {
         applicationId = "icu.kairo.kairoify"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 5
+        versionName = "0.5.0"
 
         // Jamendo needs a registered client ID. It never goes in the repo: pass -Pkairoify.jamendo.clientId=... or set
         // KAIROIFY_JAMENDO_CLIENT_ID. Without one, the Jamendo source is left out of the app.
