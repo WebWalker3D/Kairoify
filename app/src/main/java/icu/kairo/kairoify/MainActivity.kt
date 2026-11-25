@@ -72,6 +72,7 @@ import icu.kairo.kairoify.ui.components.StartOverPill
 import icu.kairo.kairoify.ui.settings.SettingsViewModel
 import kotlinx.coroutines.flow.Flow
 import icu.kairo.kairoify.player.FreeRadio
+import icu.kairo.kairoify.ui.home.PersonalShelves
 import icu.kairo.kairoify.source.lyrics.LrcLib
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.source.mainArtist
@@ -274,6 +275,7 @@ private fun KairoifyScaffold(
             history,
             playlists,
             localMusic,
+            personal = remember { PersonalShelves(history, freeRadio::build) },
             about = about,
             settings = settings,
             sourceChanges = sourceChanges,

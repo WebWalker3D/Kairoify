@@ -45,6 +45,8 @@ and one library.
   to the phone's own sound panel.
 - **Lyrics:** tap Lyrics in the player for words that follow the song (from LRCLIB's
   open database); tap a line to jump there.
+- **For you:** Home opens with Recently played and "Because you play …", built on
+  the phone from your History.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -182,7 +184,6 @@ every current and planned source, with a dated change log.
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
 - **Playlist import** from other music services.
-- **Discovery** shaped by what you listen to, kept on your phone.
 - **Explore:** an interactive world radio globe, and browsing by decade and by
   source.
 - **Android TV.**

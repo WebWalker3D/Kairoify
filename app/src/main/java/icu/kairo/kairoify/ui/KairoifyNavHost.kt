@@ -60,6 +60,7 @@ import icu.kairo.kairoify.ui.explore.FacetsScreen
 import icu.kairo.kairoify.ui.explore.FacetsViewModel
 import icu.kairo.kairoify.ui.home.HomeScreen
 import icu.kairo.kairoify.ui.home.HomeViewModel
+import icu.kairo.kairoify.ui.home.PersonalShelves
 import icu.kairo.kairoify.ui.search.SearchScreen
 import icu.kairo.kairoify.ui.search.SearchViewModel
 
@@ -71,6 +72,7 @@ fun KairoifyNavHost(
     history: HistoryStore,
     playlists: PlaylistStore,
     localMusic: LocalMusicSource,
+    personal: PersonalShelves,
     about: () -> AboutViewModel,
     settings: () -> SettingsViewModel,
     sourceChanges: Flow<Int>,
@@ -90,7 +92,7 @@ fun KairoifyNavHost(
     val sourceName = { id: String -> registry.sources.firstOrNull { it.info.id == id }?.info?.displayName ?: id }
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute> {
-            HomeScreen(viewModel { HomeViewModel(registry, sourceChanges) }, open, onLongPress, onAbout = { navController.navigate(AboutRoute) }, onSettings = { navController.navigate(SettingsRoute) })
+            HomeScreen(viewModel { HomeViewModel(registry, sourceChanges, personal::shelves) }, open, onLongPress, onAbout = { navController.navigate(AboutRoute) }, onSettings = { navController.navigate(SettingsRoute) })
         }
         composable<SearchRoute> { SearchScreen(viewModel { SearchViewModel(registry) }, open, onLongPress) }
         composable<ExploreRoute> {
