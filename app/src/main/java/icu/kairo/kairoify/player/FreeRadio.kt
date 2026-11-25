@@ -24,6 +24,10 @@ import icu.kairo.kairoify.core.model.Item
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.source.MusicSource
 import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.core.source.isBy
+import icu.kairo.kairoify.core.source.mainArtist
+import icu.kairo.kairoify.core.source.normalizeName
+import icu.kairo.kairoify.core.source.songKey
 import icu.kairo.kairoify.core.source.SourceResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -46,7 +50,7 @@ class FreeRadio(
     /** The station's queue, seed first; just the seed when nothing else was found, empty without an artist. */
     suspend fun build(seed: Item): List<Item> {
         val artist = seedArtist(seed) ?: return emptyList()
-        val artists = (listOf(artist) + similarOrSuggested(seed, artist)).distinctBy { norm(it) }
+        val artists = (listOf(artist) + similarOrSuggested(seed, artist)).distinctBy { normalizeName(it) }
         val permits = Semaphore(PARALLEL_ARTISTS)
         val found = coroutineScope {
             artists.map { name ->
@@ -68,7 +72,7 @@ class FreeRadio(
      */
     suspend fun stream(seed: Item, onBatch: suspend (List<Item>) -> Unit) {
         val artist = seedArtist(seed) ?: return
-        val artists = (listOf(artist) + similarOrSuggested(seed, artist)).distinctBy { norm(it) }
+        val artists = (listOf(artist) + similarOrSuggested(seed, artist)).distinctBy { normalizeName(it) }
         val mixer = StationMixer(seed)
         val permits = Semaphore(PARALLEL_ARTISTS)
         val gate = kotlinx.coroutines.sync.Mutex()
@@ -91,7 +95,7 @@ class FreeRadio(
     private suspend fun similarOrSuggested(seed: Item, artist: String): List<String> =
         similar(artist).ifEmpty {
             try {
-                registry.related(seed.ref).mapNotNull(::seedArtist).filterNot { norm(it) == norm(artist) }.distinct().take(8)
+                registry.related(seed.ref).mapNotNull(::seedArtist).filterNot { normalizeName(it) == normalizeName(artist) }.distinct().take(8)
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (_: Exception) {
@@ -105,11 +109,7 @@ class FreeRadio(
 }
 
 /** The artist a station grows from: a song's or album's first artist. */
-fun seedArtist(item: Item): String? = when (item) {
-    is Track -> item.artists.firstOrNull() ?: item.subtitle
-    is Album -> item.artists.firstOrNull() ?: item.subtitle
-    else -> null
-}?.substringBefore(" · ")?.trim()?.takeIf(String::isNotBlank)
+fun seedArtist(item: Item): String? = mainArtist(item)
 
 /**
  * Mixes search results into a station: the seed first, then each artist in turn (at most [maxPerArtist] songs each),
@@ -146,23 +146,3 @@ private class StationMixer(seed: Item, private val maxPerArtist: Int = 4) {
         return out
     }
 }
-
-/** Whether [artist] is one of the track's credited artists: whole names only, so "Ray Charles Manson" isn't Ray Charles. */
-private fun isBy(track: Track, artist: String): Boolean {
-    val wanted = norm(artist)
-    return (track.artists + listOfNotNull(track.subtitle))
-        .flatMap { credit -> credit.split(CREDIT_SEPARATORS) }
-        .any { norm(it) == wanted }
-}
-
-/** How shared credits are written: "A / B", "A & B", "A, B", "A feat. B", "A ft. B", "A featuring B", "A x B", "A with B", "A · 1962". */
-private val CREDIT_SEPARATORS = Regex("\\s*(?:/|&|,|;|·|\\bfeat\\.?|\\bft\\.?|\\bfeaturing\\b|\\bx\\b|\\bwith\\b)\\s*", RegexOption.IGNORE_CASE)
-
-/** "Feeling Good (Remastered)" by "Nina Simone" and "feeling good" by "nina simone" are the same song. */
-private fun songKey(item: Item): String {
-    val artist = (item as? Track)?.let { seedArtist(it) } ?: item.subtitle.orEmpty()
-    val title = item.title.replace(Regex("\\s*[(\\[].*?[)\\]]"), "")
-    return norm(artist) + "|" + norm(title)
-}
-
-private fun norm(text: String) = text.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), " ").trim()

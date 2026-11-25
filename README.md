@@ -34,6 +34,9 @@ and one library.
 - **Playlists and history:** make your own playlists (long-press anything, or the
   player's Add to playlist), reorder and rename them. Library's History tab lists
   everything you've played, with play counts. Both stay on your phone.
+- **Songs that don't dead-end:** when a song won't play on its service, Kairoify looks
+  for the same recording (same artist and title, similar length, not a remix) on your
+  other music sources and plays that instead.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -170,8 +173,6 @@ every current and planned source, with a dated change log.
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
-- **Songs that never dead-end:** when a song fails on one service, find the same
-  song on another and play that instead.
 - **Save the song on the radio:** turn what a station is playing into a song you can
   favorite and play on demand.
 - **Playlist import** from other music services.
