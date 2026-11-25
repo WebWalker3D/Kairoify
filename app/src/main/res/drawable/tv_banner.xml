@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Android TV home-screen banner (16:9): the Kairoify logo on the app's background. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/kairoify_background" />
+    <item android:width="120dp" android:height="120dp" android:gravity="center" android:drawable="@drawable/kairoify_logo" />
+</layer-list>

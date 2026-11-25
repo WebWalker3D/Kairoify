@@ -189,7 +189,8 @@ every current and planned source, with a dated change log.
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
 - **Explore:** browsing by decade and by source.
-- **Android TV.**
+- **Android TV:** a layout made for the remote (the app installs and opens on TV now,
+  but screens are still the phone's).
 - **Library:** saved albums and concerts, plus export and import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.
 - **Settings:** switch sources on or off, audio quality for Wi-Fi and mobile data,
