@@ -51,6 +51,8 @@ class CaptionFinder(
     private val commons: HttpUrl = "https://commons.wikimedia.org/w/".toHttpUrl(),
     private val archive: HttpUrl = "https://archive.org/".toHttpUrl(),
     private val language: () -> String = { java.util.Locale.getDefault().language },
+    /** Told why a lookup failed; captions still just come back null. */
+    private val onError: (Throwable) -> Unit = {},
 ) {
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -98,7 +100,8 @@ class CaptionFinder(
         block()
     } catch (e: CancellationException) {
         throw e
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        onError(e)
         null
     }
 }
@@ -114,6 +117,6 @@ fun parseSubtitles(text: String): List<LyricLine> =
         val (h, m, s, frac) = CUE_TIME.find(lines[at])!!.destructured
         val millis = ((h.toLongOrNull() ?: 0) * 3600 + m.toLong() * 60 + s.toLong()) * 1000 + frac.padEnd(3, '0').toLong()
         val words = lines.drop(at + 1).joinToString(" ") { it.trim() }
-            .replace(Regex("<[^>]*>|\\{[^}]*}"), "").replace(Regex("\\s+"), " ").trim()
+            .replace(Regex("<[^>]*>|\\{[^}]*\\}"), "").replace(Regex("\\s+"), " ").trim()
         words.takeIf(String::isNotEmpty)?.let { LyricLine(millis, it) }
     }.sortedBy { it.atMillis }

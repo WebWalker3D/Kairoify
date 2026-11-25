@@ -122,7 +122,7 @@ class AppContainer(context: Context) : PlayerDependencies {
     val lyrics = LrcLib(httpClient)
 
     /** Captions Wikimedia Commons and the Internet Archive publish for their recordings. */
-    val captions = CaptionFinder(httpClient)
+    val captions = CaptionFinder(httpClient, onError = { android.util.Log.w("Kairoify", "Captions lookup failed", it) })
 
     /** Playlists from elsewhere: yt-dlp lists the link, each song is found on the free sources. */
     val importer by lazy { PlaylistImporter(listLink = engine::flatSearch, findSong = { sourceRegistry.findSameSong(it, skipSource = "") }) }
