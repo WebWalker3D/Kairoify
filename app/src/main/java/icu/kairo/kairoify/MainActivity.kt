@@ -77,6 +77,9 @@ import icu.kairo.kairoify.importing.PlaylistImporter
 import icu.kairo.kairoify.source.lyrics.LrcLib
 import icu.kairo.kairoify.source.lyrics.CaptionFinder
 import icu.kairo.kairoify.player.findWords
+import icu.kairo.kairoify.player.transcription
+import icu.kairo.kairoify.core.transcribe.Transcriber
+import icu.kairo.kairoify.ui.player.TranscribeOffer
 import icu.kairo.kairoify.core.model.Track
 import icu.kairo.kairoify.core.source.mainArtist
 import icu.kairo.kairoify.player.seedArtist
@@ -132,6 +135,7 @@ class MainActivity : ComponentActivity() {
                         freeRadio = container.freeRadio,
                         lyrics = container.lyrics,
                         captions = container.captions,
+                        transcriber = container.transcriber,
                         importer = container.importer,
                     )
                 }
@@ -164,6 +168,7 @@ private fun KairoifyScaffold(
     freeRadio: FreeRadio,
     lyrics: LrcLib,
     captions: CaptionFinder,
+    transcriber: Transcriber,
     importer: PlaylistImporter,
 ) {
     val navController = rememberNavController()
@@ -310,6 +315,9 @@ private fun KairoifyScaffold(
             upNext = upNext,
             findLyrics = findWords(npItem, np.isLive, np.durationMs, captions, lyrics),
             wordsLabel = if (runCatching { registry.get(np.ref.sourceId) }.getOrNull()?.let { inCategory(it, SourceCategory.MUSIC) } != false) "Lyrics" else "Captions",
+            transcribe = transcription(npItem, np.isLive, registry, transcriber, player)?.let { start ->
+                TranscribeOffer(transcriber.modelReady, transcriber.modelMegabytes, start)
+            },
             extraActions = {
                 if (npItem != null && canStartRadio(registry, npItem)) {
                     TextButton(onClick = { startRadio(npItem) }) { Text("Start radio") }

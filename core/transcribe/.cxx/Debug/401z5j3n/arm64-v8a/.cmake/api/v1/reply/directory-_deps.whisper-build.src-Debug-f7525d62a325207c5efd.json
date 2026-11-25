@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "_deps/whisper-build/src",
+		"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/src"
+	}
+}

@@ -1,0 +1,220 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "_deps/whisper-build",
+					"childIndexes" : 
+					[
+						2,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.whisper-build-Release-d92115069f663d03019d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src"
+				},
+				{
+					"build" : "_deps/whisper-build/ggml",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.whisper-build.ggml-Release-7fc27ac9be7326245528.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml"
+				},
+				{
+					"build" : "_deps/whisper-build/ggml/src",
+					"childIndexes" : 
+					[
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.whisper-build.ggml.src-Release-d2a760534cd1d985f47d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml/src",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				},
+				{
+					"build" : "_deps/whisper-build/ggml/src/ggml-cpu",
+					"jsonFile" : "directory-_deps.whisper-build.ggml.src.ggml-cpu-Release-23577462f89b75a77288.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml/src/ggml-cpu"
+				},
+				{
+					"build" : "_deps/whisper-build/src",
+					"jsonFile" : "directory-_deps.whisper-build.src-Release-a4d44e44b7f8ea11ea76.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/src",
+					"targetIndexes" : 
+					[
+						4,
+						5
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "kairoify_whisper",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1,
+						5
+					],
+					"name" : "whisper.cpp",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						4,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2,
+						3,
+						4
+					],
+					"name" : "ggml",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "ggml::@adb943a8c98c89f2306b",
+					"jsonFile" : "target-ggml-Release-a566251c0a09624fe4f5.json",
+					"name" : "ggml",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ggml-base::@adb943a8c98c89f2306b",
+					"jsonFile" : "target-ggml-base-Release-ec56debff38b1e50a151.json",
+					"name" : "ggml-base",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ggml-cpu::@adb943a8c98c89f2306b",
+					"jsonFile" : "target-ggml-cpu-Release-9f4f47426c2fe2cd7264.json",
+					"name" : "ggml-cpu",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "kairoify_whisper::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-kairoify_whisper-Release-bd8620662b2571386654.json",
+					"name" : "kairoify_whisper",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "parakeet::@042bb418fb5bf6c59093",
+					"jsonFile" : "target-parakeet-Release-c27b8ed83fe988c918b1.json",
+					"name" : "parakeet",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "whisper::@042bb418fb5bf6c59093",
+					"jsonFile" : "target-whisper-Release-32d5fa870a5e09348edc.json",
+					"name" : "whisper",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a",
+		"source" : "/home/blaine/Kairoify/core/transcribe/src/main/cpp"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

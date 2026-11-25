@@ -20,7 +20,14 @@
 package icu.kairo.kairoify.player
 
 import icu.kairo.kairoify.core.model.Item
+import icu.kairo.kairoify.core.model.StreamMime
 import icu.kairo.kairoify.core.model.Track
+import icu.kairo.kairoify.core.source.SourceRegistry
+import icu.kairo.kairoify.core.transcribe.Transcriber
+import icu.kairo.kairoify.core.transcribe.Transcription
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import icu.kairo.kairoify.core.source.mainArtist
 import icu.kairo.kairoify.source.lyrics.CaptionFinder
 import icu.kairo.kairoify.source.lyrics.LrcLib
@@ -48,4 +55,23 @@ fun findWords(item: Item?, isLive: Boolean, durationMs: Long?, captions: Caption
     }
     if (own == null && song == null) return null
     return { own?.invoke() ?: song?.invoke() }
+}
+
+/**
+ * Starts writing captions on the phone for what's playing, from where it is now. Null for live streams; HLS
+ * streams (YouTube and the like) can't be decoded this way and report that when tried.
+ */
+fun transcription(item: Item?, isLive: Boolean, registry: SourceRegistry, transcriber: Transcriber, player: PlayerConnection): (() -> Flow<Transcription>)? {
+    val track = item as? Track ?: return null
+    if (isLive) return null
+    return {
+        flow {
+            val stream = registry.resolve(track.ref)
+            if (stream.isLive || stream.mimeType == StreamMime.HLS || ".m3u8" in stream.url) {
+                emit(Transcription.Failed("This recording streams in pieces the phone can't transcribe."))
+            } else {
+                emitAll(transcriber.transcribe(stream, player.position()))
+            }
+        }
+    }
 }

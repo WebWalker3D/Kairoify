@@ -89,6 +89,8 @@ fun NowPlayingSheet(
     findLyrics: (suspend () -> Lyrics?)? = null,
     /** "Lyrics" for songs, "Captions" for speeches, talk and books. */
     wordsLabel: String = "Lyrics",
+    /** Writing captions on the phone, offered when nothing is published; null when not possible. */
+    transcribe: TranscribeOffer? = null,
 ) {
     var showLyrics by rememberSaveable { mutableStateOf(false) }
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
@@ -156,9 +158,9 @@ fun NowPlayingSheet(
                 }) { Icon(KairoifyIcons.Stop, contentDescription = "Stop") }
             }
             extraActions()
-            findLyrics?.let { load ->
+            if (findLyrics != null || (transcribe != null && wordsLabel != "Lyrics")) {
                 TextButton(onClick = { showLyrics = !showLyrics }) { Text(if (showLyrics) "Hide ${wordsLabel.lowercase()}" else wordsLabel) }
-                if (showLyrics) LyricsPanel(nowPlaying.ref, player, load, wordsLabel)
+                if (showLyrics) LyricsPanel(nowPlaying.ref, player, findLyrics ?: { null }, wordsLabel, transcribe.takeIf { wordsLabel != "Lyrics" })
             }
             val link = (nowPlaying.item as? Track)?.pageUrl?.let { "Open original" to it }
                 ?: nowPlaying.homepage?.let { "Open station website" to it }

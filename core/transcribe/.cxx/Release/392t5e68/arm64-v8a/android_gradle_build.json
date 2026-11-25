@@ -1,0 +1,75 @@
+{
+  "buildFiles": [
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/CMakeLists.txt",
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml/CMakeLists.txt",
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml/src/CMakeLists.txt",
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/ggml/src/ggml-cpu/CMakeLists.txt",
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-src/src/CMakeLists.txt",
+    "/home/blaine/Kairoify/core/transcribe/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/blaine/Android/Sdk/cmake/4.1.2/bin/ninja",
+      "-C",
+      "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/blaine/Android/Sdk/cmake/4.1.2/bin/ninja",
+    "-C",
+    "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ggml::@adb943a8c98c89f2306b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml",
+      "output": "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-build/ggml/src/libggml.a"
+    },
+    "ggml-base::@adb943a8c98c89f2306b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml-base",
+      "output": "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-build/ggml/src/libggml-base.a"
+    },
+    "ggml-cpu::@adb943a8c98c89f2306b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml-cpu",
+      "output": "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-build/ggml/src/libggml-cpu.a"
+    },
+    "kairoify_whisper::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "kairoify_whisper",
+      "output": "/home/blaine/Kairoify/core/transcribe/build/intermediates/cxx/Release/392t5e68/obj/arm64-v8a/libkairoify_whisper.so",
+      "runtimeFiles": []
+    },
+    "parakeet::@042bb418fb5bf6c59093": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "parakeet",
+      "output": "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-build/src/libparakeet.a"
+    },
+    "whisper::@042bb418fb5bf6c59093": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "whisper",
+      "output": "/home/blaine/Kairoify/core/transcribe/.cxx/Release/392t5e68/arm64-v8a/_deps/whisper-build/src/libwhisper.a"
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/blaine/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/blaine/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

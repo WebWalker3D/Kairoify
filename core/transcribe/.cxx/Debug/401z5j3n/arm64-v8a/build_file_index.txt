@@ -1,0 +1,6 @@
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/CMakeLists.txt
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/ggml/CMakeLists.txt
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/ggml/src/CMakeLists.txt
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/ggml/src/ggml-cpu/CMakeLists.txt
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/arm64-v8a/_deps/whisper-src/src/CMakeLists.txt
+/home/blaine/Kairoify/core/transcribe/src/main/cpp/CMakeLists.txt

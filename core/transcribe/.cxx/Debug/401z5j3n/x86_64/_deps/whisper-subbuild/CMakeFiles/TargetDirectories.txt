@@ -1,0 +1,3 @@
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/x86_64/_deps/whisper-subbuild/CMakeFiles/whisper-populate.dir
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/x86_64/_deps/whisper-subbuild/CMakeFiles/edit_cache.dir
+/home/blaine/Kairoify/core/transcribe/.cxx/Debug/401z5j3n/x86_64/_deps/whisper-subbuild/CMakeFiles/rebuild_cache.dir
