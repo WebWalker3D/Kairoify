@@ -37,6 +37,8 @@ and one library.
 - **Songs that don't dead-end:** when a song won't play on its service, Kairoify looks
   for the same recording (same artist and title, similar length, not a remix) on your
   other music sources and plays that instead.
+- **Save the song on the radio:** when a station names the song it's playing, the
+  player's "Save this song" finds it on your music sources and keeps it in Favorites.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -173,8 +175,6 @@ every current and planned source, with a dated change log.
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
-- **Save the song on the radio:** turn what a station is playing into a song you can
-  favorite and play on demand.
 - **Playlist import** from other music services.
 - **Local music files** alongside everything streamed.
 - **Discovery** shaped by what you listen to, kept on your phone.
