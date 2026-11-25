@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import icu.kairo.kairoify.core.model.Shelf
 import icu.kairo.kairoify.core.source.SourceRegistry
 import icu.kairo.kairoify.core.source.SourceResult
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +43,12 @@ sealed interface HomeSection {
 data class HomeUiState(val loading: Boolean, val sections: List<HomeSection>)
 
 /** @param sourceChanges ticks whenever a source is switched on or off, or gets a key; home reloads then. */
-class HomeViewModel(private val registry: SourceRegistry, sourceChanges: Flow<Int> = emptyFlow()) : ViewModel() {
+class HomeViewModel(
+    private val registry: SourceRegistry,
+    sourceChanges: Flow<Int> = emptyFlow(),
+    /** Shelves made from the person's own listening ("Recently played", "Because you play …"), shown first. */
+    private val personal: suspend () -> List<Shelf> = { emptyList() },
+) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState(loading = true, sections = emptyList()))
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
     private var job: Job? = null
@@ -57,6 +63,17 @@ class HomeViewModel(private val registry: SourceRegistry, sourceChanges: Flow<In
         _state.value = _state.value.copy(loading = true)
         job = viewModelScope.launch {
             val bySource = mutableMapOf<String, List<HomeSection>>()
+            launch {
+                val mine = try {
+                    personal()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    emptyList()
+                }
+                bySource[PERSONAL] = mine.map { HomeSection.Loaded("For you", it) }
+                _state.value = _state.value.copy(sections = inSourceOrder(bySource))
+            }
             registry.home().collect { result ->
                 bySource[result.source.id] = when (result) {
                     is SourceResult.Ok -> result.value.map { HomeSection.Loaded(result.source.displayName, it) }
@@ -71,5 +88,9 @@ class HomeViewModel(private val registry: SourceRegistry, sourceChanges: Flow<In
     }
 
     private fun inSourceOrder(bySource: Map<String, List<HomeSection>>): List<HomeSection> =
-        registry.sources.flatMap { bySource[it.info.id].orEmpty() }
+        bySource[PERSONAL].orEmpty() + registry.sources.flatMap { bySource[it.info.id].orEmpty() }
+
+    private companion object {
+        const val PERSONAL = "\u0000personal"
+    }
 }
