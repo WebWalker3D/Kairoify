@@ -24,7 +24,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,17 +40,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import icu.kairo.kairoify.core.transcribe.Transcription
 import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.source.lyrics.Lyrics
+import icu.kairo.kairoify.ui.components.formatDuration
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
-/** Looks up lyrics once per song; the line being sung is highlighted and nearby lines shown. Tap a line to jump there. */
+/** Writing captions on the phone: whether the model still needs downloading, its size, and how to start. */
+class TranscribeOffer(val modelReady: Boolean, val modelMegabytes: Long, val start: () -> Flow<Transcription>)
+
+/**
+ * Looks up lyrics or captions once per recording; the current line is highlighted and nearby lines shown. Tap a
+ * line to jump there. When nothing is published and [transcribe] is offered, captions can be written on the phone.
+ */
 @Composable
-internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () -> Lyrics?, label: String = "Lyrics") {
+internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () -> Lyrics?, label: String = "Lyrics", transcribe: TranscribeOffer? = null) {
     var state by remember(key) { mutableStateOf<LyricsState>(LyricsState.Loading) }
+    var writing by remember(key) { mutableStateOf<Transcription?>(null) }
+    var started by remember(key) { mutableStateOf(false) }
     var position by remember(key) { mutableLongStateOf(0L) }
     LaunchedEffect(key) { state = load()?.let { LyricsState.Found(it) } ?: LyricsState.None }
-    val lyrics = (state as? LyricsState.Found)?.lyrics
+    if (started && transcribe != null) LaunchedEffect(key) { transcribe.start().collect { writing = it } }
+    val lyrics = (state as? LyricsState.Found)?.lyrics ?: (writing as? Transcription.Writing)?.captions
     if (lyrics?.isSynced == true) {
         LaunchedEffect(key) {
             while (true) {
@@ -61,9 +75,18 @@ internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () ->
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when {
             state is LyricsState.Loading -> CircularProgressIndicator()
-            lyrics == null -> Text("No ${label.lowercase()} found for this recording.", color = muted)
-            lyrics.instrumental -> Text("Instrumental", color = muted)
-            lyrics.isSynced -> {
+            lyrics == null && !started && transcribe != null -> {
+                Text("No ${label.lowercase()} published for this recording.", color = muted)
+                OutlinedButton(onClick = { started = true }) { Text("Transcribe on this phone") }
+                Text(
+                    (if (transcribe.modelReady) "" else "Downloads a ${transcribe.modelMegabytes} MB speech model once (Wi-Fi recommended). ") +
+                        "Runs on the phone; nothing is sent anywhere.",
+                    style = MaterialTheme.typography.labelSmall, color = muted, textAlign = TextAlign.Center,
+                )
+            }
+            lyrics == null && !started -> Text("No ${label.lowercase()} found for this recording.", color = muted)
+            lyrics?.instrumental == true -> Text("Instrumental", color = muted)
+            lyrics?.isSynced == true -> {
                 val now = lyrics.lineAt(position)
                 val from = (now - 2).coerceAtLeast(0)
                 lyrics.lines.subList(from, (from + 7).coerceAtMost(lyrics.lines.size)).forEachIndexed { i, line ->
@@ -78,9 +101,22 @@ internal fun LyricsPanel(key: Any, player: PlayerConnection, load: suspend () ->
                     )
                 }
             }
-            else -> Text(lyrics.plain.orEmpty(), textAlign = TextAlign.Center, color = muted)
+            lyrics?.plain != null -> Text(lyrics.plain.orEmpty(), textAlign = TextAlign.Center, color = muted)
         }
-        lyrics?.let { Text(it.credit, style = MaterialTheme.typography.labelSmall, color = muted) }
+        when (val w = writing) {
+            is Transcription.Downloading -> {
+                Text("Downloading the speech model…", color = muted)
+                LinearProgressIndicator(progress = { w.fraction }, modifier = Modifier.fillMaxWidth())
+            }
+            is Transcription.Writing -> if (!w.finished) {
+                Text("Transcribing… ready up to ${formatDuration(w.throughMillis)}", style = MaterialTheme.typography.labelMedium, color = muted)
+            } else if (w.captions.lines.isEmpty()) {
+                Text("No speech was heard.", color = muted)
+            }
+            is Transcription.Failed -> Text(w.message, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
+            null -> if (started) CircularProgressIndicator()
+        }
+        lyrics?.let { Text(it.credit, style = MaterialTheme.typography.labelSmall, color = muted, textAlign = TextAlign.Center) }
     }
 }
 

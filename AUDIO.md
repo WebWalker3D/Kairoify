@@ -140,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | whisper.cpp (on-phone captions) | **Added**: captions written on the phone for recordings with none published, with whisper.cpp v1.9.5 (MIT, built from a hash-checked release). Its multilingual base model (ggml-base-q5_1, 60 MB, MIT) downloads from Hugging Face once, only when Transcribe is first tapped, and is checked against its pinned SHA-256. Audio never leaves the phone. Direct files only (not HLS). |
 | 2026-11-24 | Unreleased | Wikimedia Commons, Internet Archive (captions) | **Added**: captions in the player for speeches, talks and books, from the subtitles these archives publish themselves (Commons' TimedText; the Archive's .srt/.vtt files, including its automatic ones, labelled as such). Text only; looked up only for the recording playing, only when Captions is tapped. |
 | 2026-11-24 | Unreleased | Radio Browser | **Added**: the radio globe, using the station locations Radio Browser already publishes. |
 | 2026-11-24 | Unreleased | LRCLIB (lyrics) | **Added**: synced lyrics in the player, from LRCLIB's open database (text only, no audio; no key). Looked up only for the song playing, only when Lyrics is tapped. |

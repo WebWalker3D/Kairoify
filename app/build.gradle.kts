@@ -123,6 +123,7 @@ dependencies {
     implementation(project(":sources:radioparadise"))
     implementation(project(":sources:nightride"))
     implementation(project(":sources:lyrics"))
+    implementation(project(":core:transcribe"))
     implementation(project(":sources:listenbrainz"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

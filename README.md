@@ -47,7 +47,10 @@ and one library.
   open database); tap a line to jump there.
 - **Captions:** speeches, talks and audiobooks get a Captions button that follows along the same
   way, from the subtitles Wikimedia Commons and the Internet Archive publish (the Archive's
-  automatic ones are marked as automatic).
+  automatic ones are marked as automatic). When a recording has none, **Transcribe on this phone**
+  writes them with [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (MIT), running entirely on
+  the phone and keeping just ahead of what's playing. The first time, it downloads a 60 MB speech
+  model (checked against its pinned SHA-256); nothing is sent anywhere. Any language.
 - **For you:** Home opens with Recently played and "Because you play …", built on
   the phone from your History.
 - **Import playlists:** paste a YouTube, YouTube Music, SoundCloud or Bandcamp link, or
@@ -86,7 +89,7 @@ Kairoify doesn't check for its own updates yet, so watch the
 adb install app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
 ```
 
-Needs JDK 21, the Android SDK and Python 3.14 on the `PATH` (for the embedded
+Needs JDK 21, the Android SDK (with NDK 27.0.12077973 and CMake 4.1.2, for whisper.cpp) and Python 3.14 on the `PATH` (for the embedded
 Python's packages). The build makes one APK per CPU type: `arm64-v8a` for phones,
 `x86_64` for emulators. Every push also builds debug APKs in GitHub Actions.
 

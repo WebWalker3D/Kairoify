@@ -9,3 +9,4 @@ local.properties
 captures/
 spikes/
 __pycache__/
+.cxx/
