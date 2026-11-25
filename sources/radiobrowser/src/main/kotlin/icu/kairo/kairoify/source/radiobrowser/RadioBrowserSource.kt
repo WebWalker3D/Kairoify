@@ -99,6 +99,17 @@ class RadioBrowserSource(
         client.getBody(url(listOf("json", "url", ref.itemId)))
     }
 
+    /** The most listened-to stations that say where they are, for the radio globe. */
+    suspend fun placedStations(limit: Int = 3_000): List<PlacedStation> =
+        get<List<StationDto>>(
+            listOf("json", "stations", "search"),
+            mapOf("has_geo_info" to "true", "order" to "clickcount", "reverse" to "true", "limit" to "$limit", "hidebroken" to "true"),
+        ).mapNotNull { dto ->
+            val lat = dto.geoLat?.takeIf { it in -90.0..90.0 && it != 0.0 } ?: return@mapNotNull null
+            val lon = dto.geoLong?.takeIf { it in -180.0..180.0 && it != 0.0 } ?: return@mapNotNull null
+            PlacedStation(dto.toStation(), lat, lon)
+        }
+
     private suspend fun stationPage(path: List<String>, page: PageToken?, extra: Map<String, String> = emptyMap()): Page<Item> {
         val offset = page?.value?.toIntOrNull() ?: 0
         val items = stationList(path, offset, PAGE_SIZE, extra)
@@ -146,3 +157,6 @@ class RadioBrowserSource(
         val json = Json { ignoreUnknownKeys = true }
     }
 }
+
+/** A station and where it is. */
+data class PlacedStation(val station: icu.kairo.kairoify.core.model.Station, val lat: Double, val lon: Double)

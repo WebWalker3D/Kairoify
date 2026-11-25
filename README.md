@@ -50,6 +50,8 @@ and one library.
 - **Import playlists:** paste a YouTube, YouTube Music, SoundCloud or Bandcamp link, or
   any "Artist - Title" list (e.g. copied from Spotify), and each song is found on the
   free sources.
+- **Radio globe:** Explore › Radio globe shows 3,000 live stations as dots on a
+  globe you spin with a finger; tap one to listen.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
 
@@ -186,8 +188,7 @@ every current and planned source, with a dated change log.
 - **More sources:** dozens more are listed in [`AUDIO.md`](AUDIO.md), from federated
   catalogs (Funkwhale, Mirlo, Faircamp) to historical archives (UCSB cylinders, Gallica)
   and more public-domain collections.
-- **Explore:** an interactive world radio globe, and browsing by decade and by
-  source.
+- **Explore:** browsing by decade and by source.
 - **Android TV.**
 - **Library:** saved albums and concerts, plus export and import of the whole library.
 - **Downloads** for offline listening, wherever the source allows it.

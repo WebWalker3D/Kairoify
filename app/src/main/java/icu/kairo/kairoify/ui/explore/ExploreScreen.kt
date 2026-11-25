@@ -47,7 +47,7 @@ import icu.kairo.kairoify.core.model.FacetKind
 import icu.kairo.kairoify.ui.icons.KairoifyIcons
 
 @Composable
-fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit, onOpenCategory: (SourceCategory) -> Unit) {
+fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit, onOpenCategory: (SourceCategory) -> Unit, onOpenGlobe: () -> Unit = {}) {
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Text("Explore", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(16.dp))
         SourceCategory.entries.forEach { category ->
@@ -58,6 +58,11 @@ fun ExploreScreen(onOpenFacets: (FacetKind) -> Unit, onOpenArchives: () -> Unit,
             ) { Text(category.label) }
         }
         HorizontalDivider(Modifier.padding(vertical = 8.dp))
+        ListItem(
+            supportingContent = { Text("Spin the world and tap a dot to hear a live station there") },
+            leadingContent = { Icon(KairoifyIcons.Globe, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            modifier = Modifier.clickable(onClick = onOpenGlobe),
+        ) { Text("Radio globe") }
         ListItem(
             supportingContent = { Text("Live radio from every country on Earth") },
             leadingContent = { Icon(Icons.Filled.Place, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },

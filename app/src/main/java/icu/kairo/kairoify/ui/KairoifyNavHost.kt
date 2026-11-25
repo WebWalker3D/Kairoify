@@ -61,6 +61,9 @@ import icu.kairo.kairoify.ui.explore.FacetsViewModel
 import icu.kairo.kairoify.ui.home.HomeScreen
 import icu.kairo.kairoify.ui.home.HomeViewModel
 import icu.kairo.kairoify.ui.home.PersonalShelves
+import icu.kairo.kairoify.ui.globe.GlobeScreen
+import icu.kairo.kairoify.ui.globe.GlobeViewModel
+import icu.kairo.kairoify.source.radiobrowser.RadioBrowserSource
 import icu.kairo.kairoify.importing.PlaylistImporter
 import icu.kairo.kairoify.ui.search.SearchScreen
 import icu.kairo.kairoify.ui.search.SearchViewModel
@@ -102,7 +105,11 @@ fun KairoifyNavHost(
                 onOpenFacets = { navController.navigate(FacetsRoute(it)) },
                 onOpenArchives = { navController.navigate(FacetsRoute(FacetKind.COLLECTION, sourceId = "archive")) },
                 onOpenCategory = { navController.navigate(CategoryRoute(it)) },
+                onOpenGlobe = { navController.navigate(GlobeRoute) },
             )
+        }
+        composable<GlobeRoute> {
+            GlobeScreen(viewModel { GlobeViewModel { (registry.get("radiobrowser") as RadioBrowserSource).placedStations() } }, onPlay)
         }
         composable<CategoryRoute> { entry ->
             val category = entry.toRoute<CategoryRoute>().category
