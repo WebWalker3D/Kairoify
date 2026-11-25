@@ -36,8 +36,11 @@ data class SourceInfo(val id: String, val displayName: String)
 
 enum class Capability { HOME, SEARCH, BROWSE, LIVE, RELATED, DETAILS }
 
-/** An album or concert with its playable tracks. */
-data class AlbumDetails(val album: Album, val tracks: List<Track>)
+/**
+ * An album or concert with its playable tracks. [folders] are what it contains besides tracks: subfolders of a
+ * WebDAV share or a media server's containers, each opening the same way.
+ */
+data class AlbumDetails(val album: Album, val tracks: List<Track>, val folders: List<Album> = emptyList())
 
 /** One free music service. Every service in Kairoify plugs in through this contract. */
 interface MusicSource {

@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
                         container.playlists,
                         container.localMusic,
                         about = { AboutViewModel(container.engine, container.updater) },
-                        settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings) },
+                        settings = { SettingsViewModel(container.sourceCatalog, container.sourceSettings, container::checkServer) },
                         sourceChanges = container.sourceSettings.changes,
                         inCategory = container.sourceCatalog::inCategory,
                         freeRadio = container.freeRadio,

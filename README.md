@@ -8,13 +8,15 @@
 
 Kairoify puts every free source of music under one app: live radio from every
 country, recorded live concerts, public-domain recordings, Creative Commons
-catalogs, and the free tiers of mainstream services. Search them all at once,
-browse the world by country, genre and era, and play it all through one queue
-and one library.
+catalogs, the free tiers of mainstream services, and your own music, on the phone,
+on your servers and on your home network. Search them all at once, browse the world
+by country, genre and era, and play it all through one queue and one library.
+Kairoify plays audio: music, radio, podcasts, audiobooks. It doesn't play video.
 
 - No accounts, no ads, no tracking.
 - Every source can be switched on or off in Settings.
-- Everything runs on your device — no Kairoify server in between.
+- Everything runs on your device — there is no Kairoify server, and none is planned.
+  The phone talks to each source directly.
 
 ## Status
 
@@ -60,6 +62,22 @@ and one library.
   globe you spin with a finger; tap one to listen.
 - **In the background:** playback continues with notification controls. Android
   Auto shows your Favorites too.
+
+**On `main` since 0.5.0** (in the next release):
+
+- **Links:** paste any web address into search: an audio file (MP3, FLAC, AAC, Ogg,
+  Opus…), a live stream, an M3U/M3U8, PLS or XSPF playlist, an RSS or Atom feed (podcasts,
+  artist releases, DJ shows, with Podcasting 2.0 music feeds and tip support marked), or a web
+  page that advertises a feed. Save links in Settings to keep them on Home.
+- **Your servers:** add a Subsonic, OpenSubsonic (Navidrome, Gonic, LMS, Airsonic…) or
+  Ampache server, or a WebDAV folder (Nextcloud, ownCloud, a NAS). Their music is searched
+  with everything else, folders open like albums, and new albums show on Home.
+- **Your home network:** UPnP/DLNA media servers on your Wi-Fi (Plex, Jellyfin, MiniDLNA,
+  many NAS boxes) are found automatically and browsed folder by folder.
+- **Icecast directory:** every station listed at dir.xiph.org, searchable from Radio
+  (off by default: its list is a 9 MB download, fetched at most once a week).
+- **Internet Archive:** uploads without a "creator" now get their artist from the MP3 tags or an
+  "Artist - Album" title, so Free radio and lyrics work for them.
 
 Platform: Android 8.0 and newer, on 64-bit phones.
 
@@ -147,6 +165,11 @@ built into the app.
 | Freesound | Experimental, ambient and musical recordings | Off until its API key is entered in Settings |
 | Europeana | European cultural recordings | Off until its API key is entered in Settings |
 | ccMixter | Creative Commons remixes and originals | Off by default (its files block plays from outside its site; switching it on sends its page as the Referer) |
+| Links | Any audio file, stream, M3U/PLS/XSPF playlist or RSS/Atom feed you paste or save | ✓ On `main` |
+| Your music servers | Subsonic, OpenSubsonic and Ampache servers you add | ✓ On `main` |
+| Your WebDAV folders | Nextcloud, ownCloud, NAS or any WebDAV share you add | ✓ On `main` |
+| Media servers on your network | UPnP/DLNA servers on your Wi-Fi, found automatically | ✓ On `main` |
+| Icecast directory | ~13,000 stations listed at dir.xiph.org | On `main`, off by default (9 MB weekly download) |
 
 **Free radio** (on any song or album with an artist) builds a station on the phone from
 every switched-on music source, not just one service. It plays the song you picked at once,
@@ -161,10 +184,11 @@ whenever that happens.
 
 Explore groups every source into six sections: Music, Radio, Audiobooks & poetry,
 Podcasts, Historical recordings and Sounds. Each has its own page with its own search,
-results as rows of cover art, and its genres or collections to browse. Search's All view
-Podcasts, Historical recordings and Sounds browse by topic (True crime, National Jukebox, Songs of America,
-Speeches, Birdsong, Rain…), with the first few topics shown as shelves.
-uses the same rows: sources with nothing are hidden, and slow or failed ones share one line.
+results as rows of cover art, and its genres or collections to browse. Podcasts,
+Historical recordings and Sounds browse by topic (True crime, National Jukebox, Songs of
+America, Speeches, Birdsong, Rain…), with the first few topics shown as shelves. Search's
+All view uses the same rows: sources with nothing are hidden, and slow or failed ones share
+one line.
 
 Explore's Countries, Genres and Concerts & archives lists each have a filter box: type
 part of a name (accents and case don't matter; a country's two-letter code works too).
@@ -186,6 +210,25 @@ build one in with:
 The ID is never stored in the repo. Without one, Jamendo stays off. Freesound and
 Europeana work the same way, with keys entered in Settings.
 
+### Your own servers, links and network
+
+The phone connects to each one directly; nothing passes through a Kairoify server or any other go-between.
+
+- **Subsonic / OpenSubsonic / Ampache:** Settings › Your servers › Add a server. Use the
+  address you open the server at. Kairoify signs in with the Subsonic API's salted token, so
+  the password itself is never sent. Ampache works through its Subsonic-compatible API.
+- **WebDAV:** the folder's WebDAV address, e.g.
+  `https://cloud.example.com/remote.php/dav/files/you/Music` for Nextcloud. Folders laid out
+  as `Artist/Album/03 Song.mp3` give songs their artist. Search looks through up to 400
+  folders, once per run of the app.
+- Each server is checked before it's saved. Passwords are kept only in the app's own
+  storage and are left out of Android's cloud backups and device transfers.
+- **UPnP/DLNA:** nothing to set up; servers on the same Wi-Fi appear on Home and in search
+  (search uses the server's own Search, where it has one).
+- **Links:** paste a link into search to open it, or save it in Settings › Links to keep it
+  on Home. A radio station's `.pls` or `.m3u` plays as the station; a list of songs opens as an
+  album; HLS (`.m3u8`) plays as one stream.
+
 More to follow — the goal is every free source there is. [`AUDIO.md`](AUDIO.md) lists
 every current and planned source, with a dated change log.
 
@@ -203,26 +246,17 @@ every current and planned source, with a dated change log.
   a sleep timer, and an in-app check for new Kairoify releases.
 - **Search:** artist, album and playlist results, a "Top results" strip, and source
   filters.
-- **Licenses:** an open-source notices screen, and artist and license shown for
-  Creative Commons tracks.
+- **Licenses:** an open-source notices screen.
+- **Sound:** volume normalization (each track brought to the same loudness, not just
+  compressed), using ReplayGain tags where files have them.
 - **Releases:** signed release builds published automatically by GitHub Actions.
-- **Streaming protocols.** These aren't single services; each one opens up many sources at once:
-  - **Icecast directory:** More internet radio stations.
-  - **RSS audio enclosures:** Music podcasts, artist releases, DJ shows.
-  - **Podcasting 2.0:** Independently distributed music, with optional artist tipping.
-  - **Canimus:** Artist-owned music catalogs.
-  - **ActivityPub:** Federated music distribution.
-  - **OpenSubsonic:** Compatible music servers.
-  - **Ampache API:** Community and personal music collections.
-  - **PeerTube API:** Music videos and concerts (audio-only in Kairoify unless the owner decides otherwise).
-  - **Owncast:** Independent live performances.
-  - **M3U / M3U8:** Authorized radio and media playlists.
-  - **PLS / XSPF:** More playlist formats.
-  - **Direct HTTP audio:** Artist-published MP3, FLAC, AAC and Ogg streams.
-  - **WebDAV:** Music collections you authorize on a remote server.
-  - **UPnP / DLNA:** Music you authorize on your local network.
-- **Further out:** an optional Kairoify server for sync, and Kairo, the companion
-  AI, as a DJ.
+- **Protocols still waiting:** Canimus (artist-owned catalogs) and ActivityPub
+  (federated music) wait for a published spec and services that host freely licensed audio.
+  Everything else on the protocol list is on `main` (see above).
+- **Further out:** Kairo, the companion AI, as a DJ.
+
+Not planned: video of any kind (music videos, concerts on PeerTube or Owncast, movies, TV),
+Chromecast (it needs Google Play Services), and a Kairoify server.
 
 ## License
 
@@ -234,5 +268,5 @@ The Kairoify name and logo are not licensed. Forks must use their own name and
 logo (see [`NOTICE.md`](NOTICE.md)).
 
 Music played through Kairoify belongs to its artists and is subject to the terms of
-the service it comes from. When Creative Commons sources arrive, their tracks will be
-shown with their artist and license.
+the service it comes from. Creative Commons and public-domain recordings are shown with
+their license in the player and on their album page, wherever the source publishes it.

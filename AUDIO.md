@@ -54,6 +54,10 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | NTS Radio — archive | ~90,000 shows, played from their SoundCloud or Mixcloud recordings | NTS's public API, then yt-dlp | **Not authorized**, same as SoundCloud and Mixcloud | 0.4 |
 | [Mixcloud](https://www.mixcloud.com) | DJ mixes and radio shows | Mixcloud's public search, yt-dlp for HLS streams | **Not authorized**: its API excludes audio streams (royalty reporting and licensing) and its terms restrict extraction. Included by the owner's choice. | 0.4 |
 | [Bandcamp](https://bandcamp.com) | Independent artists | Bandcamp's own search endpoint (unofficial), yt-dlp for streams | **Not authorized** (owner's choice to include) | 0.2 |
+| Links | Any web address the person pastes or saves: direct HTTP audio, live streams, M3U/M3U8, PLS and XSPF playlists, RSS/Atom feeds (Podcasting 2.0 tags read), pages that advertise a feed | Fetched by the phone from the address given | Whatever the link's owner publishes; the person chooses each link | Unreleased |
+| Your music servers | The person's own Subsonic, OpenSubsonic (Navidrome, Gonic, LMS, Airsonic…) or Ampache server | Subsonic API with its salted-token sign-in; Ampache through its Subsonic-compatible API | The person's own server and account | Unreleased |
+| Your WebDAV folders | Music folders on the person's Nextcloud, ownCloud, NAS or any WebDAV share | WebDAV PROPFIND listings, files streamed with the person's sign-in | The person's own server and account | Unreleased |
+| Media servers on your network | UPnP/DLNA servers on the same Wi-Fi (Plex, Jellyfin, MiniDLNA, many NAS boxes) | SSDP discovery, then the ContentDirectory service's Browse and Search; never leaves the local network | The person's own network | Unreleased |
 
 ## Off by default
 
@@ -62,6 +66,7 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [Jamendo](https://www.jamendo.com) | ~600,000 Creative Commons songs, shown with their license | Official, key | Register a free client ID at developer.jamendo.com and enter it in Settings (or build one in with `-Pkairoify.jamendo.clientId=…`) |
 | [Freesound](https://freesound.org) | Experimental, ambient and musical recordings, with their license | Official, key | A free API key from freesound.org/apiv2/apply, entered in Settings |
 | [Europeana](https://www.europeana.eu) | Openly reusable European cultural recordings | Official, key | A free API key from pro.europeana.eu, entered in Settings |
+| Icecast directory ([dir.xiph.org](https://dir.xiph.org)) | ~13,000 stations announced by Icecast servers (of ~33,000 listed, the ones with an address) | Off until switched on: the directory's only machine-readable form is one 9 MB file, so the phone downloads it at most once a week and searches its own copy |
 | [ccMixter](https://ccmixter.org) | Creative Commons remixes and originals, with their license | Blocked (hotlink protection) | Switch it on in Settings. Its MP3s answer 403 unless the request carries ccMixter's own page as the Referer, so when switched on Kairoify sends that header. |
 
 ## Planned
@@ -100,34 +105,28 @@ ones that need a registered key. Keyed sources stay off until a key is entered.
 | [Public Domain Review](https://publicdomainreview.org) | Curated historical audio | Plays from the original archives it links to | No |
 | More netlabels | insectorama, weareallghosts, ODrex Music, S27 | The Archive doesn't mirror these catalogs; each needs checking for another free, legal way in | No |
 | [KEXP](https://www.kexp.org) | Seattle's listener-supported station | The live stream is already in Radio Browser; the archive has no public audio | — |
-| Your own music files | Music already on your phone, alongside everything streamed | Android's media library | — |
 
 ## Planned protocols
 
 These aren't single services. Each one can unlock many sources at once.
 
-| Protocol | What it unlocks |
-|---|---|
-| Icecast directory | More internet radio stations |
-| RSS audio enclosures | Music podcasts, artist releases, DJ shows |
-| Podcasting 2.0 | Independently distributed music, with optional artist tipping |
-| Canimus | Artist-owned music catalogs |
-| ActivityPub | Federated music distribution |
-| OpenSubsonic | Compatible music servers |
-| Ampache API | Community and personal music collections |
-| PeerTube API | Music videos and concerts (audio-only in Kairoify unless the owner decides otherwise) |
-| Owncast | Independent live performances |
-| M3U / M3U8 | Authorized radio and media playlists |
-| PLS / XSPF | More playlist formats |
-| Direct HTTP audio | Artist-published MP3, FLAC, AAC and Ogg streams |
-| WebDAV | Music collections you authorize on a remote server |
-| UPnP / DLNA | Music you authorize on your local network |
+Built (on `main`, see Live above): Icecast directory, RSS audio enclosures, Podcasting 2.0
+(music feeds and tip support are marked; Kairoify never pays anything itself), OpenSubsonic,
+Ampache (through its Subsonic-compatible API), M3U/M3U8, PLS, XSPF, direct HTTP audio,
+WebDAV and UPnP/DLNA. All of them run on the phone.
+
+| Protocol | What it would unlock | Why it waits |
+|---|---|---|
+| Canimus | Artist-owned music catalogs | Checked 2026-11-25: no published spec found (canimus.org and canimus.dev didn't answer) |
+| ActivityPub | Federated music distribution | The audio services on it (Funkwhale) are covered under Planned sources; checked 2026-11-24, the open instances found host unlicensed uploads |
+| Ampache's own API | Ampache features beyond Subsonic (smart lists, ratings) | Ampache's Subsonic-compatible API already plays and searches everything |
 
 ## Ideas the design rules out or leaves to the owner
 
 These came up on the wishlist but conflict with decisions already in the design, so
 they wait for an owner decision:
-- **Music and concert video** (including PeerTube): the app plays audio only.
+- **Music and concert video** (including PeerTube and Owncast, which are video
+  platforms): the app plays audio only. Dropped from the protocol list 2026-11-25.
 - **Movies and TV:** outside a music app.
 - **Chromecast:** needs Google Play Services, which the app avoids.
 - **Spotify/Apple Music playback:** not free sources. Playlist *import*, matching
@@ -140,6 +139,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-25 | Unreleased | Links, your servers, your network, Icecast | **Added**, all on the phone: Links (direct HTTP audio, live streams, M3U/M3U8, PLS, XSPF, RSS/Atom feeds with Podcasting 2.0 tags, pages that advertise a feed); Subsonic/OpenSubsonic/Ampache servers and WebDAV folders the person adds in Settings (checked before saving; passwords kept out of backups); UPnP/DLNA media servers found on the Wi-Fi; the Icecast directory (off by default, 9 MB list fetched at most weekly). PeerTube and Owncast dropped as video; Canimus and ActivityPub wait. Checked against SomaFM, an NPR feed, dir.xiph.org and Navidrome's public demo. |
 | 2026-11-25 | Unreleased | Internet Archive | **Fixed**: uploads with no "creator" (many mixtapes and albums) now get an artist. Their songs take it from the MP3's own tags, which the Archive lists per file. Search and browse results take it from an "Artist - Album" title. Without an artist, Free radio and lyrics weren't offered for them. |
 | 2026-11-24 | Unreleased | whisper.cpp (on-phone captions) | **Added**: captions written on the phone for recordings with none published, with whisper.cpp v1.9.5 (MIT, built from a hash-checked release). Its multilingual base model (ggml-base-q5_1, 60 MB, MIT) downloads from Hugging Face once, only when Transcribe is first tapped, and is checked against its pinned SHA-256. Audio never leaves the phone. Direct files only (not HLS). |
 | 2026-11-24 | Unreleased | Wikimedia Commons, Internet Archive (captions) | **Added**: captions in the player for speeches, talks and books, from the subtitles these archives publish themselves (Commons' TimedText; the Archive's .srt/.vtt files, including its automatic ones, labelled as such). Text only; looked up only for the recording playing, only when Captions is tapped. |

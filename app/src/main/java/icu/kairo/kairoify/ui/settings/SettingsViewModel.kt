@@ -23,6 +23,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import icu.kairo.kairoify.settings.SourceCatalog
 import icu.kairo.kairoify.settings.SourceSettings
+import icu.kairo.kairoify.source.protocols.Server
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -40,8 +44,51 @@ data class SourceRow(
     val status: String,
 )
 
-class SettingsViewModel(private val catalog: SourceCatalog, private val settings: SourceSettings) : ViewModel() {
+/** Where adding a server stands: idle, checking it, or the reason it didn't answer. */
+sealed interface ServerCheck {
+    data object Idle : ServerCheck
+    data object Checking : ServerCheck
+    data class Failed(val message: String) : ServerCheck
+}
+
+class SettingsViewModel(
+    private val catalog: SourceCatalog,
+    private val settings: SourceSettings,
+    private val checkServer: suspend (Server) -> String? = { null },
+) : ViewModel() {
     val rows: StateFlow<List<SourceRow>> = settings.changes.map { rows() }.stateIn(viewModelScope, SharingStarted.Eagerly, rows())
+
+    val links: StateFlow<List<String>> = settings.changes.map { settings.links }.stateIn(viewModelScope, SharingStarted.Eagerly, settings.links)
+
+    val servers: StateFlow<List<Server>> = settings.changes.map { settings.servers }.stateIn(viewModelScope, SharingStarted.Eagerly, settings.servers)
+
+    private val _check = MutableStateFlow<ServerCheck>(ServerCheck.Idle)
+    val check: StateFlow<ServerCheck> = _check.asStateFlow()
+
+    fun addLink(url: String) = settings.addLink(url)
+
+    fun removeLink(url: String) = settings.removeLink(url)
+
+    fun removeServer(id: String) = settings.removeServer(id)
+
+    /** Checks [server] answers and signs in, then saves it; [onSaved] runs only when it did. */
+    fun addServer(server: Server, onSaved: () -> Unit) {
+        _check.value = ServerCheck.Checking
+        viewModelScope.launch {
+            val problem = checkServer(server)
+            if (problem == null) {
+                settings.saveServer(server)
+                _check.value = ServerCheck.Idle
+                onSaved()
+            } else {
+                _check.value = ServerCheck.Failed(problem)
+            }
+        }
+    }
+
+    fun clearCheck() {
+        _check.value = ServerCheck.Idle
+    }
 
     fun setOn(id: String, on: Boolean) = settings.setOn(id, on)
 

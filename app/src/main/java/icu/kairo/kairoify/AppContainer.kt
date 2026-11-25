@@ -85,6 +85,11 @@ import icu.kairo.kairoify.player.PlayerConnection
 import icu.kairo.kairoify.source.radiobrowser.RadioBrowserServers
 import icu.kairo.kairoify.source.radiobrowser.RadioBrowserSource
 import okhttp3.OkHttpClient
+import icu.kairo.kairoify.source.protocols.IcecastSource
+import icu.kairo.kairoify.source.protocols.LinkSource
+import icu.kairo.kairoify.source.protocols.SubsonicSource
+import icu.kairo.kairoify.source.protocols.UpnpSource
+import icu.kairo.kairoify.source.protocols.WebDavSource
 import java.util.Locale
 
 /** The app's object graph, built once per process. */
@@ -117,6 +122,26 @@ class AppContainer(context: Context) : PlayerDependencies {
      * "official" sources play through the provider's own API; "not authorized" ones play by extraction (yt-dlp),
      * included by the owner's choice; keyed ones stay off until a key is entered.
      */
+    /** Web addresses: pasted into search, or saved under Links in Settings. */
+    val links = LinkSource(httpClient) { sourceSettings.links }
+
+    /** The person's own servers, from Settings → Your servers. */
+    val subsonic = SubsonicSource(httpClient, sourceSettings::servers)
+    val webDav = WebDavSource(httpClient, sourceSettings::servers)
+
+    /** Tries a server before it's saved: null when it answered, else why not. */
+    suspend fun checkServer(server: icu.kairo.kairoify.source.protocols.Server): String? = try {
+        when (server.kind) {
+            icu.kairo.kairoify.source.protocols.ServerKind.SUBSONIC -> subsonic.check(server)
+            icu.kairo.kairoify.source.protocols.ServerKind.WEBDAV -> webDav.check(server)
+        }
+        null
+    } catch (e: kotlinx.coroutines.CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        e.message ?: "That server didn't answer."
+    }
+
     /** Music files on the phone, shown with everything streamed. */
     val localMusic = LocalMusicSource(context)
 
@@ -181,6 +206,19 @@ class AppContainer(context: Context) : PlayerDependencies {
                     keyName = "europeana",
                     note = "European cultural recordings. Needs a free API key from pro.europeana.eu.",
                 category = SourceCategory.HISTORY),
+                SourceEntry(links, true, note = "Paste any web address into search: an audio file, a live stream, an M3U/PLS/XSPF playlist, or a podcast or artist feed. Saved links show on Home.", category = SourceCategory.MUSIC),
+                SourceEntry(subsonic, true, note = "Your own Subsonic, OpenSubsonic (Navidrome, Gonic…) or Ampache server. Add it under Your servers.", category = SourceCategory.MUSIC),
+                SourceEntry(webDav, true, note = "Music folders on your Nextcloud, ownCloud, NAS or any WebDAV share. Add it under Your servers.", category = SourceCategory.MUSIC),
+                SourceEntry(
+                    UpnpSource(httpClient, multicast = { search -> withMulticastLock(context) { search() } }),
+                    defaultOn = true,
+                    note = "UPnP/DLNA media servers on your Wi-Fi (Plex, Jellyfin, MiniDLNA, many NAS boxes), found automatically. Nothing leaves your network.",
+                category = SourceCategory.MUSIC),
+                SourceEntry(
+                    IcecastSource(httpClient, context.cacheDir.resolve("icecast/directory.tsv")),
+                    defaultOn = false,
+                    note = "Every station in the Icecast directory (dir.xiph.org). Its list is one 9 MB download, fetched at most once a week, so it's off until you switch it on.",
+                category = SourceCategory.RADIO),
                 SourceEntry(
                     CcMixterSource(httpClient),
                     defaultOn = false,
@@ -218,4 +256,15 @@ class AppContainer(context: Context) : PlayerDependencies {
     val playlists: PlaylistStore = RoomPlaylistStore(database)
 
     override suspend fun favoriteItems(): List<Item> = favorites.favorites.first().map { it.item }
+}
+
+/** Holds Wi-Fi's multicast lock while [block] runs: without it many phones drop the SSDP replies UPnP discovery needs. */
+private suspend fun <T> withMulticastLock(context: Context, block: suspend () -> T): T {
+    val wifi = context.applicationContext.getSystemService(android.net.wifi.WifiManager::class.java)
+    val lock = runCatching { wifi?.createMulticastLock("kairoify-upnp")?.apply { setReferenceCounted(false); acquire() } }.getOrNull()
+    return try {
+        block()
+    } finally {
+        runCatching { lock?.release() }
+    }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Server passwords and API keys (the "sources" preferences) stay on this phone: never in cloud backups or transfers. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="sources.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="sources.xml" />
+    </device-transfer>
+</data-extraction-rules>

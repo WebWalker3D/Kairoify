@@ -169,6 +169,7 @@ fun KairoifyNavHost(
                 onPlayQueue = onPlayQueue,
                 onLongPress = onLongPress,
                 onOpenLink = onOpenLink,
+                onOpen = open,
             )
         }
         composable<AboutRoute> { AboutScreen(viewModel { about() }) }
