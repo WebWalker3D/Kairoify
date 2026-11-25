@@ -21,6 +21,7 @@ package icu.kairo.kairoify.settings
 
 import android.content.SharedPreferences
 import icu.kairo.kairoify.core.source.MusicSource
+import icu.kairo.kairoify.source.protocols.Server
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +45,42 @@ class SourceSettings(private val prefs: SharedPreferences) {
     fun setKey(name: String, value: String) {
         prefs.edit().putString("key.$name", value.trim()).apply()
         _changes.value++
+    }
+
+    /** Web addresses saved under Links: playlists, feeds, streams and files. Newest first. */
+    val links: List<String>
+        get() = prefs.getString(LINKS, null)?.split('\n')?.filter(String::isNotBlank).orEmpty()
+
+    fun addLink(url: String) {
+        val clean = url.trim()
+        if (clean.isEmpty()) return
+        prefs.edit().putString(LINKS, (listOf(clean) + links.filterNot { it == clean }).joinToString("\n")).apply()
+        _changes.value++
+    }
+
+    fun removeLink(url: String) {
+        prefs.edit().putString(LINKS, links.filterNot { it == url }.joinToString("\n")).apply()
+        _changes.value++
+    }
+
+    /** The person's own music servers (Subsonic/Ampache, WebDAV), passwords included. Kept only in this app's storage. */
+    val servers: List<Server>
+        get() = Server.decodeAll(prefs.getString(SERVERS, null))
+
+    /** Adds [server], replacing one with the same id (same kind, address and user). */
+    fun saveServer(server: Server) {
+        prefs.edit().putString(SERVERS, Server.encodeAll(servers.filterNot { it.id == server.id } + server)).apply()
+        _changes.value++
+    }
+
+    fun removeServer(id: String) {
+        prefs.edit().putString(SERVERS, Server.encodeAll(servers.filterNot { it.id == id })).apply()
+        _changes.value++
+    }
+
+    private companion object {
+        const val LINKS = "links"
+        const val SERVERS = "servers"
     }
 }
 

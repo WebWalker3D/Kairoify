@@ -50,12 +50,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel) {
     val rows by viewModel.rows.collectAsStateWithLifecycle()
+    val links by viewModel.links.collectAsStateWithLifecycle()
+    val servers by viewModel.servers.collectAsStateWithLifecycle()
+    val check by viewModel.check.collectAsStateWithLifecycle()
     LazyColumn(Modifier.fillMaxSize()) {
         item(key = "title") {
             Text("Settings", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
         }
         item(key = "sound") {
             SoundSection()
+            HorizontalDivider()
+        }
+        item(key = "servers") {
+            ServersSection(servers, check, onAdd = viewModel::addServer, onRemove = viewModel::removeServer, onEdit = viewModel::clearCheck)
+            HorizontalDivider()
+        }
+        item(key = "links") {
+            LinksSection(links, onAdd = viewModel::addLink, onRemove = viewModel::removeLink)
             HorizontalDivider()
         }
         item(key = "sources") {

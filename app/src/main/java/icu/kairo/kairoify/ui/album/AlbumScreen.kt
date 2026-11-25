@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
@@ -62,6 +63,7 @@ fun AlbumScreen(
     onPlayQueue: (items: List<Item>, startIndex: Int, shuffle: Boolean) -> Unit,
     onLongPress: (Item) -> Unit,
     onOpenLink: (String) -> Unit,
+    onOpen: (Item) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     when (val s = state) {
@@ -101,11 +103,14 @@ fun AlbumScreen(
                                 Text("Shuffle")
                             }
                         }
-                    } else {
+                    } else if (s.folders.isEmpty()) {
                         Text("No playable tracks in this one.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     s.album.pageUrl?.let { url -> TextButton(onClick = { onOpenLink(url) }) { Text("Open original") } }
                 }
+            }
+            items(s.folders, key = { "folder-" + it.ref.encode() }) { folder ->
+                ItemRow(folder, onClick = { onOpen(folder) }, onLongClick = onLongPress)
             }
             itemsIndexed(s.tracks, key = { _, t -> t.ref.encode() }) { index, track ->
                 ItemRow(track, onClick = { onPlayQueue(s.tracks, index, false) }, onLongClick = onLongPress)

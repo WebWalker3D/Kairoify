@@ -32,8 +32,11 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /** GETs [url] and returns the body; failures become [SourceException]s that name [sourceName]. Cancels with the coroutine. */
-suspend fun OkHttpClient.fetchText(url: HttpUrl, sourceName: String): String = suspendCancellableCoroutine { cont ->
-    val call = newCall(Request.Builder().url(url).build())
+suspend fun OkHttpClient.fetchText(url: HttpUrl, sourceName: String): String = fetchText(Request.Builder().url(url).build(), sourceName)
+
+/** Sends [request] (any method, any headers) and returns the body, with the same failures as the GET form. */
+suspend fun OkHttpClient.fetchText(request: Request, sourceName: String): String = suspendCancellableCoroutine { cont ->
+    val call = newCall(request)
     cont.invokeOnCancellation { call.cancel() }
     val unreachable = "Couldn't reach $sourceName."
     call.enqueue(object : Callback {
@@ -44,6 +47,8 @@ suspend fun OkHttpClient.fetchText(url: HttpUrl, sourceName: String): String = s
         override fun onResponse(call: Call, response: Response) {
             response.use {
                 when {
+                    it.code == 401 || it.code == 403 && request.header("Authorization") != null ->
+                        cont.resumeWithException(SourceException.Unavailable("$sourceName didn't accept the user name or password."))
                     it.code == 429 -> cont.resumeWithException(SourceException.RateLimited("$sourceName is busy. Try again in a minute."))
                     !it.isSuccessful -> cont.resumeWithException(SourceException.Unavailable(unreachable, IOException("HTTP ${it.code}")))
                     else -> try {

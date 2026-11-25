@@ -119,6 +119,7 @@ dependencies {
     implementation(project(":sources:freesound"))
     implementation(project(":sources:europeana"))
     implementation(project(":sources:podcasts"))
+    implementation(project(":sources:protocols"))
     implementation(project(":sources:wavlake"))
     implementation(project(":sources:radioparadise"))
     implementation(project(":sources:nightride"))

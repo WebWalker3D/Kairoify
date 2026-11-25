@@ -39,7 +39,7 @@ fun opensDetails(item: Item): Boolean = item is Album
 sealed interface AlbumUiState {
     data object Loading : AlbumUiState
 
-    data class Loaded(val album: Album, val tracks: List<Track>) : AlbumUiState
+    data class Loaded(val album: Album, val tracks: List<Track>, val folders: List<Album> = emptyList()) : AlbumUiState
 
     data class Failed(val message: String) : AlbumUiState
 }
@@ -59,7 +59,7 @@ class AlbumViewModel(private val registry: SourceRegistry, private val ref: Medi
         viewModelScope.launch {
             _state.value = try {
                 val details = registry.details(ref)
-                AlbumUiState.Loaded(details.album, details.tracks)
+                AlbumUiState.Loaded(details.album, details.tracks, details.folders)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: SourceException) {
