@@ -29,9 +29,11 @@ android {
     defaultConfig {
         minSdk = 26
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
-        externalNativeBuild { cmake { arguments += listOf("-DANDROID_STL=c++_static", "-DCMAKE_BUILD_TYPE=Release") } }
+        if (System.getenv("CODEQL_EXTRACTOR_JAVA_ROOT") == null) externalNativeBuild { cmake { arguments += listOf("-DANDROID_STL=c++_static", "-DCMAKE_BUILD_TYPE=Release") } }
     }
-    externalNativeBuild {
+    // CodeQL's automatic build (it scans Kotlin here, not C++) runs without an NDK, so it skips whisper.cpp.
+    // Every other build compiles it, and fails loudly when the NDK is missing.
+    if (System.getenv("CODEQL_EXTRACTOR_JAVA_ROOT") == null) externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "4.1.2"
