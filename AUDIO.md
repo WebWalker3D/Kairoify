@@ -140,6 +140,7 @@ in a published release yet.
 
 | Date | Release | Source | Change |
 |---|---|---|---|
+| 2026-11-24 | Unreleased | Wikimedia Commons, Internet Archive (captions) | **Added**: captions in the player for speeches, talks and books, from the subtitles these archives publish themselves (Commons' TimedText; the Archive's .srt/.vtt files, including its automatic ones, labelled as such). Text only; looked up only for the recording playing, only when Captions is tapped. |
 | 2026-11-24 | Unreleased | Radio Browser | **Added**: the radio globe, using the station locations Radio Browser already publishes. |
 | 2026-11-24 | Unreleased | LRCLIB (lyrics) | **Added**: synced lyrics in the player, from LRCLIB's open database (text only, no audio; no key). Looked up only for the song playing, only when Lyrics is tapped. |
 | 2026-11-24 | Unreleased | On this phone (local files) | **Added**, on by default once the person allows access: music files from Android's media library, searched with everything else, with Recently added and Albums shelves and a Library tab. Nothing leaves the phone. |
